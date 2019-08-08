@@ -1,7 +1,7 @@
 package com.example.redfruit.util
 
-import android.support.v4.app.Fragment
-import android.support.v7.app.AppCompatActivity
+import androidx.appcompat.app.AppCompatActivity
+import androidx.fragment.app.Fragment
 
 /**
  * @author https://thuytrinh.github.io/android/kotlin/2017/02/07/find-fragments.html
