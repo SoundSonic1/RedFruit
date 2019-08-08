@@ -6,26 +6,25 @@ import com.google.gson.reflect.TypeToken
 import java.lang.reflect.Type
 import java.net.URL
 
+/**
+ * Implements the Repository pattern
+ */
+object PostRepository : IRepository<Post> {
 
-class OpenApi : IApi{
-
-    override fun getPosts(): List<Post> {
-        val response = URL(url).readText()
+    override fun getData(): Collection<Post> {
+        val response = URL("https://openmensa.org/api/v2/canteens?ids=78,79,80,81,82,83").readText()
         val gson = GsonBuilder()
             .registerTypeAdapter(Post::class.java, Deserialzer())
             .setPrettyPrinting()
             .create()
-        val postList: List<Post> = gson.fromJson(
+
+        return gson.fromJson(
             response,
-            object: TypeToken<List<Post>>() {}.type)
-        return postList
+            object: TypeToken<Collection<Post>>() {}.type)
     }
 
     private class Deserialzer : JsonDeserializer<Post> {
         override fun deserialize(json: JsonElement?, typeOfT: Type?, context: JsonDeserializationContext?): Post {
-            // json is one specification of a mensa, as jsonObject
-            // iterate through the key-value pairs
-            // json needs to be non-null, else throw NPE
             val jsonObject: JsonObject = json!!.asJsonObject
             // json node needs to have keys id and name, else throw NPE
             val name: String = jsonObject.get("name")!!.asString
@@ -34,9 +33,5 @@ class OpenApi : IApi{
                 title = name
             )
         }
-    }
-
-    companion object {
-        private const val url = "https://openmensa.org/api/v2/canteens?ids=78,79,80,81,82,83"
     }
 }

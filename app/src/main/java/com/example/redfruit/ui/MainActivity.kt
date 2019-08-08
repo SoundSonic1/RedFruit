@@ -1,4 +1,4 @@
-package com.example.redfruit.ui.home
+package com.example.redfruit.ui
 
 import android.os.Bundle
 import android.view.Menu
