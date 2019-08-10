@@ -5,13 +5,14 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.redfruit.R
+import com.example.redfruit.databinding.FragmentHomeBinding
 import com.example.redfruit.ui.home.adapter.HomeAdapter
 import com.example.redfruit.ui.home.viewmodel.HomeViewModel
 import com.example.redfruit.ui.shared.PostSharedViewModel
@@ -24,7 +25,9 @@ class HomeFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
-        val view = inflater.inflate(R.layout.fragment_home, container, false)
+        val binding: FragmentHomeBinding = DataBindingUtil.inflate(inflater, R.layout.fragment_home, container, false)
+        // make binding lifecycle aware
+        binding.lifecycleOwner = viewLifecycleOwner
         // Create ViewModel specifically for this Fragment
         val viewModel = ViewModelProvider(this, ViewModelProvider.NewInstanceFactory())
             .get(HomeViewModel::class.java)
@@ -35,18 +38,14 @@ class HomeFragment : Fragment() {
             Toast.makeText(requireContext(),"Clicked on " + post.title, Toast.LENGTH_SHORT).show()
             viewModel.update(sharedViewModel.data.value!!)
         }
-        val recyclerView = view.findViewById<RecyclerView>(R.id.recyclerViewHome)
+
+        val recyclerView = binding.root.findViewById<RecyclerView>(R.id.recyclerViewHome)
         recyclerView.layoutManager = LinearLayoutManager(requireContext())
         recyclerView.adapter = adapter
         recyclerView.addItemDecoration(DividerItemDecoration(requireContext(), DividerItemDecoration.VERTICAL))
 
-        // register observer via special lifecycle returned by viewLifecycleOwner
-        viewModel.data.observe(viewLifecycleOwner, Observer { posts ->
-            if (posts != null) {
-                adapter.refreshItems(posts)
-            }
-        })
+        binding.viewModel = viewModel
 
-        return view
+        return binding.root
     }
 }

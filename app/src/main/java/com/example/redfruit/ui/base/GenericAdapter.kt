@@ -1,8 +1,6 @@
 package com.example.redfruit.ui.base
 
 import android.content.Context
-import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 
@@ -17,9 +15,7 @@ abstract class GenericAdapter<T>(private val listItems: MutableList<T>,
     override fun getItemCount() = listItems.size
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): AbstractViewHolder<T> {
-        return getViewHolder(
-            LayoutInflater.from(context)
-            .inflate(viewType, parent, false), viewType)
+        return getViewHolder(parent, viewType)
     }
 
     override fun onBindViewHolder(holder: AbstractViewHolder<T>, position: Int) {
@@ -40,6 +36,6 @@ abstract class GenericAdapter<T>(private val listItems: MutableList<T>,
      */
     protected abstract fun getLayoutId(position: Int, obj: T): Int
 
-    abstract fun getViewHolder(view: View, viewType: Int): AbstractViewHolder<T>
+    abstract fun getViewHolder(parent: ViewGroup, viewType: Int): AbstractViewHolder<T>
 
 }

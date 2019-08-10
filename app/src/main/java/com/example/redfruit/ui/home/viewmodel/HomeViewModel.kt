@@ -20,7 +20,7 @@ class HomeViewModel : ViewModel(), IViewModel<Post> {
 
     // Encapsulate access to mutable LiveData using backing property
     // with LiveData
-    override val data: LiveData<Collection<Post>> = _data
+    override val data: LiveData<Collection<Post>> get() = _data
 
     // api call must be in a separat thread
     fun loadData() = viewModelScope.launch {

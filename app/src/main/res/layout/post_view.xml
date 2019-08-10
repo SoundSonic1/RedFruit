@@ -1,15 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              android:orientation="vertical"
-              android:layout_width="match_parent"
-              android:layout_height="wrap_content"
-              android:padding="8dp"
-              android:background="?android:attr/selectableItemBackground">
-    <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/postView"
-            android:textStyle="bold"
-            android:textSize="16sp"
-    />
-</LinearLayout>
+<layout>
+    <data>
+        <variable name="item" type="com.example.redfruit.data.model.Post"/>
+    </data>
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                  android:orientation="vertical"
+                  android:layout_width="match_parent"
+                  android:layout_height="wrap_content"
+                  android:padding="8dp"
+                  android:background="?android:attr/selectableItemBackground">
+        <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/postView"
+                android:textStyle="bold"
+                android:textSize="16sp"
+                android:text="@{item.title}"
+        />
+    </LinearLayout>
+</layout>
