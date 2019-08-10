@@ -27,6 +27,10 @@ class HomeViewModel : ViewModel(), IViewModel<Post> {
         _data.value = get()
     }
 
+    fun update(posts: Collection<Post>) {
+        _data.value = posts
+    }
+
     // call to the api
     private suspend fun get() =
         withContext(Dispatchers.IO) {

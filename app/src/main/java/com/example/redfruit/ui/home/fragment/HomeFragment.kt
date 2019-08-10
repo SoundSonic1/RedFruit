@@ -14,6 +14,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.redfruit.R
 import com.example.redfruit.ui.home.adapter.HomeAdapter
 import com.example.redfruit.ui.home.viewmodel.HomeViewModel
+import com.example.redfruit.ui.shared.PostSharedViewModel
 
 
 class HomeFragment : Fragment() {
@@ -24,11 +25,15 @@ class HomeFragment : Fragment() {
     ): View? {
         // Inflate the layout for this fragment
         val view = inflater.inflate(R.layout.fragment_home, container, false)
+        // Create ViewModel specifically for this Fragment
         val viewModel = ViewModelProvider(this, ViewModelProvider.NewInstanceFactory())
             .get(HomeViewModel::class.java)
+        // get PostSharedViewModel instance from the MainActivity
+        val sharedViewModel = ViewModelProvider(activity!!).get(PostSharedViewModel::class.java)
 
         val adapter = HomeAdapter(mutableListOf(), requireContext()) { post ->
             Toast.makeText(requireContext(),"Clicked on " + post.title, Toast.LENGTH_SHORT).show()
+            viewModel.update(sharedViewModel.data.value!!)
         }
         val recyclerView = view.findViewById<RecyclerView>(R.id.recyclerViewHome)
         recyclerView.layoutManager = LinearLayoutManager(requireContext())
