@@ -1,21 +1,38 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout>
+<layout xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:android="http://schemas.android.com/apk/res/android">
     <data>
         <variable name="item" type="com.example.redfruit.data.model.Post"/>
     </data>
-    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                  android:orientation="vertical"
-                  android:layout_width="match_parent"
-                  android:layout_height="wrap_content"
-                  android:padding="8dp"
-                  android:background="?android:attr/selectableItemBackground">
-        <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:id="@+id/postView"
-                android:textStyle="bold"
-                android:textSize="16sp"
-                android:text="@{item.title}"
-        />
-    </LinearLayout>
+    <androidx.cardview.widget.CardView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="4dp"
+            app:cardCornerRadius="4dp"
+            app:cardElevation="4dp"
+    >
+        <LinearLayout
+                      android:orientation="vertical"
+                      android:layout_width="match_parent"
+                      android:layout_height="wrap_content"
+                      android:padding="6dp"
+                      android:divider="?android:dividerHorizontal"
+                      android:showDividers="middle"
+                      android:background="?android:attr/selectableItemBackground">
+            <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/postView"
+                    android:textStyle="bold"
+                    android:textSize="16sp"
+                    android:text="@{item.title}"
+            />
+            <ImageView android:layout_width="match_parent"
+                       android:layout_height="wrap_content"
+                       android:id="@+id/postImageView"
+                       android:scaleType="fitCenter"
+                       app:imageUrl="@{item.imageUrl}"
+            />
+        </LinearLayout>
+    </androidx.cardview.widget.CardView>
 </layout>

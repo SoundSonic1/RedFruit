@@ -11,7 +11,10 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
-class HomeViewModel : ViewModel(), IViewModel<Post> {
+/**
+ * Control logic of the HomeFragment
+ */
+class HomeViewModel : ViewModel(), IViewModel<Collection<Post>> {
     private val _data: MutableLiveData<Collection<Post>> by lazy {
         MutableLiveData<Collection<Post>>().also {
             loadData()
@@ -35,6 +38,10 @@ class HomeViewModel : ViewModel(), IViewModel<Post> {
     private suspend fun get() =
         withContext(Dispatchers.IO) {
             /* perform network IO here */
-            PostRepository.getData()
+            PostRepository.getData(url)
         }
+
+    companion object {
+        private const val url = "https://www.reddit.com/r/Animemes/.json?limit=10"
+    }
 }

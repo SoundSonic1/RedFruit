@@ -1,6 +1,5 @@
 package com.example.redfruit.ui.base
 
-import android.content.Context
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 
@@ -9,7 +8,6 @@ import androidx.recyclerview.widget.RecyclerView
  * @author https://medium.com/@mohanmanu/generic-adapter-with-kotlin-part-i-74e191d68b0f
  */
 abstract class GenericAdapter<T>(private val listItems: MutableList<T>,
-                                 private val context: Context,
                                  private val listener: (T) -> Unit) : RecyclerView.Adapter<AbstractViewHolder<T>>()
 {
     override fun getItemCount() = listItems.size

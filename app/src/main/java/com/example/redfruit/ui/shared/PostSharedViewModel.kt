@@ -10,7 +10,7 @@ import com.example.redfruit.ui.base.IViewModel
  * ViewModel used for communication between Fragments and Activity
  * For now, we specify the type at compile time
  */
-class PostSharedViewModel : ViewModel(), IViewModel<Post> {
+class PostSharedViewModel : ViewModel(), IViewModel<Collection<Post>> {
 
     private val _data = MutableLiveData<Collection<Post>>()
 

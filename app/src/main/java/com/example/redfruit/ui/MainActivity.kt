@@ -5,6 +5,7 @@ import android.view.Menu
 import android.view.MenuItem
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.app.AppCompatDelegate
 import androidx.appcompat.widget.Toolbar
 import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
@@ -15,8 +16,14 @@ import com.example.redfruit.ui.home.fragment.HomeFragment
 import com.example.redfruit.ui.shared.PostSharedViewModel
 import com.example.redfruit.util.findFragmentByTag
 import com.example.redfruit.util.replaceFragment
+import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.navigation.NavigationView
+import com.google.android.material.snackbar.Snackbar
 
+/**
+ * Entry point of our app. We use the single Activity, many fragments philosophy.
+ * The app moves towards clean architecture in the form of MVVM and Repository pattern
+ */
 class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
 
 
@@ -25,16 +32,17 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         setContentView(R.layout.activity_main)
         val toolbar: Toolbar = findViewById(R.id.toolbar)
         setSupportActionBar(toolbar)
+        AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
 
         val sharedViewModel = ViewModelProvider(this, ViewModelProvider.NewInstanceFactory())
             .get(PostSharedViewModel::class.java)
-        sharedViewModel.setData(Post("test"))
+        sharedViewModel.setData(Post("test", ""))
 
-        /*val fab: FloatingActionButton = findViewById(R.id.fab)
+        val fab: FloatingActionButton = findViewById(R.id.fab)
         fab.setOnClickListener { view ->
             Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
                 .setAction("Action", null).show()
-        }*/
+        }
         val drawerLayout: DrawerLayout = findViewById(R.id.drawer_layout)
         val navView: NavigationView = findViewById(R.id.nav_view)
         val toggle = ActionBarDrawerToggle(
@@ -46,6 +54,9 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         toggle.syncState()
 
         navView.setNavigationItemSelectedListener(this)
+
+        // Start with Home
+        replaceFragment(R.id.mainContent, HomeFragment(), mainTag)
     }
 
     override fun onBackPressed() {

@@ -8,7 +8,6 @@ import android.widget.Toast
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
-import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.redfruit.R
@@ -34,7 +33,7 @@ class HomeFragment : Fragment() {
         // get PostSharedViewModel instance from the MainActivity
         val sharedViewModel = ViewModelProvider(activity!!).get(PostSharedViewModel::class.java)
 
-        val adapter = HomeAdapter(mutableListOf(), requireContext()) { post ->
+        val adapter = HomeAdapter(mutableListOf()) { post ->
             Toast.makeText(requireContext(),"Clicked on " + post.title, Toast.LENGTH_SHORT).show()
             viewModel.update(sharedViewModel.data.value!!)
         }
@@ -42,7 +41,6 @@ class HomeFragment : Fragment() {
         val recyclerView = binding.root.findViewById<RecyclerView>(R.id.recyclerViewHome)
         recyclerView.layoutManager = LinearLayoutManager(requireContext())
         recyclerView.adapter = adapter
-        recyclerView.addItemDecoration(DividerItemDecoration(requireContext(), DividerItemDecoration.VERTICAL))
 
         binding.viewModel = viewModel
 
