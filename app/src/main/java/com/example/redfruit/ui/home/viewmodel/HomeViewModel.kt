@@ -42,6 +42,6 @@ class HomeViewModel : ViewModel(), IViewModel<Collection<Post>> {
         }
 
     companion object {
-        private const val url = "https://www.reddit.com/r/Animemes/.json?limit=10"
+        private const val url = "https://www.reddit.com/r/grandorder/new/.json?limit=10"
     }
 }

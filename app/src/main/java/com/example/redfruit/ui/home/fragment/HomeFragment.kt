@@ -35,7 +35,7 @@ class HomeFragment : Fragment() {
 
         val adapter = HomeAdapter(mutableListOf()) { post ->
             Toast.makeText(requireContext(),"Clicked on " + post.title, Toast.LENGTH_SHORT).show()
-            viewModel.update(sharedViewModel.data.value!!)
+            // viewModel.update(sharedViewModel.data.value!!)
         }
 
         val recyclerView = binding.root.findViewById<RecyclerView>(R.id.recyclerViewHome)

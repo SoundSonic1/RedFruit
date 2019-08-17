@@ -2,6 +2,7 @@
 <layout xmlns:app="http://schemas.android.com/apk/res-auto"
         xmlns:android="http://schemas.android.com/apk/res/android">
     <data>
+        <import type="android.view.View"/>
         <variable name="item" type="com.example.redfruit.data.model.Post"/>
     </data>
     <androidx.cardview.widget.CardView
@@ -16,22 +17,33 @@
                       android:layout_width="match_parent"
                       android:layout_height="wrap_content"
                       android:padding="6dp"
-                      android:divider="?android:dividerHorizontal"
-                      android:showDividers="middle"
                       android:background="?android:attr/selectableItemBackground">
+
+            <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/postAuthor"
+                    android:textStyle="bold"
+                    android:textSize="8sp"
+                    android:text="@{`u/` + item.author}"
+            />
+
             <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:id="@+id/postView"
                     android:textStyle="bold"
                     android:textSize="16sp"
+                    android:padding="10dp"
                     android:text="@{item.title}"
             />
             <ImageView android:layout_width="match_parent"
                        android:layout_height="wrap_content"
                        android:id="@+id/postImageView"
+                       android:adjustViewBounds="true"
                        android:scaleType="fitCenter"
-                       app:imageUrl="@{item.imageUrl}"
+                       android:visibility="@{item.Preview.enabled ? View.VISIBLE : View.GONE}"
+                       app:imageUrl="@{item.Preview.getFirstImage().source.url}"
             />
         </LinearLayout>
     </androidx.cardview.widget.CardView>

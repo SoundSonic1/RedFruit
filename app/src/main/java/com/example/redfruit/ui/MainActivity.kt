@@ -11,7 +11,6 @@ import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.lifecycle.ViewModelProvider
 import com.example.redfruit.R
-import com.example.redfruit.data.model.Post
 import com.example.redfruit.ui.home.fragment.HomeFragment
 import com.example.redfruit.ui.shared.PostSharedViewModel
 import com.example.redfruit.util.findFragmentByTag
@@ -36,7 +35,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
         val sharedViewModel = ViewModelProvider(this, ViewModelProvider.NewInstanceFactory())
             .get(PostSharedViewModel::class.java)
-        sharedViewModel.setData(Post("test", ""))
+        // sharedViewModel.setData(Post("test", ""))
 
         val fab: FloatingActionButton = findViewById(R.id.fab)
         fab.setOnClickListener { view ->
