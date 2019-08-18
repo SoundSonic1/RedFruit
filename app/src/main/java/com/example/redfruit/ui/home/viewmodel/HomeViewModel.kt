@@ -1,9 +1,6 @@
 package com.example.redfruit.ui.home.viewmodel
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
+import androidx.lifecycle.*
 import com.example.redfruit.data.api.PostRepository
 import com.example.redfruit.data.model.Post
 import com.example.redfruit.ui.base.IViewModel
@@ -14,7 +11,7 @@ import kotlinx.coroutines.withContext
 /**
  * Control logic of the HomeFragment
  */
-class HomeViewModel : ViewModel(), IViewModel<Collection<Post>> {
+class HomeViewModel(private val state: SavedStateHandle) : ViewModel(), IViewModel<Collection<Post>> {
 
     private var limit = 10
     // TODO: save subreddit and sortBy preference to savedstate
@@ -53,9 +50,11 @@ class HomeViewModel : ViewModel(), IViewModel<Collection<Post>> {
         }
     }
 
-    fun update(posts: Collection<Post>) {
-        _data.value = posts
+    fun saveData() {
+       state.set(KEY_SUBREDDIT, subreddit)
     }
+
+    fun getSavedData() = state[KEY_SUBREDDIT] ?: ""
 
     // call to the api
     private suspend fun get() =
@@ -66,5 +65,6 @@ class HomeViewModel : ViewModel(), IViewModel<Collection<Post>> {
 
     companion object {
         private const val url = "https://www.reddit.com/r/"
+        private const val KEY_SUBREDDIT = "KEY_SUBREDDIT"
     }
 }
