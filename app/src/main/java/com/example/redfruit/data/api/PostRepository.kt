@@ -17,8 +17,8 @@ object PostRepository : IRepository<Collection<Post>> {
 
     override fun getData(url: String): Collection<Post> {
         val response = URL(url).readText()
-        // JSONArray of children aka posts
         val jsonObjResponse = JsonParser().parse(response).asJsonObject
+        // JSONArray of children aka posts
         val jsonChildren = jsonObjResponse.getAsJsonObject("data").getAsJsonArray("children")
         val gson = GsonBuilder()
             .registerTypeAdapter(Post::class.java, PostDeserializer())

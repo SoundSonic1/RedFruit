@@ -5,7 +5,7 @@ import androidx.databinding.BindingAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
-import com.example.redfruit.R
+// import com.example.redfruit.R
 import com.example.redfruit.data.model.Post
 import com.example.redfruit.ui.home.adapter.HomeAdapter
 
@@ -31,7 +31,7 @@ object BindingAdapters {
             Glide.with(imageView.context)
                 .load(url)
                 .fitCenter()
-                .placeholder(R.drawable.ic_refresh_white_24dp)
+                //.placeholder(R.drawable.ic_refresh_white_24dp)
                 .transition(DrawableTransitionOptions.withCrossFade())
                 .into(imageView)
         } else {
