@@ -4,12 +4,8 @@ import com.example.redfruit.data.model.Images.ImageSource
 import com.example.redfruit.data.model.Images.RedditImage
 import com.example.redfruit.data.model.Post
 import com.example.redfruit.data.model.Preview
-import com.google.gson.GsonBuilder
-import com.google.gson.JsonDeserializationContext
-import com.google.gson.JsonDeserializer
-import com.google.gson.JsonElement
+import com.google.gson.*
 import com.google.gson.reflect.TypeToken
-import org.json.JSONObject
 import java.lang.reflect.Type
 import java.net.URL
 
@@ -22,7 +18,8 @@ object PostRepository : IRepository<Collection<Post>> {
     override fun getData(url: String): Collection<Post> {
         val response = URL(url).readText()
         // JSONArray of children aka posts
-        val jsonChildren = JSONObject(response).getJSONObject("data").getJSONArray("children").toString()
+        val jsonObjResponse = JsonParser().parse(response).asJsonObject
+        val jsonChildren = jsonObjResponse.getAsJsonObject("data").getAsJsonArray("children")
         val gson = GsonBuilder()
             .registerTypeAdapter(Post::class.java, PostDeserializer())
             .setPrettyPrinting()
