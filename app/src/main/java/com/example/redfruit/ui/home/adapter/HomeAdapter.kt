@@ -9,6 +9,10 @@ import com.example.redfruit.data.model.Post
 import com.example.redfruit.databinding.PostViewBinding
 import com.example.redfruit.ui.base.AbstractViewHolder
 import com.example.redfruit.ui.base.GenericAdapter
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 /**
  * Adapter for the RecyclerView of the HomeFragment
@@ -21,27 +25,35 @@ class HomeAdapter(private val items: MutableList<Post>,
     override fun getLayoutId(position: Int, obj: Post) = R.layout.post_view
 
     fun notifyChanges(newList: List<Post>) {
+       GlobalScope.launch {
+           notifyChangesDetail(newList)
+       }
 
-        val diff = DiffUtil.calculateDiff(object : DiffUtil.Callback() {
+    }
 
-            override fun areItemsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
-                return items[oldItemPosition].id == newList[newItemPosition].id
-            }
+    private suspend fun notifyChangesDetail(newList: List<Post>) {
+        withContext(Dispatchers.Main) {
+            val diff = DiffUtil.calculateDiff(object : DiffUtil.Callback() {
 
-            override fun areContentsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
-                return items[oldItemPosition] == newList[newItemPosition]
-            }
+                override fun areItemsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
+                    return items[oldItemPosition].id == newList[newItemPosition].id
+                }
 
-            override fun getOldListSize() = items.size
+                override fun areContentsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
+                    return items[oldItemPosition] == newList[newItemPosition]
+                }
 
-            override fun getNewListSize() = newList.size
-        })
+                override fun getOldListSize() = items.size
 
-        items.clear()
-        items.addAll(newList)
+                override fun getNewListSize() = newList.size
+            })
 
-        diff.dispatchUpdatesTo(this)
+            diff.dispatchUpdatesTo(this@HomeAdapter)
 
+            items.clear()
+            items.addAll(newList)
+
+        }
     }
 
 }
