@@ -47,6 +47,7 @@ class HomeFragment : Fragment() {
         }
 
         val recyclerView = binding.root.findViewById<RecyclerView>(R.id.recyclerViewHome)
+        recyclerView.recycledViewPool.setMaxRecycledViews(0, 30)
         recyclerView.layoutManager = LinearLayoutManager(requireContext())
         recyclerView.adapter = adapter
         recyclerView.addOnScrollListener(object : RecyclerView.OnScrollListener() {

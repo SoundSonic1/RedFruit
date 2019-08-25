@@ -19,7 +19,8 @@ object BindingAdapters {
     // not yet initialized
     fun setRecyclerViewProperties(recyclerViewHome: RecyclerView, items: Collection<Post>?) {
         if (items != null && recyclerViewHome.adapter is HomeAdapter) {
-            (recyclerViewHome.adapter as HomeAdapter).refreshItems(items)
+            (recyclerViewHome.adapter as HomeAdapter).notifyChanges(items.toList())
+            // (recyclerViewHome.adapter as HomeAdapter).refreshItems(items)
         }
     }
 

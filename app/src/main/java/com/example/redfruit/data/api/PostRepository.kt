@@ -57,6 +57,7 @@ object PostRepository : IRepository<Collection<Post>> {
 
 
             return Post(
+                id = jsonData.get("id").asString,
                 title = jsonData.get("title").asString,
                 author = jsonData.get("author")?.asString ?: "Unknown",
                 ups = jsonData.get("ups").asInt,

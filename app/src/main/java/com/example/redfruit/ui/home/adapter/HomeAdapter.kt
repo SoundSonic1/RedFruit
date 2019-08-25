@@ -3,6 +3,7 @@ package com.example.redfruit.ui.home.adapter
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
+import androidx.recyclerview.widget.DiffUtil
 import com.example.redfruit.R
 import com.example.redfruit.data.model.Post
 import com.example.redfruit.databinding.PostViewBinding
@@ -12,12 +13,36 @@ import com.example.redfruit.ui.base.GenericAdapter
 /**
  * Adapter for the RecyclerView of the HomeFragment
  */
-class HomeAdapter(items: MutableList<Post>,
+class HomeAdapter(private val items: MutableList<Post>,
                   listener: (Post) -> Unit) : GenericAdapter<Post>(items, listener) {
 
     override fun getViewHolder(parent: ViewGroup, viewType: Int) = PostViewHolder(parent)
 
     override fun getLayoutId(position: Int, obj: Post) = R.layout.post_view
+
+    fun notifyChanges(newList: List<Post>) {
+
+        val diff = DiffUtil.calculateDiff(object : DiffUtil.Callback() {
+
+            override fun areItemsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
+                return items[oldItemPosition].id == newList[newItemPosition].id
+            }
+
+            override fun areContentsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
+                return items[oldItemPosition] == newList[newItemPosition]
+            }
+
+            override fun getOldListSize() = items.size
+
+            override fun getNewListSize() = newList.size
+        })
+
+        items.clear()
+        items.addAll(newList)
+
+        diff.dispatchUpdatesTo(this)
+
+    }
 
 }
 
