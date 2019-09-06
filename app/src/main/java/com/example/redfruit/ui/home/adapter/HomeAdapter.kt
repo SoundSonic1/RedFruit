@@ -30,26 +30,26 @@ class HomeAdapter(private val items: MutableList<Post>,
 
     fun notifyChanges(newList: List<Post>) =
         uiScope.launch {
-           val diff = notifyChangesDetail(newList)
-           diff.dispatchUpdatesTo(this@HomeAdapter)
+            val diff = calculateDiff(items, newList)
+            items.clear()
+            items.addAll(newList)
+            diff.dispatchUpdatesTo(this@HomeAdapter)
 
-           items.clear()
-           items.addAll(newList)
         }
 
-    private suspend fun notifyChangesDetail(newList: List<Post>) =
+    private suspend fun calculateDiff(oldList: List<Post>, newList: List<Post>) =
         withContext(Dispatchers.Default) {
             DiffUtil.calculateDiff(object : DiffUtil.Callback() {
 
                 override fun areItemsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
-                    return items[oldItemPosition].id == newList[newItemPosition].id
+                    return oldList[oldItemPosition].id == newList[newItemPosition].id
                 }
 
                 override fun areContentsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
-                    return items[oldItemPosition] == newList[newItemPosition]
+                    return oldList[oldItemPosition] == newList[newItemPosition]
                 }
 
-                override fun getOldListSize() = items.size
+                override fun getOldListSize() = oldList.size
 
                 override fun getNewListSize() = newList.size
             })
