@@ -7,7 +7,7 @@ import androidx.recyclerview.widget.RecyclerView
  * Basic adapter that handles most of the RecyclerView adapter logic with Generics.
  * @author https://medium.com/@mohanmanu/generic-adapter-with-kotlin-part-i-74e191d68b0f
  */
-abstract class GenericAdapter<T>(private val listItems: MutableList<T>,
+abstract class GenericAdapter<T>(private val listItems: List<T>,
                                  private val listener: (T) -> Unit) : RecyclerView.Adapter<AbstractViewHolder<T>>()
 {
     override fun getItemCount() = listItems.size
@@ -21,12 +21,6 @@ abstract class GenericAdapter<T>(private val listItems: MutableList<T>,
     }
 
     override fun getItemViewType(position: Int) = getLayoutId(position, listItems[position])
-
-    fun refreshItems(listItems: Collection<T>) {
-        this.listItems.clear()
-        this.listItems.addAll(listItems)
-        notifyDataSetChanged()
-    }
 
     /**
      * @param position for more complex layouts
