@@ -20,7 +20,12 @@ import com.example.redfruit.ui.home.viewmodel.HomeViewModel
 
 class HomeFragment : Fragment() {
 
-    private lateinit var viewModel: HomeViewModel
+    private val viewModel: HomeViewModel by lazy {
+        ViewModelProvider(
+            this,
+            SavedStateViewModelFactory(requireContext().applicationContext as Application, this)
+        ).get(HomeViewModel::class.java)
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -30,13 +35,6 @@ class HomeFragment : Fragment() {
         val binding: FragmentHomeBinding = DataBindingUtil.inflate(inflater, R.layout.fragment_home, container, false)
         // make binding lifecycle aware
         binding.lifecycleOwner = viewLifecycleOwner
-        // Create ViewModel specifically for this Fragment
-        //viewModel = ViewModelProvider(this, ViewModelProvider.NewInstanceFactory())
-        //    .get(HomeViewModel::class.java)
-        viewModel = ViewModelProvider(
-            this,
-            SavedStateViewModelFactory(requireContext().applicationContext as Application, this)
-        ).get(HomeViewModel::class.java)
         // get PostSharedViewModel instance from the MainActivity
         // val sharedViewModel = ViewModelProvider(activity!!).get(PostSharedViewModel::class.java)
 
