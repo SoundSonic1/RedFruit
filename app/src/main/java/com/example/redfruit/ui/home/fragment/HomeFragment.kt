@@ -16,7 +16,6 @@ import com.example.redfruit.R
 import com.example.redfruit.databinding.FragmentHomeBinding
 import com.example.redfruit.ui.home.adapter.HomeAdapter
 import com.example.redfruit.ui.home.viewmodel.HomeViewModel
-import com.example.redfruit.ui.shared.PostSharedViewModel
 
 
 class HomeFragment : Fragment() {
@@ -39,7 +38,7 @@ class HomeFragment : Fragment() {
             SavedStateViewModelFactory(requireContext().applicationContext as Application, this)
         ).get(HomeViewModel::class.java)
         // get PostSharedViewModel instance from the MainActivity
-        val sharedViewModel = ViewModelProvider(activity!!).get(PostSharedViewModel::class.java)
+        // val sharedViewModel = ViewModelProvider(activity!!).get(PostSharedViewModel::class.java)
 
         val adapter = HomeAdapter(mutableListOf()) { post ->
             Toast.makeText(requireContext(),"Clicked on " + post.title, Toast.LENGTH_SHORT).show()
