@@ -47,16 +47,16 @@ class HomeFragment : Fragment() {
         }
 
         val recyclerView = binding.root.findViewById<RecyclerView>(R.id.recyclerViewHome)
-        recyclerView.recycledViewPool.setMaxRecycledViews(0, 30)
+        // recyclerView.recycledViewPool.setMaxRecycledViews(0, 0)
         recyclerView.layoutManager = LinearLayoutManager(requireContext())
         recyclerView.adapter = adapter
         recyclerView.addOnScrollListener(object : RecyclerView.OnScrollListener() {
-            override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
-                super.onScrollStateChanged(recyclerView, newState)
+            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+                super.onScrolled(recyclerView, dx, dy)
                 val totalItemCount = recyclerView.layoutManager?.itemCount
                 val linearLayoutManager = recyclerView.layoutManager as LinearLayoutManager
                 if (!viewModel.loading && totalItemCount == linearLayoutManager.findLastVisibleItemPosition() + 1) {
-                    viewModel.loadMoreData(5)
+                    viewModel.loadMoreData(10)
                 }
             }
         })

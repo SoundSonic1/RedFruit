@@ -9,8 +9,8 @@ import com.example.redfruit.data.model.Post
 import com.example.redfruit.databinding.PostViewBinding
 import com.example.redfruit.ui.base.AbstractViewHolder
 import com.example.redfruit.ui.base.GenericAdapter
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
@@ -20,20 +20,26 @@ import kotlinx.coroutines.withContext
 class HomeAdapter(private val items: MutableList<Post>,
                   listener: (Post) -> Unit) : GenericAdapter<Post>(items, listener) {
 
+    private val uiScope = CoroutineScope(Dispatchers.Main)
+
     override fun getViewHolder(parent: ViewGroup, viewType: Int) = PostViewHolder(parent)
 
     override fun getLayoutId(position: Int, obj: Post) = R.layout.post_view
 
-    fun notifyChanges(newList: List<Post>) {
-       GlobalScope.launch {
-           notifyChangesDetail(newList)
-       }
+    override fun getItemId(position: Int) = items[position].id.hashCode().toLong()
 
-    }
+    fun notifyChanges(newList: List<Post>) =
+        uiScope.launch {
+           val diff = notifyChangesDetail(newList)
+           diff.dispatchUpdatesTo(this@HomeAdapter)
 
-    private suspend fun notifyChangesDetail(newList: List<Post>) {
-        withContext(Dispatchers.Main) {
-            val diff = DiffUtil.calculateDiff(object : DiffUtil.Callback() {
+           items.clear()
+           items.addAll(newList)
+        }
+
+    private suspend fun notifyChangesDetail(newList: List<Post>) =
+        withContext(Dispatchers.Default) {
+            DiffUtil.calculateDiff(object : DiffUtil.Callback() {
 
                 override fun areItemsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
                     return items[oldItemPosition].id == newList[newItemPosition].id
@@ -48,13 +54,7 @@ class HomeAdapter(private val items: MutableList<Post>,
                 override fun getNewListSize() = newList.size
             })
 
-            diff.dispatchUpdatesTo(this@HomeAdapter)
-
-            items.clear()
-            items.addAll(newList)
-
         }
-    }
 
 }
 

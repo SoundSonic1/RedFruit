@@ -13,7 +13,6 @@ import androidx.lifecycle.ViewModelProvider
 import com.example.redfruit.R
 import com.example.redfruit.ui.home.fragment.HomeFragment
 import com.example.redfruit.ui.shared.PostSharedViewModel
-import com.example.redfruit.util.findFragmentByTag
 import com.example.redfruit.util.replaceFragment
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.navigation.NavigationView
@@ -24,6 +23,8 @@ import com.google.android.material.snackbar.Snackbar
  * The app moves towards clean architecture in the form of MVVM and Repository pattern
  */
 class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
+
+    val fragment: HomeFragment by lazy { HomeFragment() }
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -55,7 +56,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         navView.setNavigationItemSelectedListener(this)
 
         // Start with Home
-        replaceFragment(R.id.mainContent, HomeFragment(), mainTag)
+        replaceFragment(R.id.mainContent, fragment)
     }
 
     override fun onBackPressed() {
@@ -87,9 +88,6 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         // Handle navigation view item clicks here.
         when (item.itemId) {
             R.id.nav_home -> {
-                val fragment = findFragmentByTag(mainTag) {
-                    HomeFragment()
-                }
                 replaceFragment(R.id.mainContent, fragment, mainTag)
             }
             R.id.nav_gallery -> {

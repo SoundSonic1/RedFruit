@@ -22,7 +22,9 @@ class HomeViewModel(private val state: SavedStateHandle) : ViewModel(), IViewMod
 
     private val _data: MutableLiveData<Collection<Post>> by lazy {
         MutableLiveData<Collection<Post>>().also {
-            loadData()
+            viewModelScope.launch {
+                it.value = get()
+            }
         }
     }
 
