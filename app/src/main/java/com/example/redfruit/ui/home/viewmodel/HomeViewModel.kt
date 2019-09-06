@@ -34,14 +34,6 @@ class HomeViewModel(private val state: SavedStateHandle) : ViewModel(), IViewMod
     val loading = _loading
 
     // api call must be in a separat thread
-    fun loadData() = viewModelScope.launch {
-        // reset limit
-        _loading = true
-        _data.value = get()
-        limit = 10
-        _loading = false
-    }
-
     fun loadMoreData(count: Int) = viewModelScope.launch {
         // set hard limit
         if (limit < 70) {
