@@ -21,12 +21,11 @@ object BindingAdapters {
     fun setRecyclerViewProperties(recyclerViewHome: RecyclerView, items: Collection<Post>?) {
         if (items != null && recyclerViewHome.adapter is HomeAdapter) {
             (recyclerViewHome.adapter as HomeAdapter).notifyChanges(items.toList())
-            // (recyclerViewHome.adapter as HomeAdapter).refreshItems(items)
         }
     }
 
     @JvmStatic
-    @BindingAdapter("imageUrl")
+    @BindingAdapter("imageSource")
     // url can be null
     fun loadImage(imageView: ImageView, image: ImageSource?) {
         if (image != null) {

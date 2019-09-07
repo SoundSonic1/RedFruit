@@ -42,7 +42,7 @@
                        android:id="@+id/postImageView"
                        android:adjustViewBounds="true"
                        android:visibility="@{item.Preview.enabled ? View.VISIBLE : View.GONE}"
-                       app:imageUrl="@{item.Preview.getFirstImage().source}"
+                       app:imageSource="@{item.Preview.getFirstImage().source}"
             />
         </LinearLayout>
     </androidx.cardview.widget.CardView>
