@@ -17,7 +17,7 @@ import kotlinx.coroutines.withContext
 /**
  * Adapter for the RecyclerView of the HomeFragment
  */
-class HomeAdapter(private val items: MutableList<Post>,
+class HomeAdapter(items: MutableList<Post>,
                   listener: (Post) -> Unit) : GenericAdapter<Post>(items, listener) {
 
     private val uiScope = CoroutineScope(Dispatchers.Main)
@@ -26,13 +26,13 @@ class HomeAdapter(private val items: MutableList<Post>,
 
     override fun getLayoutId(position: Int, obj: Post) = R.layout.post_view
 
-    override fun getItemId(position: Int) = items[position].id.hashCode().toLong()
+    override fun getItemId(position: Int) = listItems[position].id.hashCode().toLong()
 
     fun notifyChanges(newList: List<Post>) =
         uiScope.launch {
-            val diff = calculateDiff(items, newList)
-            items.clear()
-            items.addAll(newList)
+            val diff = calculateDiff(listItems, newList)
+            listItems.clear()
+            listItems.addAll(newList)
             diff.dispatchUpdatesTo(this@HomeAdapter)
         }
 
@@ -62,8 +62,10 @@ class HomeAdapter(private val items: MutableList<Post>,
  */
 class PostViewHolder(
     parent: ViewGroup,
-    private val binding: PostViewBinding = DataBindingUtil.inflate(LayoutInflater.from(parent.context),
-        R.layout.post_view, parent, false)) : AbstractViewHolder<Post>(binding.root) {
+    private val binding: PostViewBinding =
+        DataBindingUtil.inflate(LayoutInflater.from(parent.context), R.layout.post_view,
+            parent, false)
+) : AbstractViewHolder<Post>(binding.root) {
 
     override fun bind(item: Post, listener: (Post) -> Unit) = with(itemView) {
         // set the text in TextView, fetch image for ImageView and add a listener
