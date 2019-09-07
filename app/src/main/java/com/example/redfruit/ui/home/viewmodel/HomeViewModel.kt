@@ -11,7 +11,9 @@ import kotlinx.coroutines.withContext
 /**
  * Control logic of the HomeFragment
  */
-class HomeViewModel(private val state: SavedStateHandle) : ViewModel(), IViewModel<Collection<Post>> {
+class HomeViewModel(
+    private val state: SavedStateHandle
+) : ViewModel(), IViewModel<Collection<Post>> {
 
     private var limit = 10
     // TODO: save subreddit and sortBy preference to savedstate

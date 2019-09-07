@@ -8,7 +8,7 @@ import androidx.recyclerview.widget.RecyclerView
  * @author https://medium.com/@mohanmanu/generic-adapter-with-kotlin-part-i-74e191d68b0f
  */
 abstract class GenericAdapter<T>(
-    val listItems: MutableList<T>,
+    protected val listItems: MutableList<T>,
     private val listener: (T) -> Unit) : RecyclerView.Adapter<AbstractViewHolder<T>>() {
 
     override fun getItemCount() = listItems.size
