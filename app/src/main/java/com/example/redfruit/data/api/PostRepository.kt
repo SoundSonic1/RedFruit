@@ -13,21 +13,31 @@ import java.net.URL
  * Implements the Repository pattern
  * For now it is a Singleton. Will change once we cache data
  */
-object PostRepository : IRepository<Collection<Post>> {
+class PostRepository : IRepository<List<Post>> {
 
-    override fun getData(url: String): Collection<Post> {
-        val response = URL(url).readText()
+    private val _data = mutableListOf<Post>()
+    private var after = "null"
+
+    override fun getData(url: String): List<Post> {
+        var redditUrl = url
+        if (after != "null") {
+            redditUrl = "$redditUrl&after=$after"
+        }
+        val response = URL(redditUrl).readText()
         val jsonObjResponse = JsonParser().parse(response).asJsonObject
+        val jsonData = jsonObjResponse.getAsJsonObject("data")
+        // bookmark index of last post
+        after = jsonData.get("after").asString
         // JSONArray of children aka posts
-        val jsonChildren = jsonObjResponse.getAsJsonObject("data").getAsJsonArray("children")
+        val jsonChildren = jsonData.getAsJsonArray("children")
         val gson = GsonBuilder()
             .registerTypeAdapter(Post::class.java, PostDeserializer())
             .setPrettyPrinting()
             .create()
 
-        return gson.fromJson(
-            jsonChildren,
-            object: TypeToken<Collection<Post>>() {}.type)
+        _data.addAll(gson.fromJson(jsonChildren, object: TypeToken<List<Post>>() {}.type))
+
+        return _data.toList()
     }
 
     private class PostDeserializer : JsonDeserializer<Post> {
@@ -93,6 +103,8 @@ object PostRepository : IRepository<Collection<Post>> {
         }
     }
 
-    // see: https://www.reddit.com/r/redditdev/comments/9ncg2r/changes_in_api_pictures/
-    private fun removeEncoding(url: String) = url.replace("amp;s", "s")
+    companion object {
+        // see: https://www.reddit.com/r/redditdev/comments/9ncg2r/changes_in_api_pictures/
+        private fun removeEncoding(url: String) = url.replace("amp;s", "s")
+    }
 }
