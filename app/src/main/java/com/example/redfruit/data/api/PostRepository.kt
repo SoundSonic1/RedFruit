@@ -5,6 +5,7 @@ import com.example.redfruit.data.model.Images.ImageSource
 import com.example.redfruit.data.model.Images.RedditImage
 import com.example.redfruit.data.model.Post
 import com.example.redfruit.data.model.Preview
+import com.example.redfruit.data.model.SubredditListing
 import com.google.gson.*
 import com.google.gson.reflect.TypeToken
 import java.lang.reflect.Type
@@ -16,19 +17,24 @@ import java.net.URL
  */
 class PostRepository : IRepository<List<Post>> {
 
-    private val _data = mutableListOf<Post>()
-    private var after = "null"
+    private val subreddit = SubredditListing(
+        name = "Unknown",
+        before = "",
+        after = "",
+        children = mutableListOf()
+    )
 
     override fun getData(url: String): List<Post> {
         var redditUrl = url
-        if (after != "null") {
-            redditUrl = "$redditUrl&after=$after"
+        if (subreddit.after.isNotBlank()) {
+            redditUrl = "$redditUrl&after=${subreddit.after}"
         }
         val response = URL(redditUrl).readText()
         val jsonObjResponse = JsonParser().parse(response).asJsonObject
         val jsonData = jsonObjResponse.getAsJsonObject("data")
-        // bookmark index of last post
-        after = jsonData.get("after").asString
+        // TODO: prevent crash if after is json null
+        // bookmark ending of the listing
+        subreddit.after = jsonData.get("after").asString
         Log.d("repo", redditUrl)
         // JSONArray of children aka posts
         val jsonChildren = jsonData.getAsJsonArray("children")
@@ -37,9 +43,9 @@ class PostRepository : IRepository<List<Post>> {
             .setPrettyPrinting()
             .create()
 
-        _data.addAll(gson.fromJson(jsonChildren, object: TypeToken<List<Post>>() {}.type))
+        subreddit.children.addAll(gson.fromJson(jsonChildren, object: TypeToken<List<Post>>() {}.type))
 
-        return _data.toList()
+        return subreddit.children.toList()
     }
 
     private class PostDeserializer : JsonDeserializer<Post> {
