@@ -18,9 +18,9 @@ object BindingAdapters {
     @BindingAdapter("items")
     // items might be null because the ViewModel which provides them is
     // not yet initialized
-    fun setRecyclerViewProperties(recyclerViewHome: RecyclerView, items: Collection<Post>?) {
+    fun setRecyclerViewProperties(recyclerViewHome: RecyclerView, items: List<Post>?) {
         if (items != null && recyclerViewHome.adapter is HomeAdapter) {
-            (recyclerViewHome.adapter as HomeAdapter).notifyChanges(items.toList())
+            (recyclerViewHome.adapter as HomeAdapter).notifyChanges(items)
         }
     }
 

@@ -1,6 +1,7 @@
 package com.example.redfruit.ui.home.viewmodel
 
 import androidx.lifecycle.*
+import com.example.redfruit.data.api.IRepository
 import com.example.redfruit.data.api.PostRepository
 import com.example.redfruit.data.model.Post
 import com.example.redfruit.ui.base.IViewModel
@@ -13,36 +14,32 @@ import kotlinx.coroutines.withContext
  */
 class HomeViewModel(
     private val state: SavedStateHandle
-) : ViewModel(), IViewModel<Collection<Post>> {
+) : ViewModel(), IViewModel<List<Post>> {
 
-    private var limit = 10
+    // TODO: inject repo into constructor
+    private val repo: IRepository<List<Post>> = PostRepository()
     // TODO: save subreddit and sortBy preference to savedstate
     private var subreddit = "grandorder"
     private var sortBy = "new"
 
-    private var _loading = false
-
-    private val _data: MutableLiveData<Collection<Post>> by lazy {
-        MutableLiveData<Collection<Post>>().also {
+    private val _data: MutableLiveData<List<Post>> by lazy {
+        MutableLiveData<List<Post>>().also {
             viewModelScope.launch {
-                it.value = get()
+                it.value = get(10)
             }
         }
     }
 
     // Encapsulate access to mutable LiveData using backing property
     // with LiveData
-    override val data: LiveData<Collection<Post>> get() = _data
-    val loading = _loading
+    override val data: LiveData<List<Post>> get() = _data
+    var loading = false
 
     // api call must be in a separat thread
-    fun loadMoreData(count: Int) = viewModelScope.launch {
-        // set hard limit
-        if (limit < 70) {
-            _loading = true
-            limit += count
-            _data.value = get()
-            _loading = false
+    fun loadMoreData(count: Int) {
+        viewModelScope.launch {
+            _data.value = get(count)
+            loading = false
         }
     }
 
@@ -53,10 +50,10 @@ class HomeViewModel(
     fun getSavedData() = state[KEY_SUBREDDIT] ?: ""
 
     // call to the api
-    private suspend fun get() =
+    private suspend fun get(limit: Int) =
         withContext(Dispatchers.IO) {
             /* perform network IO here */
-            PostRepository.getData(url + subreddit + "/" + sortBy + "/.json?limit=" + limit)
+            repo.getData("$url$subreddit/$sortBy.json?limit=$limit")
         }
 
     companion object {

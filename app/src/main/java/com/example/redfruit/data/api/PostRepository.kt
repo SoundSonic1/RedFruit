@@ -1,5 +1,6 @@
 package com.example.redfruit.data.api
 
+import android.util.Log
 import com.example.redfruit.data.model.Images.ImageSource
 import com.example.redfruit.data.model.Images.RedditImage
 import com.example.redfruit.data.model.Post
@@ -28,6 +29,7 @@ class PostRepository : IRepository<List<Post>> {
         val jsonData = jsonObjResponse.getAsJsonObject("data")
         // bookmark index of last post
         after = jsonData.get("after").asString
+        Log.d("repo", redditUrl)
         // JSONArray of children aka posts
         val jsonChildren = jsonData.getAsJsonArray("children")
         val gson = GsonBuilder()

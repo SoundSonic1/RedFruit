@@ -20,7 +20,7 @@ import com.example.redfruit.ui.home.viewmodel.HomeViewModel
 
 class HomeFragment : Fragment() {
 
-    private val viewModel: HomeViewModel by lazy {
+    private val homeViewModel: HomeViewModel by lazy {
         ViewModelProvider(
             this,
             SavedStateViewModelFactory(requireContext().applicationContext as Application, this)
@@ -32,45 +32,53 @@ class HomeFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
-        val binding: FragmentHomeBinding = DataBindingUtil.inflate(inflater, R.layout.fragment_home, container, false)
-        // make binding lifecycle aware
-        binding.lifecycleOwner = viewLifecycleOwner
+        val binding: FragmentHomeBinding =
+            DataBindingUtil.inflate(inflater, R.layout.fragment_home, container, false)
+
+        binding.apply {
+            // make binding lifecycle aware
+            lifecycleOwner = viewLifecycleOwner
+            viewModel = homeViewModel
+        }
+
         // get PostSharedViewModel instance from the MainActivity
         // val sharedViewModel = ViewModelProvider(activity!!).get(PostSharedViewModel::class.java)
 
-        val adapter = HomeAdapter(mutableListOf()) { post ->
-            Toast.makeText(requireContext(),"Clicked on " + post.title, Toast.LENGTH_SHORT).show()
+        val homeAdapter = HomeAdapter(mutableListOf()) { post ->
+            Toast.makeText(requireContext(),
+                "Clicked on ${post.title}", Toast.LENGTH_SHORT).show()
             // viewModel.update(sharedViewModel.data.value!!)
         }
 
-        val recyclerView = binding.root.findViewById<RecyclerView>(R.id.recyclerViewHome)
-        recyclerView.layoutManager = LinearLayoutManager(requireContext())
-        recyclerView.adapter = adapter
+        val recyclerView = binding.root.findViewById<RecyclerView>(R.id.recyclerViewHome).apply {
+            layoutManager = LinearLayoutManager(requireContext())
+            adapter = homeAdapter
+        }
         recyclerView.addOnScrollListener(object : RecyclerView.OnScrollListener() {
             override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
                 super.onScrolled(recyclerView, dx, dy)
                 val totalItemCount = recyclerView.layoutManager?.itemCount
                 val linearLayoutManager = recyclerView.layoutManager as LinearLayoutManager
-                if (!viewModel.loading && totalItemCount == linearLayoutManager.findLastVisibleItemPosition() + 1) {
-                    viewModel.loadMoreData(10)
+                if (!homeViewModel.loading &&
+                    totalItemCount == linearLayoutManager.findLastVisibleItemPosition() + 1) {
+                    homeViewModel.loading = true
+                    homeViewModel.loadMoreData(10)
                 }
             }
         })
-
-        binding.viewModel = viewModel
 
         return binding.root
     }
 
     override fun onResume() {
         super.onResume()
-        if (viewModel.getSavedData().isNotBlank()) {
-            Toast.makeText(requireContext(), viewModel.getSavedData(), Toast.LENGTH_SHORT).show()
+        if (homeViewModel.getSavedData().isNotBlank()) {
+            Toast.makeText(requireContext(), homeViewModel.getSavedData(), Toast.LENGTH_SHORT).show()
         }
     }
 
     override fun onPause() {
         super.onPause()
-        viewModel.saveData()
+        homeViewModel.saveData()
     }
 }
