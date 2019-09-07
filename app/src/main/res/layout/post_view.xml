@@ -13,11 +13,11 @@
             app:cardElevation="4dp"
     >
         <LinearLayout
-                      android:orientation="vertical"
-                      android:layout_width="match_parent"
-                      android:layout_height="wrap_content"
-                      android:padding="6dp"
-                      android:background="?android:attr/selectableItemBackground">
+                android:orientation="vertical"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="6dp"
+                android:background="?android:attr/selectableItemBackground">
 
             <TextView
                     android:layout_width="match_parent"
@@ -37,12 +37,14 @@
                     android:padding="10dp"
                     android:text="@{item.title}"
             />
-            <ImageView android:layout_width="match_parent"
-                       android:layout_height="wrap_content"
-                       android:id="@+id/postImageView"
-                       android:adjustViewBounds="true"
-                       android:visibility="@{item.Preview.enabled ? View.VISIBLE : View.GONE}"
-                       app:imageSource="@{item.Preview.getFirstImage().source}"
+            <ImageView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/postImageView"
+                    android:adjustViewBounds="true"
+                    android:scaleType="fitCenter"
+                    android:visibility="@{item.Preview.enabled ? View.VISIBLE : View.GONE}"
+                    app:imageSource="@{item.Preview.getFirstImage().source}"
             />
         </LinearLayout>
     </androidx.cardview.widget.CardView>
