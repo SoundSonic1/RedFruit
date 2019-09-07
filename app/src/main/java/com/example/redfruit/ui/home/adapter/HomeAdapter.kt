@@ -34,7 +34,6 @@ class HomeAdapter(private val items: MutableList<Post>,
             items.clear()
             items.addAll(newList)
             diff.dispatchUpdatesTo(this@HomeAdapter)
-
         }
 
     private suspend fun calculateDiff(oldList: List<Post>, newList: List<Post>) =
@@ -68,7 +67,6 @@ class PostViewHolder(
 
     override fun bind(item: Post, listener: (Post) -> Unit) = with(itemView) {
         // set the text in TextView, fetch image for ImageView and add a listener
-        // TODO: use data binding for ImageView
         binding.item = item
         itemView.setOnClickListener {
             listener(item)
