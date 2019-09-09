@@ -6,15 +6,19 @@ import android.view.MenuItem
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
+import androidx.appcompat.widget.SearchView
 import androidx.appcompat.widget.Toolbar
 import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
+import androidx.lifecycle.ViewModelProvider
 import com.example.redfruit.R
 import com.example.redfruit.ui.home.fragment.HomeFragment
+import com.example.redfruit.ui.shared.SubredditViewModel
 import com.example.redfruit.util.replaceFragment
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.navigation.NavigationView
 import com.google.android.material.snackbar.Snackbar
+import kotlinx.android.synthetic.main.activity_main.*
 
 /**
  * Entry point of our app. We use the single Activity, many fragments philosophy.
@@ -22,7 +26,10 @@ import com.google.android.material.snackbar.Snackbar
  */
 class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
 
-    private val fragment: HomeFragment by lazy { HomeFragment() }
+    private val homeFragment: HomeFragment by lazy { HomeFragment() }
+    private val subredditViewModel: SubredditViewModel by lazy {
+        ViewModelProvider(this).get(SubredditViewModel::class.java)
+    }
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -32,34 +39,28 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         setSupportActionBar(toolbar)
         AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
 
-        // val sharedViewModel = ViewModelProvider(this).get(PostSharedViewModel::class.java)
-        // sharedViewModel.setData(Post("test", ""))
-
         val fab: FloatingActionButton = findViewById(R.id.fab)
         fab.setOnClickListener { view ->
             Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
                 .setAction("Action", null).show()
         }
-        val drawerLayout: DrawerLayout = findViewById(R.id.drawer_layout)
-        val navView: NavigationView = findViewById(R.id.nav_view)
         val toggle = ActionBarDrawerToggle(
-            this, drawerLayout, toolbar,
+            this, drawer_layout, toolbar,
             R.string.navigation_drawer_open,
             R.string.navigation_drawer_close
         )
-        drawerLayout.addDrawerListener(toggle)
+        drawer_layout.addDrawerListener(toggle)
         toggle.syncState()
 
-        navView.setNavigationItemSelectedListener(this)
+        nav_view.setNavigationItemSelectedListener(this)
 
         // Start with Home
-        replaceFragment(R.id.mainContent, fragment)
+        replaceFragment(R.id.mainContent, homeFragment)
     }
 
     override fun onBackPressed() {
-        val drawerLayout: DrawerLayout = findViewById(R.id.drawer_layout)
-        if (drawerLayout.isDrawerOpen(GravityCompat.START)) {
-            drawerLayout.closeDrawer(GravityCompat.START)
+        if (drawer_layout.isDrawerOpen(GravityCompat.START)) {
+            drawer_layout.closeDrawer(GravityCompat.START)
         } else {
             super.onBackPressed()
         }
@@ -68,6 +69,28 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
         // Inflate the menu; this adds items to the action bar if it is present.
         menuInflater.inflate(R.menu.main, menu)
+        val searchItem = menu.findItem(R.id.action_search_subreddit)
+        val searchView = searchItem.actionView as SearchView
+
+        searchView.setOnQueryTextListener(object :  SearchView.OnQueryTextListener {
+
+            override fun onQueryTextChange(newText: String): Boolean {
+                return false
+            }
+
+            override fun onQueryTextSubmit(query: String): Boolean {
+                if (query.isNotBlank()) {
+                    // set new subreddit
+                    subredditViewModel.setSub(query)
+                    // collapse menu item
+                    searchItem.collapseActionView()
+                    return true
+                }
+                return false
+            }
+
+        })
+
         return true
     }
 
@@ -85,7 +108,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         // Handle navigation view item clicks here.
         when (item.itemId) {
             R.id.nav_home -> {
-                replaceFragment(R.id.mainContent, fragment, mainTag)
+                replaceFragment(R.id.mainContent, homeFragment, mainTag)
             }
             R.id.nav_gallery -> {
 

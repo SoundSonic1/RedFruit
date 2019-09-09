@@ -5,7 +5,7 @@ import com.example.redfruit.data.model.Images.ImageSource
 import com.example.redfruit.data.model.Images.RedditImage
 import com.example.redfruit.data.model.Post
 import com.example.redfruit.data.model.Preview
-import com.example.redfruit.data.model.SubredditListing
+import com.example.redfruit.data.model.SubRedditListing
 import com.google.gson.*
 import com.google.gson.reflect.TypeToken
 import java.lang.reflect.Type
@@ -13,46 +13,52 @@ import java.net.URL
 
 /**
  * Implements the Repository pattern
- * For now it is a Singleton. Will change once we cache data
  */
-class PostRepository : IRepository<List<Post>> {
+class SubRedditRepository(private val subRedditMap: MutableMap<String, SubRedditListing>
+                          = mutableMapOf()
+) : IRepository<List<Post>> {
 
-    private val subreddit = SubredditListing(
-        name = "Unknown",
-        before = "",
-        after = "",
-        children = mutableListOf()
-    )
-
-    override fun getData(url: String): List<Post> {
-        var redditUrl = url
-        if (subreddit.after.isNotBlank()) {
-            redditUrl = "$redditUrl&after=${subreddit.after}"
+    override fun getData(sub: String, sortBy: String, limit: Int): List<Post> {
+        // TODO: check if sub is valid
+        val subReddit = subRedditMap.getOrPut(sub) { SubRedditListing(sub) }
+        var redditUrl = "$baseUrl${subReddit.name}/${sortBy}.json?limit=$limit"
+        if (subReddit.after.isNotBlank()) {
+            redditUrl = "$redditUrl&after=${subReddit.after}"
         }
         val response = URL(redditUrl).readText()
         val jsonObjResponse = JsonParser().parse(response).asJsonObject
         val jsonData = jsonObjResponse.getAsJsonObject("data")
-        // TODO: prevent crash if after is json null
-        // bookmark ending of the listing
-        subreddit.after = jsonData.get("after").asString
         Log.d("repo", redditUrl)
         // JSONArray of children aka posts
         val jsonChildren = jsonData.getAsJsonArray("children")
+        if (jsonChildren.size() < 1) {
+            // probably invalid subreddit name
+            return listOf()
+        }
+        // TODO: prevent crash if after is json null
+        // bookmark ending of the listing
+        subReddit.after = jsonData.get("after").asString
+
         val gson = GsonBuilder()
             .registerTypeAdapter(Post::class.java, PostDeserializer())
             .setPrettyPrinting()
             .create()
 
-        subreddit.children.addAll(gson.fromJson(jsonChildren, object: TypeToken<List<Post>>() {}.type))
+        subReddit.children.addAll(
+            gson.fromJson(jsonChildren, object: TypeToken<List<Post>>() {}.type))
 
-        return subreddit.children.toList()
+        return subReddit.children.toList()
     }
+
 
     private class PostDeserializer : JsonDeserializer<Post> {
         /**
          * Used to deserialize a json array
          */
-        override fun deserialize(json: JsonElement?, typeOfT: Type?, context: JsonDeserializationContext?): Post {
+        override fun deserialize(json: JsonElement?,
+                                 typeOfT: Type?,
+                                 context: JsonDeserializationContext?
+        ): Post {
             // Throw NPE here if there is no JsonObject
             val jsonData = json!!.asJsonObject.getAsJsonObject("data")
             val jsonPreview = jsonData.getAsJsonObject("preview")
@@ -112,6 +118,7 @@ class PostRepository : IRepository<List<Post>> {
     }
 
     companion object {
+        private const val baseUrl = "https://www.reddit.com/r/"
         // see: https://www.reddit.com/r/redditdev/comments/9ncg2r/changes_in_api_pictures/
         private fun removeEncoding(url: String) = url.replace("amp;s", "s")
     }

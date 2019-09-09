@@ -1,13 +1,14 @@
 package com.example.redfruit.ui.home.viewmodel
 
 import androidx.lifecycle.*
-import com.example.redfruit.data.api.IRepository
-import com.example.redfruit.data.api.PostRepository
+import com.example.redfruit.data.api.SubRedditRepository
+import com.example.redfruit.data.model.Enum.SortBy
 import com.example.redfruit.data.model.Post
 import com.example.redfruit.ui.base.IViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import java.util.*
 
 /**
  * Control logic of the HomeFragment
@@ -16,16 +17,18 @@ class HomeViewModel(
     private val state: SavedStateHandle
 ) : ViewModel(), IViewModel<List<Post>> {
 
+    // TODO: save _subReddit and sortBy preference to savedstate
+    private var _subReddit = defaultSub
+    val subReddit get() = _subReddit
+    private var sortBy = SortBy.new
+
     // TODO: inject repo into constructor
-    private val repo: IRepository<List<Post>> = PostRepository()
-    // TODO: save subreddit and sortBy preference to savedstate
-    private var subreddit = "grandorder"
-    private var sortBy = "new"
+    private val repo = SubRedditRepository()
 
     private val _data: MutableLiveData<List<Post>> by lazy {
         MutableLiveData<List<Post>>().also {
             viewModelScope.launch {
-                it.value = get(10)
+                it.value = get(limit)
             }
         }
     }
@@ -43,21 +46,29 @@ class HomeViewModel(
         }
     }
 
-    fun saveData() {
-       state.set(KEY_SUBREDDIT, subreddit)
+    fun changeSub(sub: String) {
+        _subReddit = sub.toLowerCase(Locale.ENGLISH)
+        loadMoreData(limit)
     }
 
-    fun getSavedData() = state[KEY_SUBREDDIT] ?: ""
+    fun saveData() = state.set(KEY_SUBREDDIT, _subReddit)
+
+
+    fun getSavedData(): String {
+        _subReddit = state[KEY_SUBREDDIT] ?: defaultSub
+        return _subReddit
+    }
 
     // call to the api
-    private suspend fun get(limit: Int) =
+    private suspend fun get(count: Int) =
         withContext(Dispatchers.IO) {
             /* perform network IO here */
-            repo.getData("$url$subreddit/$sortBy.json?limit=$limit")
+            repo.getData(_subReddit, sortBy.toString(), count)
         }
 
     companion object {
-        private const val url = "https://www.reddit.com/r/"
+        private const val defaultSub = "grandorder"
         private const val KEY_SUBREDDIT = "KEY_SUBREDDIT"
+        private const val limit = 10
     }
 }
