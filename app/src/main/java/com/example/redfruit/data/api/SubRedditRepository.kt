@@ -25,19 +25,33 @@ class SubRedditRepository(private val subRedditMap: MutableMap<String, SubReddit
         if (subReddit.after.isNotBlank()) {
             redditUrl = "$redditUrl&after=${subReddit.after}"
         }
-        val response = URL(redditUrl).readText()
+        val response = try {
+            URL(redditUrl).readText()
+        } catch (e: Exception) {
+            // invalid url
+            return listOf()
+        }
         val jsonObjResponse = JsonParser().parse(response).asJsonObject
+        if (jsonObjResponse.get("reason") != null) {
+            // either private or banned sub
+            return listOf()
+        }
         val jsonData = jsonObjResponse.getAsJsonObject("data")
         Log.d("repo", redditUrl)
         // JSONArray of children aka posts
         val jsonChildren = jsonData.getAsJsonArray("children")
         if (jsonChildren.size() < 1) {
-            // probably invalid subreddit name
+            // probably invalid subreddit
             return listOf()
         }
-        // TODO: prevent crash if after is json null
-        // bookmark ending of the listing
-        subReddit.after = jsonData.get("after").asString
+        // bookmark beginning and ending of the listing
+        if (!jsonData.get("before").isJsonNull) {
+            subReddit.before = jsonData.get("before").asString
+        }
+
+        if (!jsonData.get("after").isJsonNull) {
+            subReddit.after = jsonData.get("after").asString
+        }
 
         val gson = GsonBuilder()
             .registerTypeAdapter(Post::class.java, PostDeserializer())

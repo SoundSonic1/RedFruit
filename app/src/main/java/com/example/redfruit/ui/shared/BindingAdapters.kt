@@ -3,8 +3,7 @@ package com.example.redfruit.ui.shared
 import android.widget.ImageView
 import androidx.databinding.BindingAdapter
 import androidx.recyclerview.widget.RecyclerView
-import com.bumptech.glide.Glide
-import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
+import coil.api.load
 import com.example.redfruit.data.model.Images.ImageSource
 import com.example.redfruit.data.model.Post
 import com.example.redfruit.ui.home.adapter.HomeAdapter
@@ -29,15 +28,12 @@ object BindingAdapters {
     // url can be null
     fun loadImage(imageView: ImageView, image: ImageSource?) {
         if (image != null) {
-            Glide.with(imageView.context)
-                .load(image.url)
-                .placeholder(SizableColorDrawable(0xAAAAAA, image.width, image.height))
-                .fitCenter()
-                .transition(DrawableTransitionOptions.withCrossFade())
-                .into(imageView)
+            imageView.load(image.url) {
+                crossfade(true)
+                placeholder(SizableColorDrawable(0xAAAAAA, image.width, image.height))
+            }
         } else {
             // make sure empty ImageView stays empty
-            Glide.with(imageView.context).clear(imageView)
             imageView.setImageDrawable(null)
         }
     }
