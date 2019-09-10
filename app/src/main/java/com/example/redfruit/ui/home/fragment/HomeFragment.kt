@@ -1,6 +1,5 @@
 package com.example.redfruit.ui.home.fragment
 
-import android.app.Application
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -10,13 +9,14 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
-import androidx.lifecycle.SavedStateViewModelFactory
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.redfruit.R
+import com.example.redfruit.data.api.SubRedditRepository
 import com.example.redfruit.databinding.FragmentHomeBinding
 import com.example.redfruit.ui.home.adapter.HomeAdapter
+import com.example.redfruit.ui.home.viewmodel.HomeVMFactory
 import com.example.redfruit.ui.home.viewmodel.HomeViewModel
 import com.example.redfruit.ui.shared.SubredditViewModel
 
@@ -25,10 +25,14 @@ import com.example.redfruit.ui.shared.SubredditViewModel
  */
 class HomeFragment : Fragment() {
 
-    private val homeViewModel: HomeViewModel by lazy {
+    private val repo by lazy {
+        SubRedditRepository()
+    }
+
+    private val homeViewModel by lazy {
         ViewModelProvider(
             this,
-            SavedStateViewModelFactory(requireContext().applicationContext as Application, this)
+            HomeVMFactory("grandorder", repo, this)
         ).get(HomeViewModel::class.java)
     }
 
@@ -45,6 +49,7 @@ class HomeFragment : Fragment() {
             lifecycleOwner = viewLifecycleOwner
             viewModel = homeViewModel
         }
+        changeAppTitle(homeViewModel.subReddit)
 
         // get SubredditViewModel instance from the MainActivity
         val sharedViewModel = ViewModelProvider(activity!!).get(SubredditViewModel::class.java)
@@ -79,14 +84,6 @@ class HomeFragment : Fragment() {
         })
 
         return binding.root
-    }
-
-    override fun onResume() {
-        super.onResume()
-        if (homeViewModel.getSavedData().isNotBlank()) {
-            Toast.makeText(requireContext(), homeViewModel.getSavedData(), Toast.LENGTH_SHORT).show()
-        }
-        changeAppTitle(homeViewModel.subReddit)
     }
 
     override fun onPause() {

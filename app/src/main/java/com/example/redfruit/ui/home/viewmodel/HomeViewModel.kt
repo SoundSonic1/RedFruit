@@ -1,7 +1,7 @@
 package com.example.redfruit.ui.home.viewmodel
 
 import androidx.lifecycle.*
-import com.example.redfruit.data.api.SubRedditRepository
+import com.example.redfruit.data.api.IRepository
 import com.example.redfruit.data.model.Enum.SortBy
 import com.example.redfruit.data.model.Post
 import com.example.redfruit.ui.base.IViewModel
@@ -12,18 +12,19 @@ import java.util.*
 
 /**
  * Control logic of the HomeFragment
+ * @property _subReddit to be shown in the Fragment
+ * @property repo handles the api calls
+ * @property state used to get saved configurations
  */
 class HomeViewModel(
+    private var _subReddit: String,
+    private val repo: IRepository<List<Post>>,
     private val state: SavedStateHandle
 ) : ViewModel(), IViewModel<List<Post>> {
 
     // TODO: save _subReddit and sortBy preference to savedstate
-    private var _subReddit = defaultSub
     val subReddit get() = _subReddit
     private var sortBy = SortBy.new
-
-    // TODO: inject repo into constructor
-    private val repo = SubRedditRepository()
 
     private val _data: MutableLiveData<List<Post>> by lazy {
         MutableLiveData<List<Post>>().also {
@@ -54,9 +55,8 @@ class HomeViewModel(
     fun saveData() = state.set(KEY_SUBREDDIT, _subReddit)
 
 
-    fun getSavedData(): String {
-        _subReddit = state[KEY_SUBREDDIT] ?: defaultSub
-        return _subReddit
+    fun getSavedData() {
+        _subReddit = state[KEY_SUBREDDIT] ?: _subReddit
     }
 
     // call to the api
@@ -67,7 +67,6 @@ class HomeViewModel(
         }
 
     companion object {
-        private const val defaultSub = "grandorder"
         private const val KEY_SUBREDDIT = "KEY_SUBREDDIT"
         private const val limit = 10
     }
