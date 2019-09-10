@@ -25,7 +25,7 @@ object BindingAdapters {
 
     @JvmStatic
     @BindingAdapter("imageSource")
-    // url can be null
+    // ImageSource can be null
     fun loadImage(imageView: ImageView, image: ImageSource?) {
         if (image != null) {
             imageView.load(image.url) {

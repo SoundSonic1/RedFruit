@@ -6,10 +6,10 @@ import com.example.redfruit.data.model.Images.RedditImage
 import com.example.redfruit.data.model.Post
 import com.example.redfruit.data.model.Preview
 import com.example.redfruit.data.model.SubRedditListing
+import com.example.redfruit.util.getResponse
 import com.google.gson.*
 import com.google.gson.reflect.TypeToken
 import java.lang.reflect.Type
-import java.net.URL
 
 /**
  * Implements the Repository pattern
@@ -25,19 +25,19 @@ class SubRedditRepository(private val subRedditMap: MutableMap<String, SubReddit
         if (subReddit.after.isNotBlank()) {
             redditUrl = "$redditUrl&after=${subReddit.after}"
         }
-        val response = try {
-            URL(redditUrl).readText()
-        } catch (e: Exception) {
-            // invalid url
+        // For debug purposes
+        Log.d("repo", redditUrl)
+        val response = getResponse(redditUrl)
+        if (response.isBlank()) {
             return listOf()
         }
+
         val jsonObjResponse = JsonParser().parse(response).asJsonObject
-        if (jsonObjResponse.get("reason") != null) {
+        if (jsonObjResponse.has("reason")) {
             // either private or banned sub
             return listOf()
         }
         val jsonData = jsonObjResponse.getAsJsonObject("data")
-        Log.d("repo", redditUrl)
         // JSONArray of children aka posts
         val jsonChildren = jsonData.getAsJsonArray("children")
         if (jsonChildren.size() < 1) {
@@ -55,7 +55,6 @@ class SubRedditRepository(private val subRedditMap: MutableMap<String, SubReddit
 
         val gson = GsonBuilder()
             .registerTypeAdapter(Post::class.java, PostDeserializer())
-            .setPrettyPrinting()
             .create()
 
         subReddit.children.addAll(
@@ -73,7 +72,7 @@ class SubRedditRepository(private val subRedditMap: MutableMap<String, SubReddit
                                  typeOfT: Type?,
                                  context: JsonDeserializationContext?
         ): Post {
-            // Throw NPE here if there is no JsonObject
+            // Throw NPE here if there is no JsonObject data
             val jsonData = json!!.asJsonObject.getAsJsonObject("data")
             val jsonPreview = jsonData.getAsJsonObject("preview")
             val enabled = jsonPreview?.get("enabled")?.asBoolean ?: false
@@ -83,7 +82,6 @@ class SubRedditRepository(private val subRedditMap: MutableMap<String, SubReddit
             if (enabled) {
                 val gson = GsonBuilder()
                     .registerTypeAdapter(ImageSource::class.java, ImageSourceDeserializer())
-                    .setPrettyPrinting()
                     .create()
                 images = jsonArrayImages?.map() { item ->
                     RedditImage(
