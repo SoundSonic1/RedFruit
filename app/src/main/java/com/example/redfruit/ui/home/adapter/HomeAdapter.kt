@@ -6,7 +6,7 @@ import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.DiffUtil
 import com.example.redfruit.R
 import com.example.redfruit.data.model.Post
-import com.example.redfruit.databinding.PostViewBinding
+import com.example.redfruit.databinding.PostItemBinding
 import com.example.redfruit.ui.base.AbstractViewHolder
 import com.example.redfruit.ui.base.GenericAdapter
 import kotlinx.coroutines.CoroutineScope
@@ -24,7 +24,7 @@ class HomeAdapter(items: MutableList<Post>,
 
     override fun getViewHolder(parent: ViewGroup, viewType: Int) = PostViewHolder(parent)
 
-    override fun getLayoutId(position: Int, obj: Post) = R.layout.post_view
+    override fun getLayoutId(position: Int, obj: Post) = R.layout.post_item
 
     override fun getItemId(position: Int) = listItems[position].id.hashCode().toLong()
 
@@ -62,8 +62,8 @@ class HomeAdapter(items: MutableList<Post>,
  */
 class PostViewHolder(
     parent: ViewGroup,
-    private val binding: PostViewBinding =
-        DataBindingUtil.inflate(LayoutInflater.from(parent.context), R.layout.post_view,
+    private val binding: PostItemBinding =
+        DataBindingUtil.inflate(LayoutInflater.from(parent.context), R.layout.post_item,
             parent, false)
 ) : AbstractViewHolder<Post>(binding.root) {
 
