@@ -2,8 +2,8 @@ package com.example.redfruit.ui.home.viewmodel
 
 import androidx.lifecycle.*
 import com.example.redfruit.data.api.IRepository
-import com.example.redfruit.data.model.Enum.SortBy
 import com.example.redfruit.data.model.Post
+import com.example.redfruit.data.model.enumeration.SortBy
 import com.example.redfruit.ui.base.IViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch

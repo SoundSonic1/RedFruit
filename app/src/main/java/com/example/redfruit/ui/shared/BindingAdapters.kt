@@ -4,8 +4,8 @@ import android.widget.ImageView
 import androidx.databinding.BindingAdapter
 import androidx.recyclerview.widget.RecyclerView
 import coil.api.load
-import com.example.redfruit.data.model.Images.ImageSource
 import com.example.redfruit.data.model.Post
+import com.example.redfruit.data.model.images.ImageSource
 import com.example.redfruit.ui.home.adapter.HomeAdapter
 import com.example.redfruit.util.SizableColorDrawable
 

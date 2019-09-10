@@ -1,11 +1,11 @@
 package com.example.redfruit.data.api
 
 import android.util.Log
-import com.example.redfruit.data.model.Images.ImageSource
-import com.example.redfruit.data.model.Images.RedditImage
 import com.example.redfruit.data.model.Post
 import com.example.redfruit.data.model.Preview
 import com.example.redfruit.data.model.SubRedditListing
+import com.example.redfruit.data.model.images.ImageSource
+import com.example.redfruit.data.model.images.RedditImage
 import com.example.redfruit.util.getResponse
 import com.google.gson.*
 import com.google.gson.reflect.TypeToken
@@ -13,11 +13,18 @@ import java.lang.reflect.Type
 
 /**
  * Implements the Repository pattern
+ * @property subRedditMap collects the subreddit
  */
 class SubRedditRepository(private val subRedditMap: MutableMap<String, SubRedditListing>
                           = mutableMapOf()
 ) : IRepository<List<Post>> {
 
+    /**
+     * @param sub name of the subreddit
+     * @param sortBy how the posts should be sorted
+     * @param limit the amount of the posts that are to be fetched
+     * @return a list of reddit posts
+     */
     override fun getData(sub: String, sortBy: String, limit: Int): List<Post> {
         // TODO: check if sub is valid
         val subReddit = subRedditMap.getOrPut(sub) { SubRedditListing(sub) }

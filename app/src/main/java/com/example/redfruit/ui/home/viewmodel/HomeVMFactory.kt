@@ -10,6 +10,8 @@ import com.example.redfruit.data.model.Post
 
 /**
  * Factory for HomeViewModel
+ * @property defaultSub subreddit name
+ * @property repo used for data fetching
  */
 class HomeVMFactory(
     private val defaultSub: String,

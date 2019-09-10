@@ -4,9 +4,9 @@ import androidx.lifecycle.LiveData
 
 /**
  * All our ViewModels should implement this
- * @property data observable data holder
+ * @property data observable data holder, immutable
+ * @param T data type which is exposed
  */
 interface IViewModel<T> {
-    // only expose immutable LiveData
     val data: LiveData<T>
 }

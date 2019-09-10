@@ -1,4 +1,4 @@
-package com.example.redfruit.data.model.Interfaces
+package com.example.redfruit.data.model.interfaces
 
 interface IVotable {
     val ups: Int

@@ -1,4 +1,4 @@
-package com.example.redfruit.data.model.Interfaces
+package com.example.redfruit.data.model.interfaces
 
 /**
  * see https://github.com/reddit-archive/reddit/wiki/json

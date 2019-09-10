@@ -5,6 +5,8 @@ import androidx.recyclerview.widget.RecyclerView
 
 /**
  * Basic adapter that handles most of the RecyclerView adapter logic with Generics.
+ * @property listItems data which populates the RecyclerView
+ * @property listener to translate user actions
  * @author https://medium.com/@mohanmanu/generic-adapter-with-kotlin-part-i-74e191d68b0f
  */
 abstract class GenericAdapter<T>(

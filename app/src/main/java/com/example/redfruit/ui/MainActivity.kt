@@ -23,6 +23,9 @@ import kotlinx.android.synthetic.main.activity_main.*
 /**
  * Entry point of our app. We use the single Activity, many fragments philosophy.
  * The app moves towards clean architecture in the form of MVVM and Repository pattern
+ * @property homeFragment activity starts with this fragment
+ * @property subredditViewModel is a shared viewmodel to communicate between activity
+ * and fragments
  */
 class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
 

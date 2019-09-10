@@ -22,6 +22,8 @@ import com.example.redfruit.ui.shared.SubredditViewModel
 
 /**
  * Main fragment that displays the posts in a subreddit
+ * @property repo used to fetch reddit posts for a subreddit
+ * @property homeViewModel control logic of the fragment
  */
 class HomeFragment : Fragment() {
 
@@ -91,6 +93,10 @@ class HomeFragment : Fragment() {
         homeViewModel.saveData()
     }
 
+    /**
+     * Changes the app title in the action bar
+     * @param name of the new title
+     */
     private fun changeAppTitle(name: String) {
         (activity as AppCompatActivity).supportActionBar?.title = name
     }

@@ -1,4 +1,4 @@
-package com.example.redfruit.data.model.Enum
+package com.example.redfruit.data.model.enumeration
 
 /**
  * reddit style of sorting posts
