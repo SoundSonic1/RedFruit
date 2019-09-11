@@ -3,6 +3,7 @@ package com.example.redfruit.ui
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
+import android.widget.Toast
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
@@ -14,11 +15,16 @@ import androidx.lifecycle.ViewModelProvider
 import com.example.redfruit.R
 import com.example.redfruit.ui.home.fragment.HomeFragment
 import com.example.redfruit.ui.shared.SubredditViewModel
+import com.example.redfruit.util.isValidSubDetail
 import com.example.redfruit.util.replaceFragment
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.navigation.NavigationView
 import com.google.android.material.snackbar.Snackbar
 import kotlinx.android.synthetic.main.activity_main.*
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+
 
 /**
  * Entry point of our app. We use the single Activity, many fragments philosophy.
@@ -33,7 +39,9 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     private val subredditViewModel: SubredditViewModel by lazy {
         ViewModelProvider(this).get(SubredditViewModel::class.java)
     }
-
+    private val uiScope: CoroutineScope by lazy {
+        CoroutineScope(Dispatchers.Main)
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -83,8 +91,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
             override fun onQueryTextSubmit(query: String): Boolean {
                 if (query.isNotBlank()) {
-                    // set new subreddit
-                    subredditViewModel.setSub(query)
+                    isValidSub(query)
                     // collapse menu item
                     searchItem.collapseActionView()
                     return true
@@ -132,6 +139,24 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         val drawerLayout: DrawerLayout = findViewById(R.id.drawer_layout)
         drawerLayout.closeDrawer(GravityCompat.START)
         return true
+    }
+
+    /**
+     * Checks whether the requested sub from the user exists
+     */
+    private fun isValidSub(sub: String) {
+        uiScope.launch {
+            if (isValidSubDetail(sub)) {
+                // set new subreddit
+                subredditViewModel.setSub(sub)
+            } else {
+                Toast.makeText(
+                    this@MainActivity,
+                    "The subreddit $sub could not be found.",
+                    Toast.LENGTH_SHORT
+                ).show()
+            }
+        }
     }
 
     companion object {
