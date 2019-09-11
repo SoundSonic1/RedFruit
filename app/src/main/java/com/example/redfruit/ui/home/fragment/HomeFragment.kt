@@ -19,6 +19,7 @@ import com.example.redfruit.ui.home.adapter.HomeAdapter
 import com.example.redfruit.ui.home.viewmodel.HomeVMFactory
 import com.example.redfruit.ui.home.viewmodel.HomeViewModel
 import com.example.redfruit.ui.shared.SubredditViewModel
+import com.example.redfruit.util.Constants
 
 /**
  * Main fragment that displays the posts in a subreddit
@@ -31,18 +32,20 @@ class HomeFragment : Fragment() {
         SubRedditRepository()
     }
 
-    private val homeViewModel by lazy {
-        ViewModelProvider(
-            this,
-            HomeVMFactory("grandorder", repo, this)
-        ).get(HomeViewModel::class.java)
-    }
+    private lateinit var homeViewModel: HomeViewModel
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        // Inflate the layout for this fragment
+        // get SubredditViewModel instance from the MainActivity
+        val sharedViewModel = ViewModelProvider(activity!!).get(SubredditViewModel::class.java)
+
+        homeViewModel = ViewModelProvider(
+            this,
+            HomeVMFactory(sharedViewModel.data.value ?: Constants.defautSub, repo)
+        ).get(HomeViewModel::class.java)
+
         val binding: FragmentHomeBinding =
             DataBindingUtil.inflate(inflater, R.layout.fragment_home, container, false)
 
@@ -51,12 +54,9 @@ class HomeFragment : Fragment() {
             lifecycleOwner = viewLifecycleOwner
             viewModel = homeViewModel
         }
-        changeAppTitle(homeViewModel.subReddit)
 
-        // get SubredditViewModel instance from the MainActivity
-        val sharedViewModel = ViewModelProvider(activity!!).get(SubredditViewModel::class.java)
         sharedViewModel.data.observe(viewLifecycleOwner, Observer {
-            if (it.isNotBlank()) {
+            if (it != homeViewModel.subReddit) {
                 homeViewModel.changeSub(it)
                 changeAppTitle(homeViewModel.subReddit)
             }
@@ -65,7 +65,6 @@ class HomeFragment : Fragment() {
         val homeAdapter = HomeAdapter(mutableListOf()) { post ->
             Toast.makeText(requireContext(),
                 "Clicked on ${post.title}", Toast.LENGTH_SHORT).show()
-            // viewModel.update(sharedViewModel.data.value!!)
         }
 
         val recyclerView = binding.root.findViewById<RecyclerView>(R.id.recyclerViewHome).apply {
@@ -86,11 +85,6 @@ class HomeFragment : Fragment() {
         })
 
         return binding.root
-    }
-
-    override fun onPause() {
-        super.onPause()
-        homeViewModel.saveData()
     }
 
     /**

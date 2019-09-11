@@ -1,5 +1,6 @@
 package com.example.redfruit.ui
 
+import android.content.Context
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
@@ -11,10 +12,13 @@ import androidx.appcompat.widget.SearchView
 import androidx.appcompat.widget.Toolbar
 import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
+import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import com.example.redfruit.R
 import com.example.redfruit.ui.home.fragment.HomeFragment
+import com.example.redfruit.ui.shared.SubredditVMFactory
 import com.example.redfruit.ui.shared.SubredditViewModel
+import com.example.redfruit.util.Constants
 import com.example.redfruit.util.isValidSubDetail
 import com.example.redfruit.util.replaceFragment
 import com.google.android.material.floatingactionbutton.FloatingActionButton
@@ -24,6 +28,7 @@ import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import java.util.*
 
 
 /**
@@ -36,12 +41,14 @@ import kotlinx.coroutines.launch
 class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
 
     private val homeFragment: HomeFragment by lazy { HomeFragment() }
-    private val subredditViewModel: SubredditViewModel by lazy {
-        ViewModelProvider(this).get(SubredditViewModel::class.java)
-    }
+
+    private lateinit var subredditViewModel: SubredditViewModel
+
     private val uiScope: CoroutineScope by lazy {
         CoroutineScope(Dispatchers.Main)
     }
+
+    private val sharedPref by lazy { getPreferences(Context.MODE_PRIVATE) }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -49,6 +56,17 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         val toolbar: Toolbar = findViewById(R.id.toolbar)
         setSupportActionBar(toolbar)
         AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
+
+        val savedSub = sharedPref.getString(
+            getString(R.string.saved_subreddit), Constants.defautSub
+        ) ?: Constants.defautSub
+
+        subredditViewModel = ViewModelProvider(
+            this, SubredditVMFactory(savedSub)
+        ).get(SubredditViewModel::class.java)
+
+        // TODO: change title via data binding
+        supportActionBar?.title = savedSub
 
         val fab: FloatingActionButton = findViewById(R.id.fab)
         fab.setOnClickListener { view ->
@@ -64,6 +82,14 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         toggle.syncState()
 
         nav_view.setNavigationItemSelectedListener(this)
+
+        subredditViewModel.data.observe(this, Observer {
+            // save latest subreddit
+            with (sharedPref.edit()) {
+                putString(getString(R.string.saved_subreddit), it.toLowerCase(Locale.ENGLISH))
+                commit()
+            }
+        })
 
         // Start with Home
         replaceFragment(R.id.mainContent, homeFragment)
@@ -91,7 +117,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
             override fun onQueryTextSubmit(query: String): Boolean {
                 if (query.isNotBlank()) {
-                    isValidSub(query)
+                    changeSubIfValid(query)
                     // collapse menu item
                     searchItem.collapseActionView()
                     return true
@@ -144,7 +170,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     /**
      * Checks whether the requested sub from the user exists
      */
-    private fun isValidSub(sub: String) {
+    private fun changeSubIfValid(sub: String) {
         uiScope.launch {
             if (isValidSubDetail(sub)) {
                 // set new subreddit

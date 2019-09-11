@@ -1,6 +1,9 @@
 package com.example.redfruit.ui.home.viewmodel
 
-import androidx.lifecycle.*
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.example.redfruit.data.api.IRepository
 import com.example.redfruit.data.model.Post
 import com.example.redfruit.data.model.enumeration.SortBy
@@ -14,12 +17,10 @@ import java.util.*
  * Control logic of the HomeFragment
  * @property _subReddit to be shown in the Fragment
  * @property repo handles the api calls
- * @property state used to get saved configurations
  */
 class HomeViewModel(
     private var _subReddit: String,
-    private val repo: IRepository<List<Post>>,
-    private val state: SavedStateHandle
+    private val repo: IRepository<List<Post>>
 ) : ViewModel(), IViewModel<List<Post>> {
 
     // TODO: save _subReddit and sortBy preference to savedstate
@@ -52,13 +53,6 @@ class HomeViewModel(
         loadMoreData(limit)
     }
 
-    fun saveData() = state.set(KEY_SUBREDDIT, _subReddit)
-
-
-    fun getSavedData() {
-        _subReddit = state[KEY_SUBREDDIT] ?: _subReddit
-    }
-
     // call to the api
     private suspend fun get(count: Int) =
         withContext(Dispatchers.IO) {
@@ -67,7 +61,6 @@ class HomeViewModel(
         }
 
     companion object {
-        private const val KEY_SUBREDDIT = "KEY_SUBREDDIT"
         private const val limit = 15
     }
 }
