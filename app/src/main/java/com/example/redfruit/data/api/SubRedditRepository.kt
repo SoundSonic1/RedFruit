@@ -28,7 +28,7 @@ class SubRedditRepository(private val subRedditMap: MutableMap<String, SubReddit
     override fun getData(sub: String, sortBy: String, limit: Int): List<Post> {
         // TODO: check if sub is valid
         val subReddit = subRedditMap.getOrPut(sub) { SubRedditListing(sub) }
-        var redditUrl = "$baseUrl${subReddit.name}/${sortBy}.json?limit=$limit"
+        var redditUrl = "$baseUrl${subReddit.name}/${sortBy}.json?limit=$limit&raw_json=1"
         if (subReddit.after.isNotBlank()) {
             redditUrl = "$redditUrl&after=${subReddit.after}"
         }
@@ -87,12 +87,10 @@ class SubRedditRepository(private val subRedditMap: MutableMap<String, SubReddit
 
             var images: List<RedditImage>? = null
             if (enabled) {
-                val gson = GsonBuilder()
-                    .registerTypeAdapter(ImageSource::class.java, ImageSourceDeserializer())
-                    .create()
-                images = jsonArrayImages?.map() { item ->
+                val gson = Gson()
+                images = jsonArrayImages?.map { item ->
                     RedditImage(
-                        source = gson.fromJson(item.asJsonObject.get("source"), object : TypeToken<ImageSource>() {}.type),
+                        source = gson.fromJson(item.asJsonObject.get("source"), ImageSource::class.java),
                         resolutions = gson.fromJson(item.asJsonObject.get("resolutions"), object : TypeToken<List<ImageSource>>() {}.type)
                     )
                 }
@@ -117,28 +115,7 @@ class SubRedditRepository(private val subRedditMap: MutableMap<String, SubReddit
 
     }
 
-    private class ImageSourceDeserializer : JsonDeserializer<ImageSource> {
-        override fun deserialize(
-            json: JsonElement?,
-            typeOfT: Type?,
-            context: JsonDeserializationContext?
-        ): ImageSource {
-            val jsonObj = json!!.asJsonObject
-            val url = removeEncoding(jsonObj.get("url")?.asString ?: "")
-            val width = jsonObj.get("width").asInt
-            val height = jsonObj.get("height").asInt
-
-            return ImageSource(
-                url = url,
-                width = width,
-                height = height
-            )
-        }
-    }
-
     companion object {
         private const val baseUrl = "https://www.reddit.com/r/"
-        // see: https://www.reddit.com/r/redditdev/comments/9ncg2r/changes_in_api_pictures/
-        private fun removeEncoding(url: String) = url.replace("amp;s", "s")
     }
 }
