@@ -68,6 +68,6 @@ class HomeViewModel(
 
     companion object {
         private const val KEY_SUBREDDIT = "KEY_SUBREDDIT"
-        private const val limit = 10
+        private const val limit = 15
     }
 }
