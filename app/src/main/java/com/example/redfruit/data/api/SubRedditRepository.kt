@@ -59,6 +59,8 @@ class SubRedditRepository(private val subRedditMap: MutableMap<String, SubReddit
 
         if (!jsonData.get("after").isJsonNull) {
             subReddit.after = jsonData.get("after").asString
+        } else if (jsonData.get("after").isJsonNull && subReddit.children.size > 0) {
+            return subReddit.children.toList()
         }
 
         val gson = GsonBuilder()
