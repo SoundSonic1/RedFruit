@@ -5,7 +5,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
-import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
@@ -58,7 +57,6 @@ class HomeFragment : Fragment() {
         sharedViewModel.data.observe(viewLifecycleOwner, Observer {
             if (it != homeViewModel.subReddit) {
                 homeViewModel.changeSub(it)
-                changeAppTitle(homeViewModel.subReddit)
             }
         })
 
@@ -85,13 +83,5 @@ class HomeFragment : Fragment() {
         })
 
         return binding.root
-    }
-
-    /**
-     * Changes the app title in the action bar
-     * @param name of the new title
-     */
-    private fun changeAppTitle(name: String) {
-        (activity as AppCompatActivity).supportActionBar?.title = name
     }
 }

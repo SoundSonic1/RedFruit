@@ -65,9 +65,6 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
             this, SubredditVMFactory(savedSub)
         ).get(SubredditViewModel::class.java)
 
-        // TODO: change title via data binding
-        supportActionBar?.title = savedSub
-
         val fab: FloatingActionButton = findViewById(R.id.fab)
         fab.setOnClickListener { view ->
             Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
@@ -84,6 +81,8 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         nav_view.setNavigationItemSelectedListener(this)
 
         subredditViewModel.data.observe(this, Observer {
+            // TODO: change title via data binding
+            supportActionBar?.title = it
             // save latest subreddit
             with (sharedPref.edit()) {
                 putString(getString(R.string.saved_subreddit), it.toLowerCase(Locale.ENGLISH))
