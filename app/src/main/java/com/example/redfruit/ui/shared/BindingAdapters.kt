@@ -1,5 +1,6 @@
 package com.example.redfruit.ui.shared
 
+import android.view.View
 import android.widget.ImageView
 import androidx.databinding.BindingAdapter
 import androidx.recyclerview.widget.RecyclerView
@@ -32,9 +33,9 @@ object BindingAdapters {
                 crossfade(true)
                 placeholder(SizableColorDrawable(0xAAAAAA, image.width, image.height))
             }
+            imageView.visibility = View.VISIBLE
         } else {
-            // make sure empty ImageView stays empty
-            imageView.setImageDrawable(null)
+            imageView.visibility = View.GONE
         }
     }
 }

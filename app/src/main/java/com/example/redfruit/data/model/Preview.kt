@@ -7,5 +7,6 @@ import com.example.redfruit.data.model.images.RedditImage
  * @property images Preview can contain images
  */
 data class Preview(val enabled: Boolean, val images: List<RedditImage>) {
-    fun getFirstImage() = images.firstOrNull()
+
+    val firstImageSource get() = images.firstOrNull()?.source
 }
