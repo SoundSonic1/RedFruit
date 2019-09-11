@@ -6,6 +6,7 @@ import com.example.redfruit.data.model.Preview
 import com.example.redfruit.data.model.SubRedditListing
 import com.example.redfruit.data.model.images.ImageSource
 import com.example.redfruit.data.model.images.RedditImage
+import com.example.redfruit.util.Constants
 import com.example.redfruit.util.getResponse
 import com.google.gson.*
 import com.google.gson.reflect.TypeToken
@@ -28,7 +29,7 @@ class SubRedditRepository(private val subRedditMap: MutableMap<String, SubReddit
     override fun getData(sub: String, sortBy: String, limit: Int): List<Post> {
         // TODO: check if sub is valid
         val subReddit = subRedditMap.getOrPut(sub) { SubRedditListing(sub) }
-        var redditUrl = "$baseUrl${subReddit.name}/${sortBy}.json?limit=$limit&raw_json=1"
+        var redditUrl = "${Constants.baseUrl}${subReddit.name}/${sortBy}.json?limit=$limit&raw_json=1"
         if (subReddit.after.isNotBlank()) {
             redditUrl = "$redditUrl&after=${subReddit.after}"
         }
@@ -113,9 +114,5 @@ class SubRedditRepository(private val subRedditMap: MutableMap<String, SubReddit
             )
         }
 
-    }
-
-    companion object {
-        private const val baseUrl = "https://www.reddit.com/r/"
     }
 }

@@ -24,7 +24,7 @@ fun getResponse(url: String): String = try {
  */
 suspend fun isValidSubDetail(sub: String): Boolean =
     withContext(Dispatchers.Default) {
-        val response = getResponse("https://www.reddit.com/r/$sub/about.json?raw_json=1")
+        val response = getResponse("${Constants.baseUrl}$sub/about.json?raw_json=1")
         if(response.isBlank()) {
             false
         } else {
