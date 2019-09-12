@@ -4,9 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.databinding.DataBindingUtil
-import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -19,17 +17,27 @@ import com.example.redfruit.ui.home.viewmodel.HomeVMFactory
 import com.example.redfruit.ui.home.viewmodel.HomeViewModel
 import com.example.redfruit.ui.shared.SubredditViewModel
 import com.example.redfruit.util.Constants
+import dagger.android.support.DaggerFragment
+import javax.inject.Inject
 
 /**
  * Main fragment that displays the posts in a subreddit
  * @property repo used to fetch reddit posts for a subreddit
  * @property homeViewModel control logic of the fragment
  */
-class HomeFragment : Fragment() {
+class HomeFragment : DaggerFragment() {
 
-    private val repo by lazy {
-        SubRedditRepository()
-    }
+    @Inject
+    lateinit var repo: SubRedditRepository
+
+    @Inject
+    lateinit var linearLayoutManager: LinearLayoutManager
+
+    @Inject
+    lateinit var homeAdapter: HomeAdapter
+
+    @Inject
+    lateinit var homeVMFactory: HomeVMFactory
 
     private lateinit var homeViewModel: HomeViewModel
 
@@ -42,7 +50,7 @@ class HomeFragment : Fragment() {
 
         homeViewModel = ViewModelProvider(
             this,
-            HomeVMFactory(sharedViewModel.data.value ?: Constants.DEFAULT_SUB, repo)
+            homeVMFactory
         ).get(HomeViewModel::class.java)
 
         val binding: FragmentHomeBinding =
@@ -60,13 +68,8 @@ class HomeFragment : Fragment() {
             }
         })
 
-        val homeAdapter = HomeAdapter(mutableListOf()) { post ->
-            Toast.makeText(requireContext(),
-                "Clicked on ${post.title}", Toast.LENGTH_SHORT).show()
-        }
-
         val recyclerView = binding.root.findViewById<RecyclerView>(R.id.recyclerViewHome).apply {
-            layoutManager = LinearLayoutManager(requireContext())
+            layoutManager = linearLayoutManager
             adapter = homeAdapter
         }
         recyclerView.addOnScrollListener(object : RecyclerView.OnScrollListener() {

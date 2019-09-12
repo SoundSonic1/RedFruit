@@ -1,12 +1,11 @@
 package com.example.redfruit.ui
 
-import android.content.Context
+import android.content.SharedPreferences
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
 import android.widget.Toast
 import androidx.appcompat.app.ActionBarDrawerToggle
-import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.appcompat.widget.SearchView
 import androidx.appcompat.widget.Toolbar
@@ -18,17 +17,17 @@ import com.example.redfruit.R
 import com.example.redfruit.ui.home.fragment.HomeFragment
 import com.example.redfruit.ui.shared.SubredditVMFactory
 import com.example.redfruit.ui.shared.SubredditViewModel
-import com.example.redfruit.util.Constants
 import com.example.redfruit.util.isValidSubDetail
 import com.example.redfruit.util.replaceFragment
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.navigation.NavigationView
 import com.google.android.material.snackbar.Snackbar
+import dagger.android.support.DaggerAppCompatActivity
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import java.util.*
+import javax.inject.Inject
 
 
 /**
@@ -38,17 +37,21 @@ import java.util.*
  * @property subredditViewModel is a shared viewmodel to communicate between activity
  * and fragments
  */
-class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
+class MainActivity : DaggerAppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
 
-    private val homeFragment: HomeFragment by lazy { HomeFragment() }
+    @Inject
+    lateinit var homeFragment: HomeFragment
+
+    @Inject
+    lateinit var sharedPref: SharedPreferences
+
+    @Inject
+    lateinit var uiScope: CoroutineScope
+
+    @Inject
+    lateinit var subredditVMFactory: SubredditVMFactory
 
     private lateinit var subredditViewModel: SubredditViewModel
-
-    private val uiScope: CoroutineScope by lazy {
-        CoroutineScope(Dispatchers.Main)
-    }
-
-    private val sharedPref by lazy { getPreferences(Context.MODE_PRIVATE) }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -57,12 +60,8 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         setSupportActionBar(toolbar)
         AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
 
-        val savedSub = sharedPref.getString(
-            getString(R.string.saved_subreddit), Constants.DEFAULT_SUB
-        ) ?: Constants.DEFAULT_SUB
-
         subredditViewModel = ViewModelProvider(
-            this, SubredditVMFactory(savedSub)
+            this, subredditVMFactory
         ).get(SubredditViewModel::class.java)
 
         val fab: FloatingActionButton = findViewById(R.id.fab)
@@ -89,7 +88,6 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                 commit()
             }
         })
-
         // Start with Home
         replaceFragment(R.id.mainContent, homeFragment)
     }
