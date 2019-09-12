@@ -12,12 +12,19 @@ import java.net.URL
  * @return the response as a string
  */
 fun getResponse(url: String): String = try {
-    URL(url).readText()
+    URL(urlEncode(url)).openConnection().apply {
+        setRequestProperty("User-Agent", Constants.USER_AGENT)
+    }.getInputStream().use {
+        it.bufferedReader().readLine()
+    }
 } catch (e: FileNotFoundException) {
     Log.d("getResponse", "bad url: $url")
     // invalid url
     ""
 }
+
+// TODO: use library for url encoding
+fun urlEncode(url: String): String = url.replace(" ", "%20")
 
 /**
  * Returns true if the given sub name is a valid subreddit
