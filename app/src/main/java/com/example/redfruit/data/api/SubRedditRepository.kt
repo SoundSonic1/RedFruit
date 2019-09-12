@@ -16,7 +16,7 @@ import java.lang.reflect.Type
  * Implements the Repository pattern
  * @property subRedditMap collects the subreddit
  */
-class SubRedditRepository(private val subRedditMap: MutableMap<String, SubRedditListing>
+open class SubRedditRepository(private val subRedditMap: MutableMap<String, SubRedditListing>
                           = mutableMapOf()
 ) : IRepository<List<Post>> {
 
@@ -74,7 +74,7 @@ class SubRedditRepository(private val subRedditMap: MutableMap<String, SubReddit
     }
 
 
-    private class PostDeserializer : JsonDeserializer<Post> {
+    protected class PostDeserializer : JsonDeserializer<Post> {
         /**
          * Used to deserialize a json array
          */
