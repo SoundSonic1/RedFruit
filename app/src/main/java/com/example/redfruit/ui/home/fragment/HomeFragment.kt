@@ -77,7 +77,7 @@ class HomeFragment : Fragment() {
                 if (!homeViewModel.loading &&
                     totalItemCount == linearLayoutManager.findLastVisibleItemPosition() + 1) {
                     homeViewModel.loading = true
-                    homeViewModel.loadMoreData(10)
+                    homeViewModel.loadMoreData(Constants.LIMIT)
                 }
             }
         })

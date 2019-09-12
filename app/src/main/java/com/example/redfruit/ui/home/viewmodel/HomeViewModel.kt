@@ -8,6 +8,7 @@ import com.example.redfruit.data.api.IRepository
 import com.example.redfruit.data.model.Post
 import com.example.redfruit.data.model.enumeration.SortBy
 import com.example.redfruit.ui.base.IViewModel
+import com.example.redfruit.util.Constants
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -30,7 +31,7 @@ class HomeViewModel(
     private val _data: MutableLiveData<List<Post>> by lazy {
         MutableLiveData<List<Post>>().also {
             viewModelScope.launch {
-                it.value = get(limit)
+                it.value = get(Constants.LIMIT)
             }
         }
     }
@@ -50,7 +51,7 @@ class HomeViewModel(
 
     fun changeSub(sub: String) {
         _subReddit = sub.toLowerCase(Locale.ENGLISH)
-        loadMoreData(limit)
+        loadMoreData(Constants.LIMIT)
     }
 
     // call to the api
@@ -59,8 +60,4 @@ class HomeViewModel(
             /* perform network IO here */
             repo.getData(_subReddit, sortBy.toString(), count)
         }
-
-    companion object {
-        private const val limit = 15
-    }
 }
