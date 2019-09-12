@@ -58,8 +58,8 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
 
         val savedSub = sharedPref.getString(
-            getString(R.string.saved_subreddit), Constants.defautSub
-        ) ?: Constants.defautSub
+            getString(R.string.saved_subreddit), Constants.DEFAULT_SUB
+        ) ?: Constants.DEFAULT_SUB
 
         subredditViewModel = ViewModelProvider(
             this, SubredditVMFactory(savedSub)

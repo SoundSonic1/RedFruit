@@ -31,7 +31,7 @@ fun urlEncode(url: String): String = url.replace(" ", "%20")
  */
 suspend fun isValidSubDetail(sub: String): Boolean =
     withContext(Dispatchers.Default) {
-        val response = getResponse("${Constants.baseUrl}$sub/about.json?raw_json=1")
+        val response = getResponse("${Constants.BASE_URL}$sub/about.json?raw_json=1")
         if(response.isBlank()) {
             false
         } else {

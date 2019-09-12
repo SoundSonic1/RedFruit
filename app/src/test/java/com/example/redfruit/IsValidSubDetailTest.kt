@@ -11,7 +11,7 @@ class IsValidSubDetailTest {
     @Test
     fun validSub() {
         runBlocking {
-            assertTrue("Default sub must be valid", isValidSubDetail(Constants.defautSub))
+            assertTrue("Default sub must be valid", isValidSubDetail(Constants.DEFAULT_SUB))
             assertTrue("Underscore is valid", isValidSubDetail("memes_of_dank"))
         }
     }

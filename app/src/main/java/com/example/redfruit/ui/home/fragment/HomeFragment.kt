@@ -42,7 +42,7 @@ class HomeFragment : Fragment() {
 
         homeViewModel = ViewModelProvider(
             this,
-            HomeVMFactory(sharedViewModel.data.value ?: Constants.defautSub, repo)
+            HomeVMFactory(sharedViewModel.data.value ?: Constants.DEFAULT_SUB, repo)
         ).get(HomeViewModel::class.java)
 
         val binding: FragmentHomeBinding =

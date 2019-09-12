@@ -29,7 +29,7 @@ class SubRedditRepository(private val subRedditMap: MutableMap<String, SubReddit
     override fun getData(sub: String, sortBy: String, limit: Int): List<Post> {
         // TODO: check if sub is valid
         val subReddit = subRedditMap.getOrPut(sub) { SubRedditListing(sub) }
-        var redditUrl = "${Constants.baseUrl}${subReddit.name}/${sortBy}.json?limit=$limit&raw_json=1"
+        var redditUrl = "${Constants.BASE_URL}${subReddit.name}/${sortBy}.json?limit=$limit&raw_json=1"
         if (subReddit.after.isNotBlank()) {
             redditUrl = "$redditUrl&after=${subReddit.after}"
         }
