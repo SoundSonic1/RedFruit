@@ -1,10 +1,8 @@
 package com.example.redfruit.di
 
 import android.content.Context
-import android.widget.Toast
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.redfruit.data.api.SubRedditRepository
-import com.example.redfruit.ui.home.adapter.HomeAdapter
 import com.example.redfruit.ui.home.viewmodel.HomeVMFactory
 import dagger.Module
 import dagger.Provides
@@ -23,12 +21,6 @@ class HomeFragmentModule {
         @Provides
         fun provideLinearLayoutManager(context: Context) = LinearLayoutManager(context)
 
-        @JvmStatic
-        @Provides
-        fun provideHomeAdapter(context: Context) = HomeAdapter(mutableListOf()) {
-            Toast.makeText(context,
-                "Clicked on ${it.title}", Toast.LENGTH_SHORT).show()
-        }
 
         @JvmStatic
         @Provides

@@ -88,8 +88,11 @@ class MainActivity : DaggerAppCompatActivity(), NavigationView.OnNavigationItemS
                 commit()
             }
         })
-        // Start with Home
-        replaceFragment(supportFragmentManager, R.id.mainContent, homeFragment)
+
+        // Start with home fragment
+        if (savedInstanceState == null) {
+            replaceFragment(supportFragmentManager, R.id.mainContent, homeFragment)
+        }
     }
 
     override fun onBackPressed() {
@@ -141,7 +144,7 @@ class MainActivity : DaggerAppCompatActivity(), NavigationView.OnNavigationItemS
         // Handle navigation view item clicks here.
         when (item.itemId) {
             R.id.nav_home -> {
-                replaceFragment(supportFragmentManager, R.id.mainContent, homeFragment, mainTag)
+                replaceFragment(supportFragmentManager, R.id.mainContent, homeFragment, HOME_FRAGMENT_TAG)
             }
             R.id.nav_gallery -> {
 
@@ -172,6 +175,13 @@ class MainActivity : DaggerAppCompatActivity(), NavigationView.OnNavigationItemS
             if (isValidSubDetail(sub)) {
                 // set new subreddit
                 subredditViewModel.setSub(sub)
+                // Change back to home fragment
+                replaceFragment(
+                    supportFragmentManager,
+                    R.id.mainContent,
+                    homeFragment,
+                    HOME_FRAGMENT_TAG
+                )
             } else {
                 Toast.makeText(
                     this@MainActivity,
@@ -184,6 +194,6 @@ class MainActivity : DaggerAppCompatActivity(), NavigationView.OnNavigationItemS
 
     companion object {
         // unique tags
-        private const val mainTag = "Home"
+        private const val HOME_FRAGMENT_TAG = "HOME_FRAGMENT_TAG"
     }
 }

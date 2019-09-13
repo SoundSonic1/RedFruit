@@ -11,14 +11,18 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.redfruit.R
 import com.example.redfruit.data.api.SubRedditRepository
-import com.example.redfruit.databinding.FragmentHomeBinding
+import com.example.redfruit.databinding.HomeFragmentBinding
+import com.example.redfruit.ui.comments.fragment.CommentsFragment
 import com.example.redfruit.ui.home.adapter.HomeAdapter
 import com.example.redfruit.ui.home.viewmodel.HomeVMFactory
 import com.example.redfruit.ui.home.viewmodel.HomeViewModel
 import com.example.redfruit.ui.shared.SubredditViewModel
 import com.example.redfruit.util.Constants
+import com.example.redfruit.util.findFragmentByTag
+import com.example.redfruit.util.replaceFragment
 import dagger.android.support.DaggerFragment
 import javax.inject.Inject
+import javax.inject.Provider
 
 /**
  * Main fragment that displays the posts in a subreddit
@@ -31,15 +35,23 @@ class HomeFragment : DaggerFragment() {
     lateinit var repo: SubRedditRepository
 
     @Inject
-    lateinit var linearLayoutManager: LinearLayoutManager
-
-    @Inject
-    lateinit var homeAdapter: HomeAdapter
+    lateinit var linearLayoutManagerProvider: Provider<LinearLayoutManager>
 
     @Inject
     lateinit var homeVMFactory: HomeVMFactory
 
     private lateinit var homeViewModel: HomeViewModel
+
+    private val homeAdapter: HomeAdapter by lazy {
+        HomeAdapter(
+            homeViewModel.data.value?.toMutableList() ?: mutableListOf()
+        ) {
+            val fragment = findFragmentByTag(fragmentManager!!, COMMENTS_FRAGMENT_TAG) {
+                CommentsFragment()
+            }
+            replaceFragment(fragmentManager!!, R.id.mainContent, fragment, COMMENTS_FRAGMENT_TAG)
+        }
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -53,8 +65,8 @@ class HomeFragment : DaggerFragment() {
             homeVMFactory
         ).get(HomeViewModel::class.java)
 
-        val binding: FragmentHomeBinding =
-            DataBindingUtil.inflate(inflater, R.layout.fragment_home, container, false)
+        val binding: HomeFragmentBinding =
+            DataBindingUtil.inflate(inflater, R.layout.home_fragment, container, false)
 
         binding.apply {
             // make binding lifecycle aware
@@ -68,8 +80,9 @@ class HomeFragment : DaggerFragment() {
             }
         })
 
+
         val recyclerView = binding.root.findViewById<RecyclerView>(R.id.recyclerViewHome).apply {
-            layoutManager = linearLayoutManager
+            layoutManager = linearLayoutManagerProvider.get()
             adapter = homeAdapter
         }
         recyclerView.addOnScrollListener(object : RecyclerView.OnScrollListener() {
@@ -86,5 +99,9 @@ class HomeFragment : DaggerFragment() {
         })
 
         return binding.root
+    }
+
+    companion object {
+        private const val COMMENTS_FRAGMENT_TAG = "COMMENTS_FRAGMENT_TAG"
     }
 }
