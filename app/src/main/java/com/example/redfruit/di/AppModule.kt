@@ -3,7 +3,7 @@ package com.example.redfruit.di
 import android.app.Application
 import android.content.Context
 import android.content.SharedPreferences
-import android.preference.PreferenceManager
+import androidx.preference.PreferenceManager
 import com.example.redfruit.R
 import com.example.redfruit.util.Constants
 import dagger.Module
