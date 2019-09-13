@@ -17,11 +17,10 @@ import kotlinx.coroutines.withContext
 
 /**
  * Adapter for the RecyclerView of the HomeFragment
+ * @property uiScope required to make updates to the UI after async diff calc
  */
-class HomeAdapter(items: MutableList<Post>,
+class HomeAdapter(private val uiScope: CoroutineScope, items: MutableList<Post>,
                   listener: (Post) -> Unit) : GenericAdapter<Post>(items, listener) {
-
-    private val uiScope = CoroutineScope(Dispatchers.Main)
 
     override fun getViewHolder(parent: ViewGroup, viewType: Int): AbstractViewHolder<Post> {
         if (viewType == viewTypeWithImage) {

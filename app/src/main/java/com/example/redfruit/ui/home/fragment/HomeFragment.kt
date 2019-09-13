@@ -12,14 +12,11 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.redfruit.R
 import com.example.redfruit.data.api.SubRedditRepository
 import com.example.redfruit.databinding.HomeFragmentBinding
-import com.example.redfruit.ui.comments.fragment.CommentsFragment
 import com.example.redfruit.ui.home.adapter.HomeAdapter
 import com.example.redfruit.ui.home.viewmodel.HomeVMFactory
 import com.example.redfruit.ui.home.viewmodel.HomeViewModel
 import com.example.redfruit.ui.shared.SubredditViewModel
 import com.example.redfruit.util.Constants
-import com.example.redfruit.util.findFragmentByTag
-import com.example.redfruit.util.replaceFragment
 import dagger.android.support.DaggerFragment
 import javax.inject.Inject
 import javax.inject.Provider
@@ -40,16 +37,11 @@ class HomeFragment : DaggerFragment() {
     @Inject
     lateinit var homeVMFactory: HomeVMFactory
 
+    @Inject
+    lateinit var homeAdapter: HomeAdapter
+
     private lateinit var homeViewModel: HomeViewModel
 
-    private val homeAdapter: HomeAdapter by lazy {
-        HomeAdapter(mutableListOf()) {
-            val fragment = findFragmentByTag(fragmentManager!!, COMMENTS_FRAGMENT_TAG) {
-                CommentsFragment()
-            }
-            replaceFragment(fragmentManager!!, R.id.mainContent, fragment, COMMENTS_FRAGMENT_TAG)
-        }
-    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -97,9 +89,5 @@ class HomeFragment : DaggerFragment() {
         })
 
         return binding.root
-    }
-
-    companion object {
-        private const val COMMENTS_FRAGMENT_TAG = "COMMENTS_FRAGMENT_TAG"
     }
 }
