@@ -7,6 +7,7 @@ import androidx.recyclerview.widget.DiffUtil
 import com.example.redfruit.R
 import com.example.redfruit.data.model.Post
 import com.example.redfruit.databinding.PostItemBinding
+import com.example.redfruit.databinding.PostItemWithImageBinding
 import com.example.redfruit.ui.base.AbstractViewHolder
 import com.example.redfruit.ui.base.GenericAdapter
 import kotlinx.coroutines.CoroutineScope
@@ -22,9 +23,22 @@ class HomeAdapter(items: MutableList<Post>,
 
     private val uiScope = CoroutineScope(Dispatchers.Main)
 
-    override fun getViewHolder(parent: ViewGroup, viewType: Int) = PostViewHolder(parent)
+    override fun getViewHolder(parent: ViewGroup, viewType: Int): AbstractViewHolder<Post> {
+        if (viewType == viewTypeWithImage) {
+            return PostWithImageViewHolder(parent)
+        }
+        return PostTextOnlyViewHolder(parent)
+    }
 
-    override fun getLayoutId(position: Int, obj: Post) = R.layout.post_item
+    /**
+     * Identify posts that contain image(s)
+     */
+    override fun getLayoutId(position: Int, obj: Post): Int  {
+        if (obj.preview.images.isNotEmpty()) {
+            return viewTypeWithImage
+        }
+        return viewTypeTextOnly
+    }
 
     override fun getItemId(position: Int) = listItems[position].id.hashCode().toLong()
 
@@ -55,12 +69,33 @@ class HomeAdapter(items: MutableList<Post>,
 
         }
 
+    companion object {
+        private const val viewTypeTextOnly = 0
+        private const val viewTypeWithImage = 1
+    }
+
 }
 
 /**
- * Manages the individual items with data binding
+ * Manage the individual items with data binding
  */
-class PostViewHolder(
+class PostWithImageViewHolder(
+    parent: ViewGroup,
+    private val binding: PostItemWithImageBinding =
+        DataBindingUtil.inflate(LayoutInflater.from(parent.context), R.layout.post_item_with_image,
+            parent, false)
+) : AbstractViewHolder<Post>(binding.root) {
+
+    override fun bind(item: Post, listener: (Post) -> Unit) = with(itemView) {
+        // set the text in TextView, fetch image for ImageView and add a listener
+        binding.item = item
+        itemView.setOnClickListener {
+            listener(item)
+        }
+    }
+}
+
+class PostTextOnlyViewHolder(
     parent: ViewGroup,
     private val binding: PostItemBinding =
         DataBindingUtil.inflate(LayoutInflater.from(parent.context), R.layout.post_item,

@@ -26,8 +26,7 @@ abstract class GenericAdapter<T>(
     override fun getItemViewType(position: Int) = getLayoutId(position, listItems[position])
 
     /**
-     * @param position for more complex layouts
-     * @param obj for multitypeViews
+     * return different layout ids if working with multi view types
      */
     protected abstract fun getLayoutId(position: Int, obj: T): Int
 

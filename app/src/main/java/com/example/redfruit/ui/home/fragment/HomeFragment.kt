@@ -43,9 +43,7 @@ class HomeFragment : DaggerFragment() {
     private lateinit var homeViewModel: HomeViewModel
 
     private val homeAdapter: HomeAdapter by lazy {
-        HomeAdapter(
-            homeViewModel.data.value?.toMutableList() ?: mutableListOf()
-        ) {
+        HomeAdapter(mutableListOf()) {
             val fragment = findFragmentByTag(fragmentManager!!, COMMENTS_FRAGMENT_TAG) {
                 CommentsFragment()
             }
