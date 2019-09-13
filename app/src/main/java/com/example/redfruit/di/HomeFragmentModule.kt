@@ -2,6 +2,7 @@ package com.example.redfruit.di
 
 import android.content.Context
 import androidx.fragment.app.FragmentManager
+import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.redfruit.R
 import com.example.redfruit.data.api.SubRedditRepository
@@ -9,6 +10,7 @@ import com.example.redfruit.ui.comments.fragment.CommentsFragment
 import com.example.redfruit.ui.home.adapter.HomeAdapter
 import com.example.redfruit.ui.home.fragment.HomeFragment
 import com.example.redfruit.ui.home.viewmodel.HomeVMFactory
+import com.example.redfruit.ui.home.viewmodel.HomeViewModel
 import com.example.redfruit.util.Constants
 import com.example.redfruit.util.findFragmentByTag
 import com.example.redfruit.util.replaceFragment
@@ -50,10 +52,14 @@ class HomeFragmentModule {
             }
         }
 
-
         @JvmStatic
         @Provides
-        fun provideHomeVMFactory(@Named("savedSub") savedSub: String,
-                                 repo: SubRedditRepository) = HomeVMFactory(savedSub, repo)
+        fun provideHomeViewModel(
+            fragment: HomeFragment,
+            @Named("savedSub") sub: String,
+            repo: SubRedditRepository
+        ): HomeViewModel {
+            return ViewModelProvider(fragment, HomeVMFactory(sub, repo)).get(HomeViewModel::class.java)
+        }
     }
 }

@@ -12,10 +12,8 @@ import androidx.appcompat.widget.Toolbar
 import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProvider
 import com.example.redfruit.R
 import com.example.redfruit.ui.home.fragment.HomeFragment
-import com.example.redfruit.ui.shared.SubredditVMFactory
 import com.example.redfruit.ui.shared.SubredditViewModel
 import com.example.redfruit.util.Constants
 import com.example.redfruit.util.isValidSubDetail
@@ -50,9 +48,7 @@ class MainActivity : DaggerAppCompatActivity(), NavigationView.OnNavigationItemS
     lateinit var uiScope: CoroutineScope
 
     @Inject
-    lateinit var subredditVMFactory: SubredditVMFactory
-
-    private lateinit var subredditViewModel: SubredditViewModel
+    lateinit var subredditViewModel: SubredditViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -60,10 +56,6 @@ class MainActivity : DaggerAppCompatActivity(), NavigationView.OnNavigationItemS
         val toolbar: Toolbar = findViewById(R.id.toolbar)
         setSupportActionBar(toolbar)
         AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
-
-        subredditViewModel = ViewModelProvider(
-            this, subredditVMFactory
-        ).get(SubredditViewModel::class.java)
 
         val fab: FloatingActionButton = findViewById(R.id.fab)
         fab.setOnClickListener { view ->

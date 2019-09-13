@@ -13,7 +13,6 @@ import com.example.redfruit.R
 import com.example.redfruit.data.api.SubRedditRepository
 import com.example.redfruit.databinding.HomeFragmentBinding
 import com.example.redfruit.ui.home.adapter.HomeAdapter
-import com.example.redfruit.ui.home.viewmodel.HomeVMFactory
 import com.example.redfruit.ui.home.viewmodel.HomeViewModel
 import com.example.redfruit.ui.shared.SubredditViewModel
 import com.example.redfruit.util.Constants
@@ -35,12 +34,10 @@ class HomeFragment : DaggerFragment() {
     lateinit var linearLayoutManagerProvider: Provider<LinearLayoutManager>
 
     @Inject
-    lateinit var homeVMFactory: HomeVMFactory
-
-    @Inject
     lateinit var homeAdapter: HomeAdapter
 
-    private lateinit var homeViewModel: HomeViewModel
+    @Inject
+    lateinit var homeViewModel: HomeViewModel
 
 
     override fun onCreateView(
@@ -49,11 +46,6 @@ class HomeFragment : DaggerFragment() {
     ): View? {
         // get SubredditViewModel instance from the MainActivity
         val sharedViewModel = ViewModelProvider(activity!!).get(SubredditViewModel::class.java)
-
-        homeViewModel = ViewModelProvider(
-            this,
-            homeVMFactory
-        ).get(HomeViewModel::class.java)
 
         val binding: HomeFragmentBinding =
             DataBindingUtil.inflate(inflater, R.layout.home_fragment, container, false)
