@@ -89,7 +89,7 @@ class MainActivity : DaggerAppCompatActivity(), NavigationView.OnNavigationItemS
             }
         })
         // Start with Home
-        replaceFragment(R.id.mainContent, homeFragment)
+        replaceFragment(supportFragmentManager, R.id.mainContent, homeFragment)
     }
 
     override fun onBackPressed() {
@@ -141,7 +141,7 @@ class MainActivity : DaggerAppCompatActivity(), NavigationView.OnNavigationItemS
         // Handle navigation view item clicks here.
         when (item.itemId) {
             R.id.nav_home -> {
-                replaceFragment(R.id.mainContent, homeFragment, mainTag)
+                replaceFragment(supportFragmentManager, R.id.mainContent, homeFragment, mainTag)
             }
             R.id.nav_gallery -> {
 
