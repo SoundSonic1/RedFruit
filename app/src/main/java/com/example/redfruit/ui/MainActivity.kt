@@ -17,6 +17,7 @@ import com.example.redfruit.R
 import com.example.redfruit.ui.home.fragment.HomeFragment
 import com.example.redfruit.ui.shared.SubredditVMFactory
 import com.example.redfruit.ui.shared.SubredditViewModel
+import com.example.redfruit.util.Constants
 import com.example.redfruit.util.isValidSubDetail
 import com.example.redfruit.util.replaceFragment
 import com.google.android.material.floatingactionbutton.FloatingActionButton
@@ -144,7 +145,12 @@ class MainActivity : DaggerAppCompatActivity(), NavigationView.OnNavigationItemS
         // Handle navigation view item clicks here.
         when (item.itemId) {
             R.id.nav_home -> {
-                replaceFragment(supportFragmentManager, R.id.mainContent, homeFragment, HOME_FRAGMENT_TAG)
+                replaceFragment(
+                    supportFragmentManager,
+                    R.id.mainContent,
+                    homeFragment,
+                    Constants.HOME_FRAGMENT_TAG
+                )
             }
             R.id.nav_gallery -> {
 
@@ -180,7 +186,7 @@ class MainActivity : DaggerAppCompatActivity(), NavigationView.OnNavigationItemS
                     supportFragmentManager,
                     R.id.mainContent,
                     homeFragment,
-                    HOME_FRAGMENT_TAG
+                    Constants.HOME_FRAGMENT_TAG
                 )
             } else {
                 Toast.makeText(
@@ -190,10 +196,5 @@ class MainActivity : DaggerAppCompatActivity(), NavigationView.OnNavigationItemS
                 ).show()
             }
         }
-    }
-
-    companion object {
-        // unique tags
-        private const val HOME_FRAGMENT_TAG = "HOME_FRAGMENT_TAG"
     }
 }
