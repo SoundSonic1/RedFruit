@@ -27,6 +27,8 @@
                     android:layout_width="match_parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintRight_toRightOf="parent"
                     app:layout_constraintBottom_toTopOf="@id/selfText"
                     bind:item="@{item}" />
 
@@ -40,9 +42,9 @@
                     android:ellipsize="end"
                     android:paddingLeft="10dp"
                     android:paddingRight="10dp"
-                    android:visibility="@{item.hasSelfText ? View.VISIBLE : View.GONE}"
                     app:layout_constraintTop_toBottomOf="@id/postTitleAuthor"
                     app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintRight_toRightOf="parent"
                     app:layout_constraintBottom_toBottomOf="@id/postMisc2"
                     >
 
@@ -55,6 +57,7 @@
                     android:layout_width="match_parent"
                     android:layout_marginTop="8dp"
                     app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintRight_toRightOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/selfText"
                     app:layout_constraintBottom_toBottomOf="parent"
                     bind:item="@{item}" />
