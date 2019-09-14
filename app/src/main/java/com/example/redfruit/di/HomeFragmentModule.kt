@@ -6,6 +6,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.redfruit.R
 import com.example.redfruit.data.api.SubRedditRepository
+import com.example.redfruit.data.model.enumeration.SortBy
 import com.example.redfruit.ui.comments.fragment.CommentsFragment
 import com.example.redfruit.ui.home.adapter.HomeAdapter
 import com.example.redfruit.ui.home.fragment.HomeFragment
@@ -59,7 +60,10 @@ class HomeFragmentModule {
             @Named("savedSub") sub: String,
             repo: SubRedditRepository
         ): HomeViewModel {
-            return ViewModelProvider(fragment, HomeVMFactory(sub, repo)).get(HomeViewModel::class.java)
+            return ViewModelProvider(
+                fragment,
+                HomeVMFactory(sub, SortBy.new, repo)).get(HomeViewModel::class.java
+            )
         }
     }
 }

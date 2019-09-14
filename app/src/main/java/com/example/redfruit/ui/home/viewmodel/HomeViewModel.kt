@@ -21,12 +21,12 @@ import java.util.*
  */
 class HomeViewModel(
     private var _subReddit: String,
+    private val sortBy: SortBy,
     private val repo: IRepository<List<Post>>
 ) : ViewModel(), IViewModel<List<Post>> {
 
     // TODO: save _subReddit and sortBy preference to savedstate
     val subReddit get() = _subReddit
-    private var sortBy = SortBy.new
 
     private val _data: MutableLiveData<List<Post>> by lazy {
         MutableLiveData<List<Post>>().also {
