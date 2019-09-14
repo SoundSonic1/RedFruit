@@ -5,6 +5,6 @@
     <color name="colorAccent">#D81B60</color>
     <color name="colorPostIcons">#D3D3D3</color>
     <color name="colorTextTitle">#F0EEEE</color>
-    <color name="colorBackground">#111111</color>
-    <color name="colorSurface">#222222</color>
+    <color name="colorCardViewBackground">#AAAAAA</color>
+    <color name="colorBackground">#EEEEEE</color>
 </resources>
