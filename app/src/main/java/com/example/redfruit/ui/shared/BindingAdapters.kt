@@ -30,7 +30,7 @@ object BindingAdapters {
         image?.let {
             imageView.load(it.url) {
                 crossfade(true)
-                placeholder(SizableColorDrawable(0xAAAAAA, it.width, it.height))
+                placeholder(SizableColorDrawable(0x222222, it.width, it.height))
             }
         }
     }
