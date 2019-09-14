@@ -66,6 +66,7 @@ class HomeFragment : DaggerFragment() {
         val recyclerView = binding.root.findViewById<RecyclerView>(R.id.recyclerViewHome).apply {
             layoutManager = linearLayoutManagerProvider.get()
             adapter = homeAdapter
+            setHasFixedSize(true)
         }
         recyclerView.addOnScrollListener(object : RecyclerView.OnScrollListener() {
             override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
