@@ -21,6 +21,8 @@ data class Post(
     val author: String,
     override val ups: Int,
     override val downs: Int,
+    val score: Int,
+    val num_comments: Int,
     val preview: Preview,
     val over_18: Boolean,
     val stickied: Boolean,

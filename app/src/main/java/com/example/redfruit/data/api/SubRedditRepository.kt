@@ -104,8 +104,10 @@ open class SubRedditRepository(private val subRedditMap: MutableMap<String, SubR
                 id = jsonData.get("id").asString,
                 title = jsonData.get("title").asString,
                 author = jsonData.get("author")?.asString ?: "Unknown",
-                ups = jsonData.get("ups").asInt,
-                downs = jsonData.get("downs").asInt,
+                ups = jsonData.get("ups")?.asInt ?: 0,
+                downs = jsonData.get("downs")?.asInt ?: 0,
+                score = jsonData.get("score")?.asInt ?: 0,
+                num_comments = jsonData.get("num_comments")?.asInt ?: 0,
                 preview = Preview(
                     enabled = enabled,
                     images = images ?: listOf()

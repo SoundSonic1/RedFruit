@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto">
+    <data>
+        <import type="android.view.View"/>
+        <variable name="item" type="com.example.redfruit.data.model.Post"/>
+    </data>
+    <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+        <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/scoreText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:textStyle="bold"
+                android:textSize="14sp"
+                android:text="@{Integer.toString(item.ups)}"
+                android:drawableStart="@drawable/ic_favorite_border_grey_14dp"
+                android:drawablePadding="5dp"
+                android:gravity="center_vertical"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
+                >
+
+        </androidx.appcompat.widget.AppCompatTextView>
+        <androidx.appcompat.widget.AppCompatTextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:textStyle="bold"
+                android:textSize="14sp"
+                android:text="@{Integer.toString(item.num_comments)}"
+                android:drawableStart="@drawable/ic_message_grey_14dp"
+                android:drawablePadding="5dp"
+                android:gravity="center_vertical"
+                app:layout_constraintLeft_toRightOf="@id/scoreText"
+                app:layout_constraintBottom_toBottomOf="parent"
+                >
+
+        </androidx.appcompat.widget.AppCompatTextView>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>
