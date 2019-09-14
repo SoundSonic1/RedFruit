@@ -21,12 +21,31 @@
 
             <include
                     layout="@layout/post_title_author"
+                    android:id="@+id/postTitleAuthor"
                     android:layout_height="wrap_content"
                     android:layout_width="match_parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
-                    app:layout_constraintBottom_toTopOf="@id/postMisc2"
+                    app:layout_constraintBottom_toTopOf="@id/selfText"
                     bind:item="@{item}" />
+
+            <androidx.appcompat.widget.AppCompatTextView
+                    android:id="@+id/selfText"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@{item.selftext}"
+                    android:textSize="12sp"
+                    android:maxLines="3"
+                    android:ellipsize="end"
+                    android:paddingLeft="10dp"
+                    android:paddingRight="10dp"
+                    android:visibility="@{item.hasSelfText ? View.VISIBLE : View.GONE}"
+                    app:layout_constraintTop_toBottomOf="@id/postTitleAuthor"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintBottom_toBottomOf="@id/postMisc2"
+                    >
+
+            </androidx.appcompat.widget.AppCompatTextView>
 
             <include
                     layout="@layout/post_misc"
@@ -35,7 +54,7 @@
                     android:layout_width="match_parent"
                     android:layout_marginTop="8dp"
                     app:layout_constraintLeft_toLeftOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/postImageView"
+                    app:layout_constraintTop_toBottomOf="@+id/selfText"
                     app:layout_constraintBottom_toBottomOf="parent"
                     bind:item="@{item}" />
 

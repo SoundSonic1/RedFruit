@@ -26,5 +26,8 @@ data class Post(
     val preview: Preview,
     val over_18: Boolean,
     val stickied: Boolean,
+    val selftext: String,
     override val url: String
-) : ISource, IVotable
+) : ISource, IVotable {
+    val hasSelfText get() = selftext.isNotBlank()
+}

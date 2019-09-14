@@ -114,6 +114,7 @@ open class SubRedditRepository(private val subRedditMap: MutableMap<String, SubR
                 ),
                 over_18 = jsonData.get("over_18")?.asBoolean ?: false,
                 stickied = jsonData.get("stickied")?.asBoolean ?: false,
+                selftext = jsonData.get("selftext")?.asString ?: "",
                 url = jsonData.get("url")?.asString ?: ""
             )
         }
