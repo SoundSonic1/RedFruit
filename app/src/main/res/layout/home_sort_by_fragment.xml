@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:app="http://schemas.android.com/apk/res-auto">
+    <data>
+        <variable name="viewModel"
+                type="com.example.redfruit.ui.home.viewmodel.HomeViewModel"/>
+    </data>
+    <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+            xmlns:tools="http://schemas.android.com/tools"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            tools:context=".ui.home.fragment.HomeSortByFragment">
+
+        <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/recyclerViewHomeSortBy"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:scrollbars="vertical"
+                app:items="@{viewModel.data}"
+        />
+
+    </FrameLayout>
+</layout>

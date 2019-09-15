@@ -11,4 +11,5 @@ object Constants {
     const val LIMIT = 15
     const val HOME_FRAGMENT_TAG = "HOME_FRAGMENT_TAG"
     const val COMMENTS_FRAGMENT_TAG = "COMMENTS_FRAGMENT_TAG"
+    const val SORT_BY_KEY = "SORT_BY_KEY"
 }

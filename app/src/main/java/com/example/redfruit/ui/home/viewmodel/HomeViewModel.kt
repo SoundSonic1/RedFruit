@@ -58,6 +58,6 @@ class HomeViewModel(
     private suspend fun get(count: Int) =
         withContext(Dispatchers.IO) {
             /* perform network IO here */
-            repo.getData(_subReddit, sortBy.toString(), count)
+            repo.getData(_subReddit, sortBy.name, count)
         }
 }
