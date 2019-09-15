@@ -11,8 +11,8 @@ import com.example.redfruit.data.model.enumeration.SortBy
 import com.example.redfruit.ui.comments.fragment.CommentsFragment
 import com.example.redfruit.ui.home.adapter.HomeAdapter
 import com.example.redfruit.ui.home.fragment.HomeSortByFragment
-import com.example.redfruit.ui.home.viewmodel.HomeVMFactory
 import com.example.redfruit.ui.home.viewmodel.HomeViewModel
+import com.example.redfruit.util.BaseVMFactory
 import com.example.redfruit.util.Constants
 import com.example.redfruit.util.findFragmentByTag
 import com.example.redfruit.util.replaceFragment
@@ -82,7 +82,8 @@ class HomeSortByFragmentModule {
         ): HomeViewModel {
             return ViewModelProvider(
                 homeSortByFragment,
-                HomeVMFactory(savedSub, sortBy, repo)).get(HomeViewModel::class.java)
+                BaseVMFactory { HomeViewModel(savedSub, sortBy, repo) }
+            ).get(HomeViewModel::class.java)
         }
     }
 }
