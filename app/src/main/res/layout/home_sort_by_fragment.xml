@@ -9,14 +9,22 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             tools:context=".ui.home.fragment.HomeSortByFragment">
-
-        <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/recyclerViewHomeSortBy"
+        <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+                android:id="@+id/homeSwipeRefresh"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:scrollbars="vertical"
-                app:items="@{viewModel.data}"
-        />
+                app:onRefreshListener="@{() -> viewModel.refreshSub()}"
+                app:refreshing="@{viewModel.isLoading}">
+
+            <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/recyclerViewHomeSortBy"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:scrollbars="vertical"
+                    app:items="@{viewModel.data}"
+                    />
+
+        </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
     </FrameLayout>
 </layout>

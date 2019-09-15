@@ -6,4 +6,5 @@ package com.example.redfruit.data.api
  */
 interface IRepository<T> {
     fun getData(sub: String, sortBy: String, limit: Int): T
+    fun clearData()
 }

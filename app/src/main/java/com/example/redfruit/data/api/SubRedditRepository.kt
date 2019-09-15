@@ -21,6 +21,9 @@ open class SubRedditRepository(private val subRedditMap: MutableMap<String, SubR
 ) : IRepository<List<Post>> {
 
     /**
+     * Main function that returns a list of posts from a given subreddit
+     * for ViewModels
+     *
      * @param sub name of the subreddit
      * @param sortBy how the posts should be sorted
      * @param limit the amount of the posts that are to be fetched
@@ -71,6 +74,13 @@ open class SubRedditRepository(private val subRedditMap: MutableMap<String, SubR
             gson.fromJson(jsonChildren, object: TypeToken<List<Post>>() {}.type))
 
         return subReddit.children.toList()
+    }
+
+    /**
+     * Clear all data to make a clean refresh
+     */
+    override fun clearData() {
+        subRedditMap.clear()
     }
 
 

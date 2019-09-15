@@ -4,11 +4,13 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.content.ContextCompat
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 
 import com.example.redfruit.R
 import com.example.redfruit.data.model.enumeration.SortBy
@@ -71,13 +73,22 @@ class HomeSortByFragment : DaggerFragment() {
                 super.onScrolled(recyclerView, dx, dy)
                 val totalItemCount = recyclerView.layoutManager?.itemCount
                 val linearLayoutManager = recyclerView.layoutManager as LinearLayoutManager
-                if (!homeViewModel.loading &&
+                if (!(homeViewModel.isLoading.value ?: true) &&
                     totalItemCount == linearLayoutManager.findLastVisibleItemPosition() + 1) {
-                    homeViewModel.loading = true
+                    homeViewModel.isLoading.value = true
                     homeViewModel.loadMoreData(Constants.LIMIT)
                 }
             }
         })
+
+        val swipeRefreshLayout =
+            binding.root.findViewById<SwipeRefreshLayout>(R.id.homeSwipeRefresh)
+
+        swipeRefreshLayout.setColorSchemeColors(
+            ContextCompat.getColor(requireContext(), R.color.colorPrimary),
+            ContextCompat.getColor(requireContext(), R.color.colorPrimaryDark),
+            ContextCompat.getColor(requireContext(), R.color.colorAccent)
+        )
 
         return binding.root
     }

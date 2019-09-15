@@ -28,29 +28,40 @@ class HomeViewModel(
     // TODO: save _subReddit and sortBy preference to savedstate
     val subReddit get() = _subReddit
 
+    val isLoading: MutableLiveData<Boolean> = MutableLiveData(false)
+
     private val _data: MutableLiveData<List<Post>> by lazy {
         MutableLiveData<List<Post>>().also {
             viewModelScope.launch {
+                isLoading.value = true
                 it.value = get(Constants.LIMIT)
+                isLoading.value = false
             }
         }
     }
 
-    // Encapsulate access to mutable LiveData using backing property
-    // with LiveData
+    /**
+     * Encapsulate access to mutable LiveData using backing property
+     * with LiveData
+     */
     override val data: LiveData<List<Post>> get() = _data
-    var loading = false
 
     // api call must be in a separat thread
     fun loadMoreData(count: Int) {
+        isLoading.value = true
         viewModelScope.launch {
             _data.value = get(count)
-            loading = false
+            isLoading.value = false
         }
     }
 
     fun changeSub(sub: String) {
         _subReddit = sub.toLowerCase(Locale.ENGLISH)
+        loadMoreData(Constants.LIMIT)
+    }
+
+    fun refreshSub() {
+        repo.clearData()
         loadMoreData(Constants.LIMIT)
     }
 
