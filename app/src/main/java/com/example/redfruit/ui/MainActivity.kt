@@ -109,7 +109,7 @@ class MainActivity : DaggerAppCompatActivity(), NavigationView.OnNavigationItemS
             }
 
             override fun onQueryTextSubmit(query: String): Boolean {
-                if (query.isNotBlank()) {
+                if (query.isNotBlank() && subredditViewModel.data.value != query) {
                     changeSubIfValid(query)
                     // collapse menu item
                     searchItem.collapseActionView()

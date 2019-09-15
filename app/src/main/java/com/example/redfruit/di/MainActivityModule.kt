@@ -1,6 +1,6 @@
 package com.example.redfruit.di
 
-import androidx.lifecycle.ViewModelProvider
+import androidx.activity.viewModels
 import com.example.redfruit.ui.MainActivity
 import com.example.redfruit.ui.home.fragment.HomeFragment
 import com.example.redfruit.ui.shared.SubredditViewModel
@@ -24,10 +24,10 @@ class MainActivityModule {
             mainActivity: MainActivity,
             @Named("savedSub") sub: String
         ): SubredditViewModel {
-            return ViewModelProvider(
-                mainActivity,
+            val vm by mainActivity.viewModels<SubredditViewModel> {
                 BaseVMFactory { SubredditViewModel(sub) }
-            ).get(SubredditViewModel::class.java)
+            }
+            return vm
         }
     }
 

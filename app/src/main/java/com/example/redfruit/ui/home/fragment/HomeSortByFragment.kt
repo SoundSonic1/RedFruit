@@ -6,8 +6,8 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.core.content.ContextCompat
 import androidx.databinding.DataBindingUtil
+import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.redfruit.R
@@ -44,14 +44,12 @@ class HomeSortByFragment : DaggerFragment() {
         savedInstanceState: Bundle?
     ): View? {
         // get SubredditViewModel instance from the MainActivity
-        activity?.let {
-            val sharedViewModel = ViewModelProvider(it).get(SubredditViewModel::class.java)
-            sharedViewModel.data.observe(viewLifecycleOwner, Observer {
-                if (it != homeViewModel.subReddit) {
-                    homeViewModel.changeSub(it)
-                }
-            })
-        }
+        val sharedViewModel by activityViewModels<SubredditViewModel>()
+        sharedViewModel.data.observe(viewLifecycleOwner, Observer {sub ->
+            if (sub != homeViewModel.subReddit) {
+                homeViewModel.changeSub(sub)
+            }
+        })
 
         val binding: HomeSortByFragmentBinding =
             DataBindingUtil.inflate(inflater, R.layout.home_sort_by_fragment, container, false)

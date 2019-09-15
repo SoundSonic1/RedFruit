@@ -3,7 +3,7 @@ package com.example.redfruit.di
 import android.content.Context
 import android.util.Log
 import androidx.fragment.app.FragmentManager
-import androidx.lifecycle.ViewModelProvider
+import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.redfruit.R
 import com.example.redfruit.data.api.SubRedditRepository
@@ -49,11 +49,11 @@ class HomeSortByFragmentModule {
             uiScope: CoroutineScope
         ): HomeAdapter {
             return HomeAdapter(uiScope, mutableListOf()) {
-                fragmentManager?.let {
-                    val fragment = findFragmentByTag(it, Constants.COMMENTS_FRAGMENT_TAG) {
+                fragmentManager?.let { fm ->
+                    val fragment = findFragmentByTag(fm, Constants.COMMENTS_FRAGMENT_TAG) {
                         CommentsFragment()
                     }
-                    replaceFragment(it, R.id.mainContent, fragment, Constants.COMMENTS_FRAGMENT_TAG)
+                    replaceFragment(fm, R.id.mainContent, fragment, Constants.COMMENTS_FRAGMENT_TAG)
                 }
             }
         }
@@ -75,15 +75,15 @@ class HomeSortByFragmentModule {
         @JvmStatic
         @Provides
         fun provideHomeViewModel(
-            homeSortByFragment: HomeSortByFragment,
+            fragment: HomeSortByFragment,
             @Named("savedSub") savedSub: String,
             sortBy: SortBy,
             repo: SubRedditRepository
         ): HomeViewModel {
-            return ViewModelProvider(
-                homeSortByFragment,
+            val vm by fragment.viewModels<HomeViewModel> {
                 BaseVMFactory { HomeViewModel(savedSub, sortBy, repo) }
-            ).get(HomeViewModel::class.java)
+            }
+            return vm
         }
     }
 }
