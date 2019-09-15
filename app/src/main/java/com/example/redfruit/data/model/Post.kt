@@ -29,5 +29,5 @@ data class Post(
     val selftext: String,
     override val url: String
 ) : ISource, IVotable {
-    val hasSelfText get() = selftext.isNotBlank()
+    // val hasSelfText get() = selftext.isNotBlank()
 }
