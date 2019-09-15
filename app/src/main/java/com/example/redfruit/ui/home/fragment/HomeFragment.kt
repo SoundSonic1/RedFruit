@@ -4,11 +4,10 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.viewpager.widget.ViewPager
 import com.example.redfruit.R
 import com.example.redfruit.ui.home.adapter.SortByPagerAdapter
-import com.google.android.material.tabs.TabLayout
 import dagger.android.support.DaggerFragment
+import kotlinx.android.synthetic.main.home_fragment.view.*
 import javax.inject.Inject
 
 class HomeFragment : DaggerFragment() {
@@ -21,10 +20,10 @@ class HomeFragment : DaggerFragment() {
         savedInstanceState: Bundle?
     ): View? {
         val view = inflater.inflate(R.layout.home_fragment, container, false)
-        val viewPagerHome = view.findViewById<ViewPager>(R.id.viewPagerHome).apply {
+        val viewPagerHome = view.viewPagerHome.apply {
             adapter = sortByPagerAdapter
         }
-        view.findViewById<TabLayout>(R.id.tabsSortBy).apply {
+        view.tabsSortBy.apply {
             setupWithViewPager(viewPagerHome)
         }
 

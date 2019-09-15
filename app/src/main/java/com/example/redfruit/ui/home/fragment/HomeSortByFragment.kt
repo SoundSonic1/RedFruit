@@ -10,8 +10,6 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
-
 import com.example.redfruit.R
 import com.example.redfruit.data.model.enumeration.SortBy
 import com.example.redfruit.databinding.HomeSortByFragmentBinding
@@ -20,6 +18,7 @@ import com.example.redfruit.ui.home.viewmodel.HomeViewModel
 import com.example.redfruit.ui.shared.SubredditViewModel
 import com.example.redfruit.util.Constants
 import dagger.android.support.DaggerFragment
+import kotlinx.android.synthetic.main.home_sort_by_fragment.view.*
 import javax.inject.Inject
 import javax.inject.Provider
 
@@ -45,7 +44,14 @@ class HomeSortByFragment : DaggerFragment() {
         savedInstanceState: Bundle?
     ): View? {
         // get SubredditViewModel instance from the MainActivity
-        val sharedViewModel = ViewModelProvider(activity!!).get(SubredditViewModel::class.java)
+        activity?.let {
+            val sharedViewModel = ViewModelProvider(it).get(SubredditViewModel::class.java)
+            sharedViewModel.data.observe(viewLifecycleOwner, Observer {
+                if (it != homeViewModel.subReddit) {
+                    homeViewModel.changeSub(it)
+                }
+            })
+        }
 
         val binding: HomeSortByFragmentBinding =
             DataBindingUtil.inflate(inflater, R.layout.home_sort_by_fragment, container, false)
@@ -56,14 +62,8 @@ class HomeSortByFragment : DaggerFragment() {
             viewModel = homeViewModel
         }
 
-        sharedViewModel.data.observe(viewLifecycleOwner, Observer {
-            if (it != homeViewModel.subReddit) {
-                homeViewModel.changeSub(it)
-            }
-        })
 
-
-        val recyclerView = binding.root.findViewById<RecyclerView>(R.id.recyclerViewHomeSortBy).apply {
+        val recyclerView = binding.root.recyclerViewHomeSortBy.apply {
             layoutManager = linearLayoutManagerProvider.get()
             adapter = homeAdapter
             setHasFixedSize(true)
@@ -73,7 +73,7 @@ class HomeSortByFragment : DaggerFragment() {
                 super.onScrolled(recyclerView, dx, dy)
                 val totalItemCount = recyclerView.layoutManager?.itemCount
                 val linearLayoutManager = recyclerView.layoutManager as LinearLayoutManager
-                if (!(homeViewModel.isLoading.value ?: true) &&
+                if (homeViewModel.isLoading.value == false &&
                     totalItemCount == linearLayoutManager.findLastVisibleItemPosition() + 1) {
                     homeViewModel.isLoading.value = true
                     homeViewModel.loadMoreData(Constants.LIMIT)
@@ -81,14 +81,13 @@ class HomeSortByFragment : DaggerFragment() {
             }
         })
 
-        val swipeRefreshLayout =
-            binding.root.findViewById<SwipeRefreshLayout>(R.id.homeSwipeRefresh)
-
-        swipeRefreshLayout.setColorSchemeColors(
-            ContextCompat.getColor(requireContext(), R.color.colorPrimary),
-            ContextCompat.getColor(requireContext(), R.color.colorPrimaryDark),
-            ContextCompat.getColor(requireContext(), R.color.colorAccent)
-        )
+        binding.root.homeSwipeRefresh.apply {
+            setColorSchemeColors(
+                ContextCompat.getColor(requireContext(), R.color.colorPrimary),
+                ContextCompat.getColor(requireContext(), R.color.colorPrimaryDark),
+                ContextCompat.getColor(requireContext(), R.color.colorAccent)
+            )
+        }
 
         return binding.root
     }
