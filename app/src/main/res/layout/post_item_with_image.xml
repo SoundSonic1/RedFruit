@@ -24,7 +24,7 @@
                     android:layout_height="wrap_content"
                     android:layout_width="match_parent"
                     app:layout_constraintTop_toTopOf="parent"
-                    app:layout_constraintBottom_toTopOf="@+id/postImageView"
+                    app:layout_constraintBottom_toTopOf="@+id/postMediaView"
                     app:layout_constraintLeft_toLeftOf="parent"
                     app:layout_constraintRight_toRightOf="parent"
                     bind:item="@{item}" />
@@ -32,7 +32,7 @@
             <androidx.appcompat.widget.AppCompatImageView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:id="@+id/postImageView"
+                    android:id="@+id/postMediaView"
                     android:adjustViewBounds="true"
                     android:scaleType="fitCenter"
                     android:contentDescription="@string/image_view_content_descr"
@@ -50,7 +50,7 @@
                     android:layout_marginTop="8dp"
                     app:layout_constraintLeft_toLeftOf="parent"
                     app:layout_constraintRight_toRightOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/postImageView"
+                    app:layout_constraintTop_toBottomOf="@+id/postMediaView"
                     bind:item="@{item}" />
         </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.cardview.widget.CardView>

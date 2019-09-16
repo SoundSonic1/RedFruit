@@ -6,6 +6,9 @@ import com.example.redfruit.data.model.Preview
 import com.example.redfruit.data.model.SubRedditListing
 import com.example.redfruit.data.model.images.ImageSource
 import com.example.redfruit.data.model.images.RedditImage
+import com.example.redfruit.data.model.media.Oembed
+import com.example.redfruit.data.model.media.RedditVideo
+import com.example.redfruit.data.model.media.SecureMedia
 import com.example.redfruit.util.Constants
 import com.example.redfruit.util.getResponse
 import com.google.gson.*
@@ -98,15 +101,23 @@ open class SubRedditRepository(private val subRedditMap: MutableMap<String, SubR
             val enabled = jsonPreview?.get("enabled")?.asBoolean ?: false
             val jsonArrayImages = jsonPreview?.getAsJsonArray("images")
 
-            var images: List<RedditImage>? = null
-            if (enabled) {
-                val gson = Gson()
-                images = jsonArrayImages?.map { item ->
-                    RedditImage(
-                        source = gson.fromJson(item.asJsonObject.get("source"), ImageSource::class.java),
-                        resolutions = gson.fromJson(item.asJsonObject.get("resolutions"), object : TypeToken<List<ImageSource>>() {}.type)
-                    )
-                }
+            val gson = Gson()
+            // get images only if preview is enabled
+            val images = if (enabled) {
+                jsonArrayImages?.map {
+                RedditImage(
+                    source = gson.fromJson(it.asJsonObject.get("source"), ImageSource::class.java),
+                    resolutions = gson.fromJson(it.asJsonObject.get("resolutions"), object : TypeToken<List<ImageSource>>() {}.type)
+                )
+            }
+            } else {
+                null
+            }
+
+            val secureMedia: SecureMedia? = if (jsonData.get("secure_media").isJsonNull) {
+                null
+            } else {
+                getSecureMedia(jsonData.getAsJsonObject("secure_media"))
             }
 
 
@@ -122,11 +133,24 @@ open class SubRedditRepository(private val subRedditMap: MutableMap<String, SubR
                     enabled = enabled,
                     images = images ?: listOf()
                 ),
+                secureMedia = secureMedia,
                 over_18 = jsonData.get("over_18")?.asBoolean ?: false,
                 stickied = jsonData.get("stickied")?.asBoolean ?: false,
                 selftext = jsonData.get("selftext")?.asString ?: "",
                 url = jsonData.get("url")?.asString ?: ""
             )
+        }
+
+        private fun getSecureMedia(jsonObj: JsonObject): SecureMedia {
+            val redditVideo = jsonObj.get("reddit_video")?.let {
+                Gson().fromJson(it.asJsonObject, RedditVideo::class.java)
+            }
+
+            val oembed = jsonObj.get("oembed")?.let {
+                Gson().fromJson(it.asJsonObject, Oembed::class.java)
+            }
+
+            return SecureMedia(redditVideo, oembed)
         }
 
     }

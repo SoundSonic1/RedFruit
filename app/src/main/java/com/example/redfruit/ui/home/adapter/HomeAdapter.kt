@@ -8,6 +8,7 @@ import com.example.redfruit.R
 import com.example.redfruit.data.model.Post
 import com.example.redfruit.databinding.PostItemBinding
 import com.example.redfruit.databinding.PostItemWithImageBinding
+import com.example.redfruit.databinding.PostItemWithMediaBinding
 import com.example.redfruit.ui.base.AbstractViewHolder
 import com.example.redfruit.ui.base.GenericAdapter
 import kotlinx.coroutines.CoroutineScope
@@ -23,7 +24,10 @@ class HomeAdapter(private val uiScope: CoroutineScope, items: MutableList<Post>,
                   listener: (Post) -> Unit) : GenericAdapter<Post>(items, listener) {
 
     override fun getViewHolder(parent: ViewGroup, viewType: Int): AbstractViewHolder<Post> {
-        if (viewType == viewTypeWithImage) {
+        if (viewType == viewTypeWithMedia) {
+            return PostWithMediaViewHolder(parent)
+        }
+        else if (viewType == viewTypeWithImage) {
             return PostWithImageViewHolder(parent)
         }
         return PostTextOnlyViewHolder(parent)
@@ -33,7 +37,11 @@ class HomeAdapter(private val uiScope: CoroutineScope, items: MutableList<Post>,
      * Identify posts that contain image(s)
      */
     override fun getLayoutId(position: Int, obj: Post): Int  {
-        if (obj.preview.images.isNotEmpty()) {
+        // TODO: support oembed
+        if (obj.secureMedia?.redditVideo != null) {
+            return viewTypeWithMedia
+        }
+        else if (obj.preview.images.isNotEmpty()) {
             return viewTypeWithImage
         }
         return viewTypeTextOnly
@@ -71,6 +79,7 @@ class HomeAdapter(private val uiScope: CoroutineScope, items: MutableList<Post>,
     companion object {
         private const val viewTypeTextOnly = 0
         private const val viewTypeWithImage = 1
+        private const val viewTypeWithMedia = 2
     }
 
 }
@@ -91,6 +100,17 @@ class PostWithImageViewHolder(
         itemView.setOnClickListener {
             listener(item)
         }
+    }
+}
+
+class PostWithMediaViewHolder(
+    parent: ViewGroup,
+    private val binding: PostItemWithMediaBinding =
+        DataBindingUtil.inflate(LayoutInflater.from(parent.context), R.layout.post_item_with_media,
+            parent, false)
+) : AbstractViewHolder<Post>(binding.root) {
+    override fun bind(item: Post, listener: (Post) -> Unit) {
+        binding.item = item
     }
 }
 

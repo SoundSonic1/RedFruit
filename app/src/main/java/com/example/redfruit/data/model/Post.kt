@@ -2,6 +2,7 @@ package com.example.redfruit.data.model
 
 import com.example.redfruit.data.model.interfaces.ISource
 import com.example.redfruit.data.model.interfaces.IVotable
+import com.example.redfruit.data.model.media.SecureMedia
 
 /** Contains the necessary information of a reddit post
  *
@@ -24,6 +25,7 @@ data class Post(
     val score: Int,
     val num_comments: Int,
     val preview: Preview,
+    val secureMedia: SecureMedia?,
     val over_18: Boolean,
     val stickied: Boolean,
     val selftext: String,

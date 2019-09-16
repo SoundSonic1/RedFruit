@@ -61,6 +61,8 @@ dependencies {
     implementation "androidx.lifecycle:lifecycle-extensions:$lifecycle_version"
     // for fetching images
     implementation("io.coil-kt:coil:0.7.0")
+    // for advanced video playback
+    implementation 'com.google.android.exoplayer:exoplayer:2.10.4'
     // databinding
     kapt 'com.android.databinding:compiler:3.5.0'
     // for dependency injection
