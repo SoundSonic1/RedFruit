@@ -1,6 +1,7 @@
 package com.example.redfruit.ui.shared
 
 import android.net.Uri
+import android.view.View
 import android.widget.ImageView
 import androidx.databinding.BindingAdapter
 import androidx.recyclerview.widget.RecyclerView
@@ -17,6 +18,9 @@ import com.google.android.exoplayer2.trackselection.DefaultTrackSelector
 import com.google.android.exoplayer2.ui.PlayerView
 import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory
 import com.google.android.exoplayer2.util.Util
+import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.YouTubePlayer
+import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.listeners.YouTubePlayerCallback
+import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.views.YouTubePlayerView
 
 /**
  * Collect all BindingAdapters here
@@ -62,6 +66,22 @@ object BindingAdapters {
 
                 exoPlayer.prepare(mediaSource)
             }
+        }
+    }
+
+    @JvmStatic
+    @BindingAdapter("youtube")
+    fun loadYoutubeVideo(youtubePlayerView: YouTubePlayerView, youtubeId: String?) {
+        if (!youtubeId.isNullOrBlank()) {
+            val callback: YouTubePlayerCallback = object : YouTubePlayerCallback {
+                override fun onYouTubePlayer(youTubePlayer: YouTubePlayer) {
+                    youTubePlayer.cueVideo(youtubeId, 0f)
+                }
+            }
+            youtubePlayerView.getYouTubePlayerWhenReady(callback)
+            youtubePlayerView.visibility = View.VISIBLE
+        } else {
+            youtubePlayerView.visibility = View.GONE
         }
     }
 }

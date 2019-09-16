@@ -1,7 +1,6 @@
 package com.example.redfruit.data.model
 
 import com.example.redfruit.data.model.interfaces.ISource
-import com.example.redfruit.data.model.interfaces.IVotable
 import com.example.redfruit.data.model.media.SecureMedia
 
 /** Contains the necessary information of a reddit post
@@ -20,16 +19,12 @@ data class Post(
     val id: String,
     val title: String,
     val author: String,
-    override val ups: Int,
-    override val downs: Int,
-    val score: Int,
-    val num_comments: Int,
+    val score: String,
+    val num_comments: String,
     val preview: Preview,
     val secureMedia: SecureMedia?,
     val over_18: Boolean,
     val stickied: Boolean,
     val selftext: String,
     override val url: String
-) : ISource, IVotable {
-    // val hasSelfText get() = selftext.isNotBlank()
-}
+) : ISource

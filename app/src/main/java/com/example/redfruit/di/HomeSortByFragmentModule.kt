@@ -4,6 +4,7 @@ import android.content.Context
 import android.util.Log
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.Lifecycle
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.redfruit.R
 import com.example.redfruit.data.api.SubRedditRepository
@@ -44,11 +45,16 @@ class HomeSortByFragmentModule {
 
         @JvmStatic
         @Provides
+        fun provideLifeCycle(fragment: HomeSortByFragment) = fragment.lifecycle
+
+        @JvmStatic
+        @Provides
         fun provideHomeAdapter(
             fragmentManager: FragmentManager?,
-            uiScope: CoroutineScope
+            uiScope: CoroutineScope,
+            lifecycle: Lifecycle
         ): HomeAdapter {
-            return HomeAdapter(uiScope, mutableListOf()) {
+            return HomeAdapter(mutableListOf(), uiScope, lifecycle) {
                 fragmentManager?.let { fm ->
                     val fragment = findFragmentByTag(fm, Constants.COMMENTS_FRAGMENT_TAG) {
                         CommentsFragment()

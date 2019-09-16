@@ -6,9 +6,9 @@ import com.example.redfruit.data.model.Preview
 import com.example.redfruit.data.model.SubRedditListing
 import com.example.redfruit.data.model.images.ImageSource
 import com.example.redfruit.data.model.images.RedditImage
-import com.example.redfruit.data.model.media.Oembed
 import com.example.redfruit.data.model.media.RedditVideo
 import com.example.redfruit.data.model.media.SecureMedia
+import com.example.redfruit.data.model.media.YoutubeoEmbed
 import com.example.redfruit.util.Constants
 import com.example.redfruit.util.getResponse
 import com.google.gson.*
@@ -125,10 +125,8 @@ open class SubRedditRepository(private val subRedditMap: MutableMap<String, SubR
                 id = jsonData.get("id").asString,
                 title = jsonData.get("title").asString,
                 author = jsonData.get("author")?.asString ?: "Unknown",
-                ups = jsonData.get("ups")?.asInt ?: 0,
-                downs = jsonData.get("downs")?.asInt ?: 0,
-                score = jsonData.get("score")?.asInt ?: 0,
-                num_comments = jsonData.get("num_comments")?.asInt ?: 0,
+                score = jsonData.get("score")?.asString ?: "0",
+                num_comments = jsonData.get("num_comments")?.asString ?: "0",
                 preview = Preview(
                     enabled = enabled,
                     images = images ?: listOf()
@@ -146,11 +144,15 @@ open class SubRedditRepository(private val subRedditMap: MutableMap<String, SubR
                 Gson().fromJson(it.asJsonObject, RedditVideo::class.java)
             }
 
-            val oembed = jsonObj.get("oembed")?.let {
-                Gson().fromJson(it.asJsonObject, Oembed::class.java)
+            val youtubeOembed = if (jsonObj.get("type")?.asString == "youtube.com") {
+                jsonObj.get("oembed")?.let {
+                    Gson().fromJson(it.asJsonObject, YoutubeoEmbed::class.java)
+                }
+            } else {
+                null
             }
 
-            return SecureMedia(redditVideo, oembed)
+            return SecureMedia(redditVideo, youtubeOembed)
         }
 
     }

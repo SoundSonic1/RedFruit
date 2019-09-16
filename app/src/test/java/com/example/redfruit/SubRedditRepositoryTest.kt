@@ -57,8 +57,7 @@ class SubRedditRepositoryTest : SubRedditRepository() {
         )
         assertEquals(imageSource, child.preview.firstImageSource)
 
-        assertEquals(1, child.ups)
-        assertEquals(0, child.downs)
+        assertEquals("1", child.score)
 
         assertEquals("d35r85", child.id)
 

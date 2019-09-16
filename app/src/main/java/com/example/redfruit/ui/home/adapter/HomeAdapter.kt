@@ -3,29 +3,40 @@ package com.example.redfruit.ui.home.adapter
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
+import androidx.lifecycle.Lifecycle
 import androidx.recyclerview.widget.DiffUtil
 import com.example.redfruit.R
 import com.example.redfruit.data.model.Post
-import com.example.redfruit.databinding.PostItemBinding
-import com.example.redfruit.databinding.PostItemWithImageBinding
-import com.example.redfruit.databinding.PostItemWithMediaBinding
+import com.example.redfruit.databinding.PostItemImageBinding
+import com.example.redfruit.databinding.PostItemRedditVideoBinding
+import com.example.redfruit.databinding.PostItemTextBinding
+import com.example.redfruit.databinding.PostItemYoutubeBinding
 import com.example.redfruit.ui.base.AbstractViewHolder
 import com.example.redfruit.ui.base.GenericAdapter
+import kotlinx.android.synthetic.main.post_item_youtube.view.*
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
 /**
- * Adapter for the RecyclerView of the HomeFragment
+ * Adapter for the RecyclerView of the HomeSortByFragment
  * @property uiScope required to make updates to the UI after async diff calc
+ * @property lifeCycle to properly release YoutubePlayerView
  */
-class HomeAdapter(private val uiScope: CoroutineScope, items: MutableList<Post>,
-                  listener: (Post) -> Unit) : GenericAdapter<Post>(items, listener) {
+class HomeAdapter(
+    items: MutableList<Post>,
+    private val uiScope: CoroutineScope,
+    private val lifeCycle: Lifecycle,
+    listener: (Post) -> Unit
+) : GenericAdapter<Post>(items, listener) {
 
     override fun getViewHolder(parent: ViewGroup, viewType: Int): AbstractViewHolder<Post> {
-        if (viewType == viewTypeWithMedia) {
-            return PostWithMediaViewHolder(parent)
+        if (viewType == viewTypeWithYoutube) {
+            return PostWithYoutubeViewHolder(parent, lifeCycle)
+        }
+        else if (viewType == viewTypeWithMedia) {
+            return PostWithRedditVideoViewHolder(parent)
         }
         else if (viewType == viewTypeWithImage) {
             return PostWithImageViewHolder(parent)
@@ -37,8 +48,11 @@ class HomeAdapter(private val uiScope: CoroutineScope, items: MutableList<Post>,
      * Identify posts that contain image(s)
      */
     override fun getLayoutId(position: Int, obj: Post): Int  {
-        // TODO: support oembed
-        if (obj.secureMedia?.redditVideo != null) {
+        // TODO: support more oEmbed
+        if (obj.secureMedia?.youtubeoEmbed?.provider_url == "https://www.youtube.com/") {
+            return viewTypeWithYoutube
+        }
+        else if (obj.secureMedia?.redditVideo != null) {
             return viewTypeWithMedia
         }
         else if (obj.preview.images.isNotEmpty()) {
@@ -80,6 +94,7 @@ class HomeAdapter(private val uiScope: CoroutineScope, items: MutableList<Post>,
         private const val viewTypeTextOnly = 0
         private const val viewTypeWithImage = 1
         private const val viewTypeWithMedia = 2
+        private const val viewTypeWithYoutube = 3
     }
 
 }
@@ -89,8 +104,8 @@ class HomeAdapter(private val uiScope: CoroutineScope, items: MutableList<Post>,
  */
 class PostWithImageViewHolder(
     parent: ViewGroup,
-    private val binding: PostItemWithImageBinding =
-        DataBindingUtil.inflate(LayoutInflater.from(parent.context), R.layout.post_item_with_image,
+    private val binding: PostItemImageBinding =
+        DataBindingUtil.inflate(LayoutInflater.from(parent.context), R.layout.post_item_image,
             parent, false)
 ) : AbstractViewHolder<Post>(binding.root) {
 
@@ -103,10 +118,10 @@ class PostWithImageViewHolder(
     }
 }
 
-class PostWithMediaViewHolder(
+class PostWithRedditVideoViewHolder(
     parent: ViewGroup,
-    private val binding: PostItemWithMediaBinding =
-        DataBindingUtil.inflate(LayoutInflater.from(parent.context), R.layout.post_item_with_media,
+    private val binding: PostItemRedditVideoBinding =
+        DataBindingUtil.inflate(LayoutInflater.from(parent.context), R.layout.post_item_reddit_video,
             parent, false)
 ) : AbstractViewHolder<Post>(binding.root) {
     override fun bind(item: Post, listener: (Post) -> Unit) {
@@ -114,10 +129,25 @@ class PostWithMediaViewHolder(
     }
 }
 
+class PostWithYoutubeViewHolder(
+    parent: ViewGroup,
+    lifeCycle: Lifecycle,
+    private val binding: PostItemYoutubeBinding =
+        DataBindingUtil.inflate(LayoutInflater.from(parent.context), R.layout.post_item_youtube,
+            parent, false)
+) : AbstractViewHolder<Post>(binding.root) {
+    init {
+        lifeCycle.addObserver(itemView.postYoutubeView)
+    }
+    override fun bind(item: Post, listener: (Post) -> Unit) {
+        binding.item = item
+    }
+}
+
 class PostTextOnlyViewHolder(
     parent: ViewGroup,
-    private val binding: PostItemBinding =
-        DataBindingUtil.inflate(LayoutInflater.from(parent.context), R.layout.post_item,
+    private val binding: PostItemTextBinding =
+        DataBindingUtil.inflate(LayoutInflater.from(parent.context), R.layout.post_item_text,
             parent, false)
 ) : AbstractViewHolder<Post>(binding.root) {
 
