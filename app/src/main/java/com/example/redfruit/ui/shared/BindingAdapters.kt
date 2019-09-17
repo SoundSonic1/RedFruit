@@ -84,4 +84,14 @@ object BindingAdapters {
             youtubePlayerView.visibility = View.GONE
         }
     }
+
+    @JvmStatic
+    @BindingAdapter("toolbarImage")
+    fun loadToolbarImage(imageView: ImageView, url: String?) {
+       url?.let {
+           imageView.load(it) {
+               crossfade(true)
+           }
+       }
+    }
 }
