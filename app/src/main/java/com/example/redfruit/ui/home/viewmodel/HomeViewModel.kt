@@ -25,7 +25,6 @@ class HomeViewModel(
     private val repo: IRepository<List<Post>>
 ) : ViewModel(), IViewModel<List<Post>> {
 
-    // TODO: save _subReddit and sortBy preference to savedstate
     val subReddit get() = _subReddit
 
     val isLoading: MutableLiveData<Boolean> = MutableLiveData(false)
@@ -56,7 +55,7 @@ class HomeViewModel(
     }
 
     fun changeSub(sub: String) {
-        _subReddit = sub.toLowerCase(Locale.ENGLISH)
+        _subReddit = sub
         loadMoreData(Constants.LIMIT)
     }
 
@@ -69,6 +68,6 @@ class HomeViewModel(
     private suspend fun get(count: Int) =
         withContext(Dispatchers.IO) {
             /* perform network IO here */
-            repo.getData(_subReddit, sortBy.name, count)
+            repo.getData(_subReddit.toLowerCase(Locale.ENGLISH), sortBy.name, count)
         }
 }

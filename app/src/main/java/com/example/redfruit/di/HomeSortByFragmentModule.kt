@@ -7,7 +7,7 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.redfruit.R
-import com.example.redfruit.data.api.SubRedditRepository
+import com.example.redfruit.data.api.SubRedditPostsRepository
 import com.example.redfruit.data.model.enumeration.SortBy
 import com.example.redfruit.ui.comments.fragment.CommentsFragment
 import com.example.redfruit.ui.home.adapter.HomeAdapter
@@ -29,7 +29,7 @@ class HomeSortByFragmentModule {
     companion object {
         @JvmStatic
         @Provides
-        fun provideSubredditRepo() = SubRedditRepository()
+        fun provideSubredditRepo() = SubRedditPostsRepository()
 
         @JvmStatic
         @Provides
@@ -84,7 +84,7 @@ class HomeSortByFragmentModule {
             fragment: HomeSortByFragment,
             @Named("savedSub") savedSub: String,
             sortBy: SortBy,
-            repo: SubRedditRepository
+            repo: SubRedditPostsRepository
         ): HomeViewModel {
             val vm by fragment.viewModels<HomeViewModel> {
                 BaseVMFactory { HomeViewModel(savedSub, sortBy, repo) }

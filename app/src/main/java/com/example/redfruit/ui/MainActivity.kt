@@ -18,7 +18,7 @@ import com.example.redfruit.databinding.ActivityMainBinding
 import com.example.redfruit.ui.home.fragment.HomeFragment
 import com.example.redfruit.ui.shared.SubredditViewModel
 import com.example.redfruit.util.Constants
-import com.example.redfruit.util.isValidSubDetail
+import com.example.redfruit.util.isValidSub
 import com.example.redfruit.util.replaceFragment
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.navigation.NavigationView
@@ -56,8 +56,11 @@ class MainActivity : DaggerAppCompatActivity(), NavigationView.OnNavigationItemS
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        val binding: ActivityMainBinding = DataBindingUtil.setContentView(this, R.layout.activity_main)
-        binding.item = subredditViewModel
+        val binding: ActivityMainBinding =
+            DataBindingUtil.setContentView(this, R.layout.activity_main)
+
+        binding.lifecycleOwner = this
+        binding.viewModelMainactivity = subredditViewModel
 
         collapsingToolbarLayout.isTitleEnabled = false
         val toolbar: Toolbar = findViewById(R.id.toolbar)
@@ -81,10 +84,10 @@ class MainActivity : DaggerAppCompatActivity(), NavigationView.OnNavigationItemS
 
         subredditViewModel.data.observe(this, Observer {
             // TODO: change title via data binding
-            supportActionBar?.title = it
+            supportActionBar?.title = it.display_name
             // save latest subreddit
             with (sharedPref.edit()) {
-                putString(getString(R.string.saved_subreddit), it.toLowerCase(Locale.ENGLISH))
+                putString(getString(R.string.saved_subreddit), it.display_name)
                 commit()
             }
         })
@@ -116,13 +119,14 @@ class MainActivity : DaggerAppCompatActivity(), NavigationView.OnNavigationItemS
             }
 
             override fun onQueryTextSubmit(query: String): Boolean {
-                if (query.isNotBlank() && subredditViewModel.data.value != query) {
+                if (query.isNotBlank() &&
+                    subredditViewModel.data.value?.display_name?.toLowerCase(Locale.ENGLISH) != query.toLowerCase(
+                        Locale.ENGLISH)) {
                     changeSubIfValid(query)
-                    // collapse menu item
-                    searchItem.collapseActionView()
-                    return true
                 }
-                return false
+                // collapse menu item
+                searchItem.collapseActionView()
+                return true
             }
 
         })
@@ -177,7 +181,7 @@ class MainActivity : DaggerAppCompatActivity(), NavigationView.OnNavigationItemS
      */
     private fun changeSubIfValid(sub: String) {
         uiScope.launch {
-            if (isValidSubDetail(sub)) {
+            if (isValidSub(sub)) {
                 // set new subreddit
                 subredditViewModel.setSub(sub)
                 // Change back to home fragment

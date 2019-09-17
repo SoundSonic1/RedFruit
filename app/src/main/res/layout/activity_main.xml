@@ -2,7 +2,7 @@
 <layout>
     <data>
         <variable
-                name="item"
+                name="viewModelMainactivity"
                 type="com.example.redfruit.ui.shared.SubredditViewModel" />
     </data>
     <androidx.drawerlayout.widget.DrawerLayout
@@ -19,7 +19,7 @@
                 layout="@layout/app_bar_main"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                app:item="@{item}"/>
+                app:viewModel="@{viewModelMainactivity}"/>
 
         <com.google.android.material.navigation.NavigationView
                 android:id="@+id/nav_view"

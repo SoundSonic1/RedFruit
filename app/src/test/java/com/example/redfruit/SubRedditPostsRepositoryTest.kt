@@ -1,6 +1,6 @@
 package com.example.redfruit
 
-import com.example.redfruit.data.api.SubRedditRepository
+import com.example.redfruit.data.api.SubRedditPostsRepository
 import com.example.redfruit.data.model.Post
 import com.example.redfruit.data.model.images.ImageSource
 import com.example.redfruit.util.Constants
@@ -12,13 +12,13 @@ import org.junit.Assert.assertFalse
 import org.junit.Before
 import org.junit.Test
 
-class SubRedditRepositoryTest : SubRedditRepository() {
+class SubRedditPostsRepositoryTest : SubRedditPostsRepository() {
 
-    private lateinit var repo: SubRedditRepository
+    private lateinit var repo: SubRedditPostsRepository
 
     @Before
     fun setUp() {
-        repo = SubRedditRepository()
+        repo = SubRedditPostsRepository()
     }
 
     @Test

@@ -88,10 +88,14 @@ object BindingAdapters {
     @JvmStatic
     @BindingAdapter("toolbarImage")
     fun loadToolbarImage(imageView: ImageView, url: String?) {
-       url?.let {
-           imageView.load(it) {
-               crossfade(true)
-           }
-       }
+        if (url.isNullOrBlank()) {
+            imageView.load("https://wallpaperplay.com/walls/full/2/9/e/31137.jpg") {
+                crossfade(true)
+            }
+        } else {
+            imageView.load(url) {
+                crossfade(true)
+            }
+        }
     }
 }

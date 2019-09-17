@@ -29,7 +29,7 @@ fun urlEncode(url: String): String = url.replace(" ", "%20")
 /**
  * Returns true if the given sub name is a valid subreddit
  */
-suspend fun isValidSubDetail(sub: String): Boolean =
+suspend fun isValidSub(sub: String): Boolean =
     withContext(Dispatchers.Default) {
         val response = getResponse("${Constants.BASE_URL}$sub/about.json?raw_json=1")
         if(response.isBlank()) {

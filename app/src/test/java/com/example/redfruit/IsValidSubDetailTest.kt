@@ -1,7 +1,7 @@
 package com.example.redfruit
 
 import com.example.redfruit.util.Constants
-import com.example.redfruit.util.isValidSubDetail
+import com.example.redfruit.util.isValidSub
 import kotlinx.coroutines.runBlocking
 import org.junit.Assert.assertFalse
 import org.junit.Assert.assertTrue
@@ -11,21 +11,21 @@ class IsValidSubDetailTest {
     @Test
     fun validSub() {
         runBlocking {
-            assertTrue("Default sub must be valid", isValidSubDetail(Constants.DEFAULT_SUB))
-            assertTrue("Underscore is valid", isValidSubDetail("memes_of_dank"))
+            assertTrue("Default sub must be valid", isValidSub(Constants.DEFAULT_SUB))
+            assertTrue("Underscore is valid", isValidSub("memes_of_dank"))
         }
     }
 
     @Test
     fun invalidSub() {
         runBlocking {
-            assertFalse(isValidSubDetail("androidde"))
+            assertFalse(isValidSub("androidde"))
         }
         runBlocking {
-            assertFalse("There is no empty sub", isValidSubDetail(""))
+            assertFalse("There is no empty sub", isValidSub(""))
         }
         runBlocking {
-            assertFalse("Spaces are not allowed", isValidSubDetail("dank memes"))
+            assertFalse("Spaces are not allowed", isValidSub("dank memes"))
         }
     }
 }

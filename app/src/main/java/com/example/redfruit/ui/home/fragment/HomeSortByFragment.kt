@@ -46,8 +46,8 @@ class HomeSortByFragment : DaggerFragment() {
         // get SubredditViewModel instance from the MainActivity
         val sharedViewModel by activityViewModels<SubredditViewModel>()
         sharedViewModel.data.observe(viewLifecycleOwner, Observer {sub ->
-            if (sub != homeViewModel.subReddit) {
-                homeViewModel.changeSub(sub)
+            if (sub.display_name != homeViewModel.subReddit) {
+                homeViewModel.changeSub(sub.display_name)
             }
         })
 

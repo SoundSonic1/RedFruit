@@ -19,7 +19,7 @@ import java.lang.reflect.Type
  * Implements the Repository pattern
  * @property subRedditMap collects the subreddit
  */
-open class SubRedditRepository(private val subRedditMap: MutableMap<String, SubRedditListing>
+open class SubRedditPostsRepository(private val subRedditMap: MutableMap<String, SubRedditListing>
                           = mutableMapOf()
 ) : IRepository<List<Post>> {
 
