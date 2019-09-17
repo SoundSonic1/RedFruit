@@ -13,7 +13,7 @@ import java.util.*
 class SubredditViewModel(subreddit: String) : ViewModel(), IViewModel<String> {
 
     private val _data = MutableLiveData<String>(subreddit)
-    private val _imageUrl = MutableLiveData<String>("https://wallpaperaccess.com/full/17520.jpg")
+    private val _imageUrl = MutableLiveData<String>("https://wallpaperplay.com/walls/full/2/9/e/31137.jpg")
 
     override val data: LiveData<String> get() = _data
     val imageUrl: LiveData<String> get() = _imageUrl
