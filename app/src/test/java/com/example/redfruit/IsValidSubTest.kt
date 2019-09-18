@@ -7,9 +7,9 @@ import org.junit.Assert.assertFalse
 import org.junit.Assert.assertTrue
 import org.junit.Test
 
-class IsValidSubDetailTest {
+class IsValidSubTest {
     @Test
-    fun validSub() {
+    fun validSubTest() {
         runBlocking {
             assertTrue("Default sub must be valid", isValidSub(Constants.DEFAULT_SUB))
             assertTrue("Underscore is valid", isValidSub("memes_of_dank"))
@@ -17,7 +17,7 @@ class IsValidSubDetailTest {
     }
 
     @Test
-    fun invalidSub() {
+    fun invalidSubTest() {
         runBlocking {
             assertFalse(isValidSub("androidde"))
         }

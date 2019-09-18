@@ -2,6 +2,7 @@ package com.example.redfruit
 
 import com.example.redfruit.data.api.SubRedditPostsRepository
 import com.example.redfruit.data.model.Post
+import com.example.redfruit.data.model.enumeration.SortBy
 import com.example.redfruit.data.model.images.ImageSource
 import com.example.redfruit.util.Constants
 import com.google.gson.GsonBuilder
@@ -22,13 +23,20 @@ class SubRedditPostsRepositoryTest : SubRedditPostsRepository() {
     }
 
     @Test
-    fun getDataTest() {
-        assertEquals(10, repo.getData(Constants.DEFAULT_SUB, "new", 10).size)
+    fun getDataCountTest() {
+        assertEquals(10, repo.getData(Constants.DEFAULT_SUB, SortBy.new, 10).size)
         assertEquals(
             "Should add new posts on top of old ones",
             20,
-            repo.getData(Constants.DEFAULT_SUB, "new", 10).size
+            repo.getData(Constants.DEFAULT_SUB, SortBy.new, 10).size
         )
+        assertEquals(0, repo.getData("empty", SortBy.new, 10).size)
+    }
+
+    @Test
+    fun getInvalidDataTest() {
+        assertEquals(listOf<Post>(), repo.getData("androidd", SortBy.new, 10))
+        assertEquals(listOf<Post>(), repo.getData("lounge", SortBy.new, 10))
     }
 
     @Test
@@ -62,6 +70,10 @@ class SubRedditPostsRepositoryTest : SubRedditPostsRepository() {
         assertEquals("d35r85", child.id)
 
         assertEquals("https://i.redd.it/efxkoi0c15m31.jpg", child.url)
+
+        assertEquals("There is no media",null, child.secureMedia)
+
+        assertEquals("2", child.num_comments)
     }
 
     companion object {

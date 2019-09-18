@@ -4,6 +4,7 @@ import android.util.Log
 import com.example.redfruit.data.model.Post
 import com.example.redfruit.data.model.Preview
 import com.example.redfruit.data.model.SubRedditListing
+import com.example.redfruit.data.model.enumeration.SortBy
 import com.example.redfruit.data.model.images.ImageSource
 import com.example.redfruit.data.model.images.RedditImage
 import com.example.redfruit.data.model.media.RedditVideo
@@ -21,7 +22,7 @@ import java.lang.reflect.Type
  */
 open class SubRedditPostsRepository(private val subRedditMap: MutableMap<String, SubRedditListing>
                           = mutableMapOf()
-) : IRepository<List<Post>> {
+) : IPostsRepository<List<Post>> {
 
     /**
      * Main function that returns a list of posts from a given subreddit
@@ -32,10 +33,10 @@ open class SubRedditPostsRepository(private val subRedditMap: MutableMap<String,
      * @param limit the amount of the posts that are to be fetched
      * @return a list of reddit posts
      */
-    override fun getData(sub: String, sortBy: String, limit: Int): List<Post> {
+    override fun getData(sub: String, sortBy: SortBy, limit: Int): List<Post> {
         // TODO: check if sub is valid
         val subReddit = subRedditMap.getOrPut(sub) { SubRedditListing(sub) }
-        var redditUrl = "${Constants.BASE_URL}${subReddit.name}/${sortBy}.json?limit=$limit&raw_json=1"
+        var redditUrl = "${Constants.BASE_URL}${subReddit.name}/${sortBy.name}.json?limit=$limit&raw_json=1"
         if (subReddit.after.isNotBlank()) {
             redditUrl = "$redditUrl&after=${subReddit.after}"
         }
@@ -47,17 +48,19 @@ open class SubRedditPostsRepository(private val subRedditMap: MutableMap<String,
         }
 
         val jsonObjResponse = JsonParser().parse(response).asJsonObject
-        if (jsonObjResponse.has("reason")) {
+        if (jsonObjResponse.get("kind")?.asString != "Listing") {
             // either private or banned sub
             return listOf()
         }
         val jsonData = jsonObjResponse.getAsJsonObject("data")
         // JSONArray of children aka posts
         val jsonChildren = jsonData.getAsJsonArray("children")
-        if (jsonChildren.size() < 1) {
-            // probably invalid subreddit
+
+        // check if children are posts
+        if (jsonChildren.any { it.asJsonObject.get("kind").asString != "t3" }) {
             return listOf()
         }
+
         // bookmark beginning and ending of the listing
         if (!jsonData.get("before").isJsonNull) {
             subReddit.before = jsonData.get("before").asString
@@ -82,9 +85,7 @@ open class SubRedditPostsRepository(private val subRedditMap: MutableMap<String,
     /**
      * Clear all data to make a clean refresh
      */
-    override fun clearData() {
-        subRedditMap.clear()
-    }
+    override fun clearData() = subRedditMap.clear()
 
 
     protected class PostDeserializer : JsonDeserializer<Post> {
@@ -111,7 +112,7 @@ open class SubRedditPostsRepository(private val subRedditMap: MutableMap<String,
                 )
             }
             } else {
-                null
+                listOf()
             }
 
             val secureMedia: SecureMedia? = if (jsonData.get("secure_media").isJsonNull) {

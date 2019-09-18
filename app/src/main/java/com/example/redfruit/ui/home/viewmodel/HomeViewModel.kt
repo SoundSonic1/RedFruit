@@ -4,7 +4,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.redfruit.data.api.IRepository
+import com.example.redfruit.data.api.IPostsRepository
 import com.example.redfruit.data.model.Post
 import com.example.redfruit.data.model.enumeration.SortBy
 import com.example.redfruit.ui.base.IViewModel
@@ -22,7 +22,7 @@ import java.util.*
 class HomeViewModel(
     private var _subReddit: String,
     private val sortBy: SortBy,
-    private val repo: IRepository<List<Post>>
+    private val repo: IPostsRepository<List<Post>>
 ) : ViewModel(), IViewModel<List<Post>> {
 
     val subReddit get() = _subReddit
@@ -68,6 +68,6 @@ class HomeViewModel(
     private suspend fun get(count: Int) =
         withContext(Dispatchers.IO) {
             /* perform network IO here */
-            repo.getData(_subReddit.toLowerCase(Locale.ENGLISH), sortBy.name, count)
+            repo.getData(_subReddit.toLowerCase(Locale.ENGLISH), sortBy, count)
         }
 }

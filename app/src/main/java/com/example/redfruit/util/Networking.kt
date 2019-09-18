@@ -4,7 +4,6 @@ import android.util.Log
 import com.google.gson.JsonParser
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
-import java.io.FileNotFoundException
 import java.net.URL
 
 /**
@@ -17,7 +16,7 @@ fun getResponse(url: String): String = try {
     }.getInputStream().use {
         it.bufferedReader().readLine()
     }
-} catch (e: FileNotFoundException) {
+} catch (e: Exception) {
     Log.d("getResponse", "bad url: $url")
     // invalid url
     ""
