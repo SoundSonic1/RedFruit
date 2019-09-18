@@ -2,13 +2,13 @@
 <layout xmlns:app="http://schemas.android.com/apk/res-auto">
     <data>
         <variable name="viewModel"
-                type="com.example.redfruit.ui.home.viewmodel.HomeViewModel"/>
+                type="com.example.redfruit.ui.home.viewmodel.HomePostsViewModel"/>
     </data>
     <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
             xmlns:tools="http://schemas.android.com/tools"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            tools:context=".ui.home.fragment.HomeSortByFragment">
+            tools:context=".ui.home.fragment.childfragments.SubredditPostsFragment">
         <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
                 android:id="@+id/homeSwipeRefresh"
                 android:layout_width="match_parent"
@@ -17,7 +17,7 @@
                 app:refreshing="@{viewModel.isLoading}">
 
             <androidx.recyclerview.widget.RecyclerView
-                    android:id="@+id/recyclerViewHomeSortBy"
+                    android:id="@+id/recyclerViewPosts"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:scrollbars="vertical"

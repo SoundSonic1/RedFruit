@@ -1,4 +1,4 @@
-package com.example.redfruit.ui.home.fragment
+package com.example.redfruit.ui.home.fragment.childfragments
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -12,26 +12,26 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.redfruit.R
 import com.example.redfruit.data.model.enumeration.SortBy
-import com.example.redfruit.databinding.HomeSortByFragmentBinding
+import com.example.redfruit.databinding.SubredditPostsFragmentBinding
 import com.example.redfruit.ui.home.adapter.HomeAdapter
-import com.example.redfruit.ui.home.viewmodel.HomeViewModel
-import com.example.redfruit.ui.shared.SubredditViewModel
+import com.example.redfruit.ui.home.viewmodel.HomePostsViewModel
+import com.example.redfruit.ui.shared.SubredditAboutViewModel
 import com.example.redfruit.util.Constants
 import dagger.android.support.DaggerFragment
-import kotlinx.android.synthetic.main.home_sort_by_fragment.view.*
+import kotlinx.android.synthetic.main.subreddit_posts_fragment.view.*
 import javax.inject.Inject
 import javax.inject.Provider
 
 /**
  * Fragment that displays the posts of a subreddit
- * @property homeViewModel control logic of the fragment
+ * @property homePostsViewModel control logic of the fragment
  * @property linearLayoutManagerProvider gets new instance of LayoutManager
  * @property homeAdapter used for RecyclerView
  */
-class HomeSortByFragment : DaggerFragment() {
+class SubredditPostsFragment : DaggerFragment() {
 
     @Inject
-    lateinit var homeViewModel: HomeViewModel
+    lateinit var homePostsViewModel: HomePostsViewModel
 
     @Inject
     lateinit var linearLayoutManagerProvider: Provider<LinearLayoutManager>
@@ -43,25 +43,25 @@ class HomeSortByFragment : DaggerFragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        // get SubredditViewModel instance from the MainActivity
-        val sharedViewModel by activityViewModels<SubredditViewModel>()
+        // get SubredditAboutViewModel instance from the MainActivity
+        val sharedViewModel by activityViewModels<SubredditAboutViewModel>()
         sharedViewModel.data.observe(viewLifecycleOwner, Observer {sub ->
-            if (sub.display_name != homeViewModel.subReddit) {
-                homeViewModel.changeSub(sub.display_name)
+            if (sub.display_name != homePostsViewModel.subReddit) {
+                homePostsViewModel.changeSub(sub.display_name)
             }
         })
 
-        val binding: HomeSortByFragmentBinding =
-            DataBindingUtil.inflate(inflater, R.layout.home_sort_by_fragment, container, false)
+        val binding: SubredditPostsFragmentBinding = DataBindingUtil.inflate(
+            inflater, R.layout.subreddit_posts_fragment, container, false)
 
         binding.apply {
             // make binding lifecycle aware
             lifecycleOwner = viewLifecycleOwner
-            viewModel = homeViewModel
+            viewModel = homePostsViewModel
         }
 
 
-        val recyclerView = binding.root.recyclerViewHomeSortBy.apply {
+        val recyclerView = binding.root.recyclerViewPosts.apply {
             layoutManager = linearLayoutManagerProvider.get()
             adapter = homeAdapter
             setHasFixedSize(true)
@@ -71,10 +71,10 @@ class HomeSortByFragment : DaggerFragment() {
                 super.onScrolled(recyclerView, dx, dy)
                 val totalItemCount = recyclerView.layoutManager?.itemCount
                 val linearLayoutManager = recyclerView.layoutManager as LinearLayoutManager
-                if (homeViewModel.isLoading.value == false &&
+                if (homePostsViewModel.isLoading.value == false &&
                     totalItemCount == linearLayoutManager.findLastVisibleItemPosition() + 1) {
-                    homeViewModel.isLoading.value = true
-                    homeViewModel.loadMoreData(Constants.LIMIT)
+                    homePostsViewModel.isLoading.value = true
+                    homePostsViewModel.loadMoreData(Constants.LIMIT)
                 }
             }
         })
@@ -94,8 +94,8 @@ class HomeSortByFragment : DaggerFragment() {
         /**
          * Provide SortBy preference
          */
-        fun newInstance(sortBy: SortBy): HomeSortByFragment {
-            val fragment = HomeSortByFragment()
+        fun newInstance(sortBy: SortBy): SubredditPostsFragment {
+            val fragment = SubredditPostsFragment()
             val args = Bundle().apply {
                 putString(Constants.SORT_BY_KEY, sortBy.toString())
             }

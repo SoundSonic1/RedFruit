@@ -4,7 +4,7 @@ import androidx.activity.viewModels
 import com.example.redfruit.data.api.SubredditAboutRepository
 import com.example.redfruit.ui.MainActivity
 import com.example.redfruit.ui.home.fragment.HomeFragment
-import com.example.redfruit.ui.shared.SubredditViewModel
+import com.example.redfruit.ui.shared.SubredditAboutViewModel
 import com.example.redfruit.util.BaseVMFactory
 import dagger.Module
 import dagger.Provides
@@ -30,9 +30,9 @@ class MainActivityModule {
             mainActivity: MainActivity,
             @Named("savedSub") sub: String,
             repo: SubredditAboutRepository
-        ): SubredditViewModel {
-            val vm by mainActivity.viewModels<SubredditViewModel> {
-                BaseVMFactory { SubredditViewModel(sub, repo) }
+        ): SubredditAboutViewModel {
+            val vm by mainActivity.viewModels<SubredditAboutViewModel> {
+                BaseVMFactory { SubredditAboutViewModel(sub, repo) }
             }
             return vm
         }

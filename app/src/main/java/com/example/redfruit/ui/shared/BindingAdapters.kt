@@ -6,7 +6,10 @@ import android.widget.ImageView
 import androidx.databinding.BindingAdapter
 import androidx.recyclerview.widget.RecyclerView
 import coil.api.load
+import coil.transform.CircleCropTransformation
+import com.example.redfruit.R
 import com.example.redfruit.data.model.Post
+import com.example.redfruit.data.model.SubredditAbout
 import com.example.redfruit.data.model.images.ImageSource
 import com.example.redfruit.data.model.media.SecureMedia
 import com.example.redfruit.ui.home.adapter.HomeAdapter
@@ -95,6 +98,31 @@ object BindingAdapters {
         } else {
             imageView.load(url) {
                 crossfade(true)
+            }
+        }
+    }
+
+    @JvmStatic
+    @BindingAdapter("iconImage")
+    fun loadIconImage(imageView: ImageView, subredditAbout: SubredditAbout?) {
+        subredditAbout?.let {
+            // Not sure why there are two icons available
+            val url = if (it.icon_img.isNotBlank()) {
+                it.icon_img
+            } else {
+                it.community_icon
+            }
+            if (url.isBlank()) {
+                imageView.load(R.drawable.ic_reddit_24dp) {
+                    crossfade(true)
+                    transformations(CircleCropTransformation())
+                }
+            } else {
+                imageView.load(url) {
+                    crossfade(true)
+                    placeholder(R.drawable.ic_reddit_24dp)
+                    transformations(CircleCropTransformation())
+                }
             }
         }
     }

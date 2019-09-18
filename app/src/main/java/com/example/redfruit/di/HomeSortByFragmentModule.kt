@@ -11,8 +11,8 @@ import com.example.redfruit.data.api.SubRedditPostsRepository
 import com.example.redfruit.data.model.enumeration.SortBy
 import com.example.redfruit.ui.comments.fragment.CommentsFragment
 import com.example.redfruit.ui.home.adapter.HomeAdapter
-import com.example.redfruit.ui.home.fragment.HomeSortByFragment
-import com.example.redfruit.ui.home.viewmodel.HomeViewModel
+import com.example.redfruit.ui.home.fragment.childfragments.SubredditPostsFragment
+import com.example.redfruit.ui.home.viewmodel.HomePostsViewModel
 import com.example.redfruit.util.BaseVMFactory
 import com.example.redfruit.util.Constants
 import com.example.redfruit.util.findFragmentByTag
@@ -40,12 +40,12 @@ class HomeSortByFragmentModule {
          */
         @JvmStatic
         @Provides
-        fun provideFragmentManager(homeSortByFragment: HomeSortByFragment) =
-            homeSortByFragment.activity?.supportFragmentManager
+        fun provideFragmentManager(subredditPostsFragment: SubredditPostsFragment) =
+            subredditPostsFragment.activity?.supportFragmentManager
 
         @JvmStatic
         @Provides
-        fun provideLifeCycle(fragment: HomeSortByFragment) = fragment.lifecycle
+        fun provideLifeCycle(fragment: SubredditPostsFragment) = fragment.lifecycle
 
         @JvmStatic
         @Provides
@@ -66,9 +66,9 @@ class HomeSortByFragmentModule {
 
         @JvmStatic
         @Provides
-        fun provideSortBy(homeSortByFragment: HomeSortByFragment): SortBy {
+        fun provideSortBy(subredditPostsFragment: SubredditPostsFragment): SortBy {
             val sortByString =
-                homeSortByFragment.arguments?.getString(Constants.SORT_BY_KEY) ?: "hot"
+                subredditPostsFragment.arguments?.getString(Constants.SORT_BY_KEY) ?: "hot"
 
             try {
                 return SortBy.valueOf(sortByString)
@@ -81,13 +81,13 @@ class HomeSortByFragmentModule {
         @JvmStatic
         @Provides
         fun provideHomeViewModel(
-            fragment: HomeSortByFragment,
+            fragment: SubredditPostsFragment,
             @Named("savedSub") savedSub: String,
             sortBy: SortBy,
             repo: SubRedditPostsRepository
-        ): HomeViewModel {
-            val vm by fragment.viewModels<HomeViewModel> {
-                BaseVMFactory { HomeViewModel(savedSub, sortBy, repo) }
+        ): HomePostsViewModel {
+            val vm by fragment.viewModels<HomePostsViewModel> {
+                BaseVMFactory { HomePostsViewModel(savedSub, sortBy, repo) }
             }
             return vm
         }

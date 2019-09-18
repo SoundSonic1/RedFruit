@@ -16,8 +16,8 @@ import java.util.*
  * ViewModel used for communication between Fragments and Activity
  * For now, we specify the type at compile time
  */
-class SubredditViewModel(subreddit: String,
-                         private val repo: SubredditAboutRepository
+class SubredditAboutViewModel(subreddit: String,
+                              private val repo: SubredditAboutRepository
 ) : ViewModel(), IViewModel<SubredditAbout> {
 
     private val _data: MutableLiveData<SubredditAbout> by lazy {

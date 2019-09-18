@@ -3,7 +3,7 @@
     <data>
         <variable
                 name="viewModel"
-                type="com.example.redfruit.ui.shared.SubredditViewModel" />
+                type="com.example.redfruit.ui.shared.SubredditAboutViewModel" />
     </data>
     <androidx.coordinatorlayout.widget.CoordinatorLayout
             xmlns:android="http://schemas.android.com/apk/res/android"

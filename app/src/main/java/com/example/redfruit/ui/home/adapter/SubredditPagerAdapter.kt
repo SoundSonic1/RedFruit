@@ -3,14 +3,13 @@ package com.example.redfruit.ui.home.adapter
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentPagerAdapter
-import com.example.redfruit.data.model.enumeration.SortBy
 
 /**
- * Adapter to show fragments based on SortBy for ViewPager
+ * Show posts based on SortBy preference and About page of the subreddit
  */
-class SortByPagerAdapter(
+class SubredditPagerAdapter(
     private val fragments: List<Fragment>,
-    private val categories: List<SortBy>,
+    private val categories: List<String>,
     fm: FragmentManager
 ) : FragmentPagerAdapter(fm, BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT) {
 
@@ -18,6 +17,6 @@ class SortByPagerAdapter(
 
     override fun getCount() = fragments.size
 
-    override fun getPageTitle(position: Int) = categories[position].name
+    override fun getPageTitle(position: Int) = categories[position]
 
 }

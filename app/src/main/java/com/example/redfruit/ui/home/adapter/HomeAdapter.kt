@@ -20,7 +20,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
 /**
- * Adapter for the RecyclerView of the HomeSortByFragment
+ * Adapter for the RecyclerView of the SubredditPostsFragment
  * @property uiScope required to make updates to the UI after async diff calc
  * @property lifeCycle to properly release YoutubePlayerView
  */

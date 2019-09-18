@@ -15,11 +15,11 @@ import kotlinx.coroutines.withContext
 import java.util.*
 
 /**
- * Control logic of the HomeFragment
+ * Control logic of the SubredditPostsFragment
  * @property _subReddit to be shown in the Fragment
  * @property repo handles the api calls
  */
-class HomeViewModel(
+class HomePostsViewModel(
     private var _subReddit: String,
     private val sortBy: SortBy,
     private val repo: IPostsRepository<List<Post>>

@@ -2,9 +2,10 @@ package com.example.redfruit.di
 
 import androidx.fragment.app.FragmentManager
 import com.example.redfruit.data.model.enumeration.SortBy
-import com.example.redfruit.ui.home.adapter.SortByPagerAdapter
+import com.example.redfruit.ui.home.adapter.SubredditPagerAdapter
 import com.example.redfruit.ui.home.fragment.HomeFragment
-import com.example.redfruit.ui.home.fragment.HomeSortByFragment
+import com.example.redfruit.ui.home.fragment.childfragments.SubredditAboutFragment
+import com.example.redfruit.ui.home.fragment.childfragments.SubredditPostsFragment
 import dagger.Module
 import dagger.Provides
 
@@ -25,10 +26,13 @@ class HomeFragmentModule {
         @JvmStatic
         @Provides
         fun provideTabAdapter(fragmentManager: FragmentManager) =
-            SortByPagerAdapter(
-                listOf(HomeSortByFragment.newInstance(SortBy.hot),
-                    HomeSortByFragment.newInstance(SortBy.new)),
-                listOf(SortBy.hot, SortBy.new),
+            SubredditPagerAdapter(
+                listOf(
+                    SubredditPostsFragment.newInstance(SortBy.hot),
+                    SubredditPostsFragment.newInstance(SortBy.new),
+                    SubredditAboutFragment()
+                ),
+                listOf(SortBy.hot.name, SortBy.new.name, "about"),
                 fragmentManager
             )
 

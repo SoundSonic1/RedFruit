@@ -2,7 +2,7 @@ package com.example.redfruit.di
 
 import com.example.redfruit.ui.comments.fragment.CommentsFragment
 import com.example.redfruit.ui.home.fragment.HomeFragment
-import com.example.redfruit.ui.home.fragment.HomeSortByFragment
+import com.example.redfruit.ui.home.fragment.childfragments.SubredditPostsFragment
 import dagger.Module
 import dagger.android.ContributesAndroidInjector
 
@@ -12,7 +12,7 @@ abstract class FragmentsBindingModule {
     abstract fun fragmentHome(): HomeFragment
 
     @ContributesAndroidInjector(modules = [HomeSortByFragmentModule::class])
-    abstract fun fragmentHomeSortBy(): HomeSortByFragment
+    abstract fun fragmentHomeSortBy(): SubredditPostsFragment
 
     @ContributesAndroidInjector
     abstract fun fragmentComments(): CommentsFragment

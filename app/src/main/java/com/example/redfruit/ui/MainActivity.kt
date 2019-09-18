@@ -16,7 +16,7 @@ import androidx.lifecycle.Observer
 import com.example.redfruit.R
 import com.example.redfruit.databinding.ActivityMainBinding
 import com.example.redfruit.ui.home.fragment.HomeFragment
-import com.example.redfruit.ui.shared.SubredditViewModel
+import com.example.redfruit.ui.shared.SubredditAboutViewModel
 import com.example.redfruit.util.Constants
 import com.example.redfruit.util.isValidSub
 import com.example.redfruit.util.replaceFragment
@@ -36,7 +36,7 @@ import javax.inject.Inject
  * Entry point of our app. We use the single Activity, many fragments philosophy.
  * The app moves towards clean architecture in the form of MVVM and Repository pattern
  * @property homeFragment activity starts with this fragment
- * @property subredditViewModel is a shared viewmodel to communicate between activity
+ * @property subredditAboutViewModel is a shared viewmodel to communicate between activity
  * and fragments
  */
 class MainActivity : DaggerAppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
@@ -51,7 +51,7 @@ class MainActivity : DaggerAppCompatActivity(), NavigationView.OnNavigationItemS
     lateinit var uiScope: CoroutineScope
 
     @Inject
-    lateinit var subredditViewModel: SubredditViewModel
+    lateinit var subredditAboutViewModel: SubredditAboutViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -60,7 +60,7 @@ class MainActivity : DaggerAppCompatActivity(), NavigationView.OnNavigationItemS
             DataBindingUtil.setContentView(this, R.layout.activity_main)
 
         binding.lifecycleOwner = this
-        binding.viewModelMainactivity = subredditViewModel
+        binding.viewModelMainactivity = subredditAboutViewModel
 
         collapsingToolbarLayout.isTitleEnabled = false
         val toolbar: Toolbar = findViewById(R.id.toolbar)
@@ -82,7 +82,7 @@ class MainActivity : DaggerAppCompatActivity(), NavigationView.OnNavigationItemS
 
         nav_view.setNavigationItemSelectedListener(this)
 
-        subredditViewModel.data.observe(this, Observer {
+        subredditAboutViewModel.data.observe(this, Observer {
             // TODO: change title via data binding
             supportActionBar?.title = it.display_name
             // save latest subreddit
@@ -120,7 +120,7 @@ class MainActivity : DaggerAppCompatActivity(), NavigationView.OnNavigationItemS
 
             override fun onQueryTextSubmit(query: String): Boolean {
                 if (query.isNotBlank() &&
-                    subredditViewModel.data.value?.display_name?.toLowerCase(Locale.ENGLISH) != query.toLowerCase(
+                    subredditAboutViewModel.data.value?.display_name?.toLowerCase(Locale.ENGLISH) != query.toLowerCase(
                         Locale.ENGLISH)) {
                     changeSubIfValid(query)
                 }
@@ -183,7 +183,7 @@ class MainActivity : DaggerAppCompatActivity(), NavigationView.OnNavigationItemS
         uiScope.launch {
             if (isValidSub(sub)) {
                 // set new subreddit
-                subredditViewModel.setSub(sub)
+                subredditAboutViewModel.setSub(sub)
                 // Change back to home fragment
                 replaceFragment(
                     supportFragmentManager,
