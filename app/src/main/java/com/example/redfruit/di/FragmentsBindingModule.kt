@@ -11,7 +11,7 @@ abstract class FragmentsBindingModule {
     @ContributesAndroidInjector(modules = [HomeFragmentModule::class])
     abstract fun fragmentHome(): HomeFragment
 
-    @ContributesAndroidInjector(modules = [HomeSortByFragmentModule::class])
+    @ContributesAndroidInjector(modules = [SubredditPostsFragmentModule::class])
     abstract fun fragmentHomeSortBy(): SubredditPostsFragment
 
     @ContributesAndroidInjector

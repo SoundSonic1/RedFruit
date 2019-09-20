@@ -23,7 +23,7 @@ import kotlinx.coroutines.CoroutineScope
 import javax.inject.Named
 
 @Module
-class HomeSortByFragmentModule {
+class SubredditPostsFragmentModule {
 
     @Module
     companion object {
@@ -52,9 +52,13 @@ class HomeSortByFragmentModule {
         fun provideHomeAdapter(
             fragmentManager: FragmentManager?,
             uiScope: CoroutineScope,
-            lifecycle: Lifecycle
+            lifecycle: Lifecycle,
+            homePostsViewModel: HomePostsViewModel
         ): HomeAdapter {
-            return HomeAdapter(mutableListOf(), uiScope, lifecycle) {
+            // restore data if possible
+            val dataList = homePostsViewModel.data.value?.toMutableList() ?: mutableListOf()
+
+            return HomeAdapter(dataList, uiScope, lifecycle) {
                 fragmentManager?.let { fm ->
                     val fragment = findFragmentByTag(fm, Constants.COMMENTS_FRAGMENT_TAG) {
                         CommentsFragment()
