@@ -41,5 +41,47 @@
 
         </androidx.appcompat.widget.AppCompatTextView>
 
+        <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/platinumAwardTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:drawableStart="@drawable/ic_platinum_gilding_18dp"
+                android:drawablePadding="3dp"
+                android:text="@{String.valueOf(item.gildings.platinumCount)}"
+                android:layout_marginEnd="5dp"
+                android:visibility="@{item.gildings.platinumCount > 0 ? View.VISIBLE : View.GONE}"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintRight_toLeftOf="@id/goldAwardTextView">
+
+        </androidx.appcompat.widget.AppCompatTextView>
+
+        <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/goldAwardTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:drawableStart="@drawable/ic_gold_gilding_18dp"
+                android:drawablePadding="3dp"
+                android:text="@{String.valueOf(item.gildings.goldCount)}"
+                android:layout_marginEnd="5dp"
+                android:visibility="@{item.gildings.goldCount > 0 ? View.VISIBLE : View.GONE}"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintRight_toLeftOf="@id/silverAwardTextView">
+
+        </androidx.appcompat.widget.AppCompatTextView>
+
+        <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/silverAwardTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:drawableStart="@drawable/ic_silver_gilding_18dp"
+                android:drawablePadding="3dp"
+                android:text="@{String.valueOf(item.gildings.silverCount)}"
+                android:layout_marginEnd="5dp"
+                android:visibility="@{item.gildings.silverCount > 0 ? View.VISIBLE : View.GONE}"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintRight_toRightOf="parent">
+
+        </androidx.appcompat.widget.AppCompatTextView>
+
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

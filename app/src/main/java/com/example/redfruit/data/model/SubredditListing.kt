@@ -8,7 +8,7 @@ import com.example.redfruit.data.model.interfaces.IListing
  * @property after bookmark last post in children
  * @property children sublist of the subreddit posts
  */
-data class SubRedditListing(val name: String,
+data class SubredditListing(val name: String,
                             override var before: String = "",
                             override var after: String = "",
                             override val children: MutableList<Post> = mutableListOf()

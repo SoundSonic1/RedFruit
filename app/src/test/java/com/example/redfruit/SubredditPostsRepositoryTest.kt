@@ -1,6 +1,6 @@
 package com.example.redfruit
 
-import com.example.redfruit.data.api.SubRedditPostsRepository
+import com.example.redfruit.data.api.SubredditPostsRepository
 import com.example.redfruit.data.model.Post
 import com.example.redfruit.data.model.enumeration.SortBy
 import com.example.redfruit.data.model.images.ImageSource
@@ -13,13 +13,13 @@ import org.junit.Assert.assertFalse
 import org.junit.Before
 import org.junit.Test
 
-class SubRedditPostsRepositoryTest : SubRedditPostsRepository() {
+class SubredditPostsRepositoryTest : SubredditPostsRepository() {
 
-    private lateinit var repo: SubRedditPostsRepository
+    private lateinit var repo: SubredditPostsRepository
 
     @Before
     fun setUp() {
-        repo = SubRedditPostsRepository()
+        repo = SubredditPostsRepository()
     }
 
     @Test

@@ -1,9 +1,10 @@
 package com.example.redfruit.data.api
 
 import android.util.Log
+import com.example.redfruit.data.model.Gildings
 import com.example.redfruit.data.model.Post
 import com.example.redfruit.data.model.Preview
-import com.example.redfruit.data.model.SubRedditListing
+import com.example.redfruit.data.model.SubredditListing
 import com.example.redfruit.data.model.enumeration.SortBy
 import com.example.redfruit.data.model.images.ImageSource
 import com.example.redfruit.data.model.images.RedditImage
@@ -18,9 +19,9 @@ import java.lang.reflect.Type
 
 /**
  * Implements the Repository pattern
- * @property subRedditMap collects the subreddit
+ * @property subredditMap collects the subreddit
  */
-open class SubRedditPostsRepository(private val subRedditMap: MutableMap<String, SubRedditListing>
+open class SubredditPostsRepository(private val subredditMap: MutableMap<String, SubredditListing>
                           = mutableMapOf()
 ) : IPostsRepository<List<Post>> {
 
@@ -35,7 +36,7 @@ open class SubRedditPostsRepository(private val subRedditMap: MutableMap<String,
      */
     override fun getData(sub: String, sortBy: SortBy, limit: Int): List<Post> {
         // TODO: check if sub is valid
-        val subReddit = subRedditMap.getOrPut(sub) { SubRedditListing(sub) }
+        val subReddit = subredditMap.getOrPut(sub) { SubredditListing(sub) }
         var redditUrl = "${Constants.BASE_URL}${subReddit.name}/${sortBy.name}.json?limit=$limit&raw_json=1"
         if (subReddit.after.isNotBlank()) {
             redditUrl = "$redditUrl&after=${subReddit.after}"
@@ -85,7 +86,7 @@ open class SubRedditPostsRepository(private val subRedditMap: MutableMap<String,
     /**
      * Clear all data to make a clean refresh
      */
-    override fun clearData() = subRedditMap.clear()
+    override fun clearData() = subredditMap.clear()
 
 
     protected class PostDeserializer : JsonDeserializer<Post> {
@@ -133,6 +134,7 @@ open class SubRedditPostsRepository(private val subRedditMap: MutableMap<String,
                     images = images ?: listOf()
                 ),
                 secureMedia = secureMedia,
+                gildings = gson.fromJson(jsonData.get("gildings"), Gildings::class.java),
                 over_18 = jsonData.get("over_18")?.asBoolean ?: false,
                 stickied = jsonData.get("stickied")?.asBoolean ?: false,
                 selftext = jsonData.get("selftext")?.asString ?: "",

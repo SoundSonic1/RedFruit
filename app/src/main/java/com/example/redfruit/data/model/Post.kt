@@ -8,11 +8,13 @@ import com.example.redfruit.data.model.media.SecureMedia
  * @property id unique
  * @property title of the post
  * @property author of the post
- * @property ups amount of upvotes
- * @property downs amount of downvotes
+ * @property score total score after calculating ups and downs (might fluctuate)
+ * @property num_comments total number of comments
  * @property preview contains sources like images
+ * @property secureMedia contains video details
  * @property over_18 marked nsfw post
  * @property stickied post
+ * @property selftext post information details
  * @property url of the post
  */
 data class Post(
@@ -23,6 +25,7 @@ data class Post(
     val num_comments: String,
     val preview: Preview,
     val secureMedia: SecureMedia?,
+    val gildings: Gildings,
     val over_18: Boolean,
     val stickied: Boolean,
     val selftext: String,
