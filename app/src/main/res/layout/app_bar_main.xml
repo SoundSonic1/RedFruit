@@ -25,6 +25,7 @@
                     app:contentScrim="?attr/colorPrimary"
                     app:layout_scrollFlags="scroll|exitUntilCollapsed">
                 <androidx.appcompat.widget.AppCompatImageView
+                        android:id="@+id/toolbarImageView"
                         android:layout_width="match_parent"
                         android:layout_height="100dp"
                         android:scaleType="centerCrop"
@@ -42,7 +43,9 @@
             </com.google.android.material.appbar.CollapsingToolbarLayout>
         </com.google.android.material.appbar.AppBarLayout>
 
-        <include layout="@layout/content_main"/>
+        <include
+                layout="@layout/content_main"
+                android:id="@+id/contentMain"/>
 
         <com.google.android.material.floatingactionbutton.FloatingActionButton
                 android:id="@+id/fab"

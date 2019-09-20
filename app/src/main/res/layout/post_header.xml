@@ -23,6 +23,7 @@
                 />
 
         <androidx.cardview.widget.CardView
+                android:id="@+id/over18CardView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:visibility="@{item.over_18 ? View.VISIBLE : View.GONE}"
@@ -32,6 +33,7 @@
                 app:cardBackgroundColor="@color/colorPrimaryDark"
                 >
             <TextView
+                    android:id="@+id/over18TextView"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textSize="9sp"
@@ -53,6 +55,7 @@
                 app:cardBackgroundColor="@color/colorAccent"
                 >
             <TextView
+                    android:id="@+id/stickiedTextView"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:drawableStart="@drawable/ic_create_14dp"
@@ -65,9 +68,9 @@
         </androidx.cardview.widget.CardView>
 
         <TextView
+                android:id="@+id/postTitle"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:id="@+id/postTitle"
                 android:textStyle="bold"
                 android:textSize="16sp"
                 android:padding="10dp"

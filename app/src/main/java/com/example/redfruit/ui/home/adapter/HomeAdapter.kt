@@ -137,7 +137,7 @@ class PostWithYoutubeViewHolder(
             parent, false)
 ) : AbstractViewHolder<Post>(binding.root) {
     init {
-        lifeCycle.addObserver(itemView.postYoutubeView)
+        lifeCycle.addObserver(itemView.postYoutubePlayerView)
     }
     override fun bind(item: Post, listener: (Post) -> Unit) {
         binding.item = item

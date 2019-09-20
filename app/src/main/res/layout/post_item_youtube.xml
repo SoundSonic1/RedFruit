@@ -7,6 +7,7 @@ xmlns:bind="http://schemas.android.com/tools">
     <variable name="item" type="com.example.redfruit.data.model.Post"/>
 </data>
 <androidx.cardview.widget.CardView
+        android:id="@+id/postItemYoutubeView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="4dp"
@@ -20,35 +21,35 @@ xmlns:bind="http://schemas.android.com/tools">
 
         <include
                 layout="@layout/post_header"
-                android:id="@+id/postTitleAuthorInclude"
+                android:id="@+id/postTitleAuthorIncludeYoutube"
                 android:layout_height="wrap_content"
                 android:layout_width="match_parent"
                 app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintBottom_toTopOf="@+id/postYoutubeView"
+                app:layout_constraintBottom_toTopOf="@+id/postYoutubePlayerView"
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintRight_toRightOf="parent"
                 bind:item="@{item}" />
 
         <com.pierfrancescosoffritti.androidyoutubeplayer.core.player.views.YouTubePlayerView
-                android:id="@+id/postYoutubeView"
+                android:id="@+id/postYoutubePlayerView"
                 android:layout_width="match_parent"
                 android:layout_height="230dp"
                 android:contentDescription="@string/image_view_content_descr"
                 app:youtube="@{item.secureMedia.youtubeoEmbed.youtubeId}"
-                app:layout_constraintTop_toBottomOf="@id/postTitleAuthorInclude"
-                app:layout_constraintBottom_toTopOf="@id/postMisc"
+                app:layout_constraintTop_toBottomOf="@id/postTitleAuthorIncludeYoutube"
+                app:layout_constraintBottom_toTopOf="@id/postMiscYoutube"
                 app:layout_constraintLeft_toLeftOf="parent"
                 />
 
         <include
                 layout="@layout/post_misc"
-                android:id="@+id/postMisc"
+                android:id="@+id/postMiscYoutube"
                 android:layout_height="wrap_content"
                 android:layout_width="match_parent"
                 android:layout_marginTop="8dp"
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintRight_toRightOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/postYoutubeView"
+                app:layout_constraintTop_toBottomOf="@+id/postYoutubePlayerView"
                 bind:item="@{item}" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 </androidx.cardview.widget.CardView>
