@@ -11,40 +11,55 @@ import com.example.redfruit.R
  * @return Fragment: returns either a fragment found in the FragmentManager
  * or from a higher order function
  */
-fun findFragmentByTag(fm: FragmentManager, tag: String, ifNone: (String) -> Fragment): Fragment {
+fun findOrCreateFragment(fm: FragmentManager, tag: String, ifNone: (String) -> Fragment): Fragment {
     return fm.findFragmentByTag(tag) ?: ifNone(tag)
 }
 
 /**
- * Replaces container with a given fragment
- * @param fm FragmentManager of the current activity or fragment
- * @param containerViewId is the id of the frame layout that should be replaced
- * @param fragment is the 'new' fragment for replacement
- * @note here the fragment gets not added to the BackStack
+ * Replaces container with the given fragment but does not add it to backstack
  */
-fun replaceFragment(fm: FragmentManager, containerViewId: Int, fragment: Fragment) {
+fun replaceFragmentIgnoreBackstack(
+    fm: FragmentManager,
+    containerViewId: Int,
+    fragment: Fragment,
+    tag: String
+) {
     val transaction = fm.beginTransaction()
-    transaction.setCustomAnimations(R.anim.fade_in, R.anim.fade_out, R.anim.fade_in, R.anim.fade_out)
-    transaction.replace(containerViewId, fragment)
-    transaction.commit()
-    fm.executePendingTransactions()
+    transaction
+        .setCustomAnimations(R.anim.fade_in, R.anim.fade_out, R.anim.fade_in, R.anim.fade_out)
+        .replace(containerViewId, fragment, tag)
+        .commit()
 }
 
 /**
- * Replaces container with a given fragment and remembers the fragment via a tag
- *
- * @param fm FragmentManager of the current activity or fragment
- * @param containerViewId is the id of the frame layout that should be replaced
- * @param fragment is the 'new' fragment for replacement
- * @param tag should be unique to the fragment
- * @note here the fragment gets added to the BackStack
+ * Replaces container with the given fragment.
  */
 fun replaceFragment(fm: FragmentManager, containerViewId: Int, fragment: Fragment, tag: String) {
     val transaction = fm.beginTransaction()
-    transaction.setCustomAnimations(R.anim.fade_in, R.anim.fade_out, R.anim.fade_in, R.anim.fade_out)
-    // replace and remember fragment by tag
-    transaction.replace(containerViewId, fragment, tag)
-    transaction.addToBackStack(tag)
-    transaction.commit()
-    fm.executePendingTransactions()
+    transaction
+        .setCustomAnimations(R.anim.fade_in, R.anim.fade_out, R.anim.fade_in, R.anim.fade_out)
+        .replace(containerViewId, fragment, tag)
+        .addToBackStack(null)
+        .commit()
+}
+
+/**
+ * Adds the given fragment to the container and puts it to the backstack.
+ */
+fun addFragment(
+    fm: FragmentManager,
+    containerViewId: Int,
+    fragment: Fragment, tag: String
+): Boolean {
+
+    if (fragment.isAdded) return false
+
+    val transaction = fm.beginTransaction()
+    transaction
+        .setCustomAnimations(R.anim.fade_in, R.anim.fade_out, R.anim.fade_in, R.anim.fade_out)
+        .add(containerViewId, fragment, tag)
+        .addToBackStack(null)
+        .commit()
+
+    return true
 }

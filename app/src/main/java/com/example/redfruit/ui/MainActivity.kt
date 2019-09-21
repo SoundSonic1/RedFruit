@@ -20,6 +20,7 @@ import com.example.redfruit.ui.shared.SubredditAboutViewModel
 import com.example.redfruit.util.Constants
 import com.example.redfruit.util.isValidSub
 import com.example.redfruit.util.replaceFragment
+import com.example.redfruit.util.replaceFragmentIgnoreBackstack
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.navigation.NavigationView
 import com.google.android.material.snackbar.Snackbar
@@ -92,7 +93,12 @@ class MainActivity : DaggerAppCompatActivity(), NavigationView.OnNavigationItemS
 
         // Start with home fragment
         if (savedInstanceState == null) {
-            replaceFragment(supportFragmentManager, R.id.mainContent, homeFragment)
+            replaceFragmentIgnoreBackstack(
+                supportFragmentManager,
+                R.id.mainContent,
+                homeFragment,
+                Constants.HOME_FRAGMENT_TAG
+            )
         }
     }
 
@@ -117,9 +123,8 @@ class MainActivity : DaggerAppCompatActivity(), NavigationView.OnNavigationItemS
             }
 
             override fun onQueryTextSubmit(query: String): Boolean {
-                if (query.isNotBlank() &&
-                    subredditAboutViewModel.data.value?.display_name?.toLowerCase(Locale.ENGLISH) != query.toLowerCase(
-                        Locale.ENGLISH)) {
+                if (subredditAboutViewModel.data.value?.display_name?.toLowerCase(Locale.ENGLISH)
+                    != query.toLowerCase(Locale.ENGLISH)) {
                     changeSubIfValid(query)
                 }
                 // collapse menu item
@@ -146,12 +151,7 @@ class MainActivity : DaggerAppCompatActivity(), NavigationView.OnNavigationItemS
         // Handle navigation view item clicks here.
         when (item.itemId) {
             R.id.nav_home -> {
-                replaceFragment(
-                    supportFragmentManager,
-                    R.id.mainContent,
-                    homeFragment,
-                    Constants.HOME_FRAGMENT_TAG
-                )
+
             }
             R.id.nav_gallery -> {
 
@@ -182,7 +182,6 @@ class MainActivity : DaggerAppCompatActivity(), NavigationView.OnNavigationItemS
             if (isValidSub(sub)) {
                 // set new subreddit
                 subredditAboutViewModel.setSub(sub)
-                // Change back to home fragment
                 replaceFragment(
                     supportFragmentManager,
                     R.id.mainContent,

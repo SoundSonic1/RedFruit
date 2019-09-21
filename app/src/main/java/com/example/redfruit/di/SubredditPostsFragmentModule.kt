@@ -15,8 +15,8 @@ import com.example.redfruit.ui.home.fragment.childfragments.SubredditPostsFragme
 import com.example.redfruit.ui.home.viewmodel.HomePostsViewModel
 import com.example.redfruit.util.BaseVMFactory
 import com.example.redfruit.util.Constants
-import com.example.redfruit.util.findFragmentByTag
-import com.example.redfruit.util.replaceFragment
+import com.example.redfruit.util.addFragment
+import com.example.redfruit.util.findOrCreateFragment
 import dagger.Module
 import dagger.Provides
 import javax.inject.Named
@@ -58,10 +58,10 @@ class SubredditPostsFragmentModule {
 
             return HomeAdapter(fragmentManager!!, lifecycle, dataList) {
                 fragmentManager.let { fm ->
-                    val fragment = findFragmentByTag(fm, Constants.COMMENTS_FRAGMENT_TAG) {
+                    val fragment = findOrCreateFragment(fm, Constants.COMMENTS_FRAGMENT_TAG) {
                         CommentsFragment()
                     }
-                    replaceFragment(fm, R.id.mainContent, fragment, Constants.COMMENTS_FRAGMENT_TAG)
+                    addFragment(fm, R.id.mainContent, fragment, Constants.COMMENTS_FRAGMENT_TAG)
                 }
             }
         }
