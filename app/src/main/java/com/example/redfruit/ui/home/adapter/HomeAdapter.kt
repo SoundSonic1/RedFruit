@@ -19,14 +19,12 @@ import kotlinx.coroutines.withContext
 
 /**
  * Adapter for the RecyclerView of the SubredditPostsFragment
- * @property uiScope required to make updates to the UI after async diff calc
  * @property lifeCycle to properly release YoutubePlayerView
  */
 class HomeAdapter(
     private val fm : FragmentManager,
-    items: MutableList<Post>,
-    private val uiScope: CoroutineScope,
     private val lifeCycle: Lifecycle,
+    items: MutableList<Post>,
     listener: (Post) -> Unit
 ) : GenericAdapter<Post>(items, listener) {
 
@@ -63,7 +61,7 @@ class HomeAdapter(
     override fun getItemId(position: Int) = listItems[position].id.hashCode().toLong()
 
     fun notifyChanges(newList: List<Post>) =
-        uiScope.launch {
+        CoroutineScope(Dispatchers.Main).launch {
             val diff = calculateDiff(listItems, newList)
             listItems.clear()
             listItems.addAll(newList)

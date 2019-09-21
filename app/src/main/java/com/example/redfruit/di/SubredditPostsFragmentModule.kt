@@ -19,7 +19,6 @@ import com.example.redfruit.util.findFragmentByTag
 import com.example.redfruit.util.replaceFragment
 import dagger.Module
 import dagger.Provides
-import kotlinx.coroutines.CoroutineScope
 import javax.inject.Named
 
 @Module
@@ -51,14 +50,13 @@ class SubredditPostsFragmentModule {
         @Provides
         fun provideHomeAdapter(
             fragmentManager: FragmentManager?,
-            uiScope: CoroutineScope,
             lifecycle: Lifecycle,
             homePostsViewModel: HomePostsViewModel
         ): HomeAdapter {
             // restore data if possible
             val dataList = homePostsViewModel.data.value?.toMutableList() ?: mutableListOf()
 
-            return HomeAdapter(fragmentManager!!, dataList, uiScope, lifecycle) {
+            return HomeAdapter(fragmentManager!!, lifecycle, dataList) {
                 fragmentManager.let { fm ->
                     val fragment = findFragmentByTag(fm, Constants.COMMENTS_FRAGMENT_TAG) {
                         CommentsFragment()

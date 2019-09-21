@@ -8,8 +8,6 @@ import com.example.redfruit.R
 import com.example.redfruit.util.Constants
 import dagger.Module
 import dagger.Provides
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
 import javax.inject.Named
 import javax.inject.Singleton
 
@@ -24,10 +22,6 @@ class AppModule {
     @Singleton
     fun provideSharedPreference(app: Application): SharedPreferences =
         PreferenceManager.getDefaultSharedPreferences(app)
-
-    @Provides
-    @Singleton
-    fun provideCoroutineScopeMain() = CoroutineScope(Dispatchers.Main)
 
     @Provides
     @Named("savedSub")

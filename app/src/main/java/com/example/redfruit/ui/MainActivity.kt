@@ -27,6 +27,7 @@ import dagger.android.support.DaggerAppCompatActivity
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.app_bar_main.*
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import java.util.*
 import javax.inject.Inject
@@ -46,9 +47,6 @@ class MainActivity : DaggerAppCompatActivity(), NavigationView.OnNavigationItemS
 
     @Inject
     lateinit var sharedPref: SharedPreferences
-
-    @Inject
-    lateinit var uiScope: CoroutineScope
 
     @Inject
     lateinit var subredditAboutViewModel: SubredditAboutViewModel
@@ -180,7 +178,7 @@ class MainActivity : DaggerAppCompatActivity(), NavigationView.OnNavigationItemS
      * Checks whether the requested sub from the user exists
      */
     private fun changeSubIfValid(sub: String) {
-        uiScope.launch {
+        CoroutineScope(Dispatchers.Main).launch {
             if (isValidSub(sub)) {
                 // set new subreddit
                 subredditAboutViewModel.setSub(sub)
