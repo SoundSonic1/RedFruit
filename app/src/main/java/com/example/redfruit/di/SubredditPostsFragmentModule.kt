@@ -58,8 +58,8 @@ class SubredditPostsFragmentModule {
             // restore data if possible
             val dataList = homePostsViewModel.data.value?.toMutableList() ?: mutableListOf()
 
-            return HomeAdapter(dataList, uiScope, lifecycle) {
-                fragmentManager?.let { fm ->
+            return HomeAdapter(fragmentManager!!, dataList, uiScope, lifecycle) {
+                fragmentManager.let { fm ->
                     val fragment = findFragmentByTag(fm, Constants.COMMENTS_FRAGMENT_TAG) {
                         CommentsFragment()
                     }

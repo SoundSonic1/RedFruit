@@ -5,6 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.content.ContextCompat
+import androidx.core.os.bundleOf
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
@@ -96,10 +97,8 @@ class SubredditPostsFragment : DaggerFragment() {
          */
         fun newInstance(sortBy: SortBy): SubredditPostsFragment {
             val fragment = SubredditPostsFragment()
-            val args = Bundle().apply {
-                putString(Constants.SORT_BY_KEY, sortBy.toString())
-            }
-            fragment.arguments = args
+            fragment.arguments = bundleOf(Constants.SORT_BY_KEY to sortBy.name)
+
             return fragment
         }
     }

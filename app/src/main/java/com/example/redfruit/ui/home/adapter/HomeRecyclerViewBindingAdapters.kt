@@ -83,4 +83,14 @@ object HomeRecyclerViewBindingAdapters {
             youtubePlayerView.visibility = View.GONE
         }
     }
+
+    @JvmStatic
+    @BindingAdapter("imageFragment")
+    fun loadImageToFragment(imageView: ImageView, url: String) {
+        if (url.isNotBlank()) {
+            imageView.load(url) {
+                crossfade(true)
+            }
+        }
+    }
 }

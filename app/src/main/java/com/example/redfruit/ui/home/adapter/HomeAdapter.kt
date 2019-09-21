@@ -1,6 +1,7 @@
 package com.example.redfruit.ui.home.adapter
 
 import android.view.ViewGroup
+import androidx.fragment.app.FragmentManager
 import androidx.lifecycle.Lifecycle
 import androidx.recyclerview.widget.DiffUtil
 import com.example.redfruit.R
@@ -22,6 +23,7 @@ import kotlinx.coroutines.withContext
  * @property lifeCycle to properly release YoutubePlayerView
  */
 class HomeAdapter(
+    private val fm : FragmentManager,
     items: MutableList<Post>,
     private val uiScope: CoroutineScope,
     private val lifeCycle: Lifecycle,
@@ -36,7 +38,7 @@ class HomeAdapter(
             return PostWithRedditVideoViewHolder(parent)
         }
         else if (viewType == R.layout.post_item_image) {
-            return PostWithImageViewHolder(parent)
+            return PostWithImageViewHolder(fm, parent)
         }
         return PostTextOnlyViewHolder(parent)
     }

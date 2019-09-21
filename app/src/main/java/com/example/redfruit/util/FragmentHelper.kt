@@ -2,6 +2,7 @@ package com.example.redfruit.util
 
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
+import com.example.redfruit.R
 
 /**
  * @author https://thuytrinh.github.io/android/kotlin/2017/02/07/find-fragments.html
@@ -23,6 +24,7 @@ fun findFragmentByTag(fm: FragmentManager, tag: String, ifNone: (String) -> Frag
  */
 fun replaceFragment(fm: FragmentManager, containerViewId: Int, fragment: Fragment) {
     val transaction = fm.beginTransaction()
+    transaction.setCustomAnimations(R.anim.fade_in, R.anim.fade_out, R.anim.fade_in, R.anim.fade_out)
     transaction.replace(containerViewId, fragment)
     transaction.commit()
     fm.executePendingTransactions()
@@ -39,6 +41,7 @@ fun replaceFragment(fm: FragmentManager, containerViewId: Int, fragment: Fragmen
  */
 fun replaceFragment(fm: FragmentManager, containerViewId: Int, fragment: Fragment, tag: String) {
     val transaction = fm.beginTransaction()
+    transaction.setCustomAnimations(R.anim.fade_in, R.anim.fade_out, R.anim.fade_in, R.anim.fade_out)
     // replace and remember fragment by tag
     transaction.replace(containerViewId, fragment, tag)
     transaction.addToBackStack(tag)

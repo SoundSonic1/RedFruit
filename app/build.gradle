@@ -39,7 +39,7 @@ tasks.withType(org.jetbrains.kotlin.gradle.tasks.KotlinCompile).all {
 
 dependencies {
     // experimental version needed for viewModelScope
-    def lifecycle_version = "2.2.0-alpha04"
+    def lifecycle_version = "2.2.0-alpha05"
     def dagger_version = "2.24"
     def ktx_version = "1.1.0"
     def exo_version = "2.10.4"
@@ -62,6 +62,8 @@ dependencies {
     implementation "androidx.lifecycle:lifecycle-extensions:$lifecycle_version"
     // for fetching images
     implementation("io.coil-kt:coil:0.7.0")
+    // pinch to zoom etc. for images
+    implementation 'com.github.MikeOrtiz:TouchImageView:2.2.0'
     // for advanced video playback
     implementation "com.google.android.exoplayer:exoplayer-core:$exo_version"
     implementation "com.google.android.exoplayer:exoplayer-ui:$exo_version"
