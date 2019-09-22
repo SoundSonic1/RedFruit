@@ -9,12 +9,13 @@ import com.example.redfruit.data.model.Post
 import com.example.redfruit.databinding.PostItemImageBinding
 import com.example.redfruit.ui.base.AbstractViewHolder
 import com.example.redfruit.ui.home.fragment.ImageFragment
+import com.example.redfruit.util.Constants
 import com.example.redfruit.util.addFragment
 import kotlinx.android.synthetic.main.post_item_image.view.*
 
 class PostWithImageViewHolder(
-    private val fm : FragmentManager,
     parent: ViewGroup,
+    private val fm : FragmentManager,
     private val binding: PostItemImageBinding =
         DataBindingUtil.inflate(
             LayoutInflater.from(parent.context), R.layout.post_item_image,
@@ -32,7 +33,7 @@ class PostWithImageViewHolder(
                 fm,
                 R.id.mainContent,
                 ImageFragment.newInstance(item.preview.firstImageSource?.url ?: ""),
-                "ImageTag"
+                Constants.IMAGE_FRAGMENT_TAG
             )
         }
 

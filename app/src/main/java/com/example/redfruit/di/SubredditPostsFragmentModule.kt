@@ -4,7 +4,6 @@ import android.content.Context
 import android.util.Log
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.Lifecycle
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.redfruit.R
 import com.example.redfruit.data.api.SubredditPostsRepository
@@ -44,19 +43,14 @@ class SubredditPostsFragmentModule {
 
         @JvmStatic
         @Provides
-        fun provideLifeCycle(fragment: SubredditPostsFragment) = fragment.lifecycle
-
-        @JvmStatic
-        @Provides
         fun provideHomeAdapter(
             fragmentManager: FragmentManager?,
-            lifecycle: Lifecycle,
             homePostsViewModel: HomePostsViewModel
         ): HomeAdapter {
             // restore data if possible
             val dataList = homePostsViewModel.data.value?.toMutableList() ?: mutableListOf()
 
-            return HomeAdapter(fragmentManager!!, lifecycle, dataList) {
+            return HomeAdapter(fragmentManager!!, dataList) {
                 fragmentManager.let { fm ->
                     val fragment = findOrCreateFragment(fm, Constants.COMMENTS_FRAGMENT_TAG) {
                         CommentsFragment()

@@ -4,19 +4,14 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.coordinatorlayout.widget.CoordinatorLayout
 import androidx.core.os.bundleOf
 import androidx.databinding.DataBindingUtil
-import androidx.fragment.app.Fragment
-import androidx.fragment.app.FragmentActivity
 import com.example.redfruit.R
 import com.example.redfruit.databinding.ImageFragmentBinding
-import com.google.android.material.appbar.AppBarLayout
+import com.example.redfruit.ui.base.BaseFullScreenFragment
 
 
-class ImageFragment : Fragment() {
-
-    private var initToolbarHeight: Int = 0
+class ImageFragment : BaseFullScreenFragment() {
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -37,21 +32,6 @@ class ImageFragment : Fragment() {
     override fun onPause() {
         super.onPause()
         enableToolbar(activity!!)
-    }
-
-    private fun disableToolbar(fragmentActivity: FragmentActivity) {
-        val appbarLayout = fragmentActivity.findViewById<AppBarLayout>(R.id.appBarLayout)
-        val lp = appbarLayout.layoutParams as CoordinatorLayout.LayoutParams
-        initToolbarHeight = lp.height
-        lp.height = 0
-        appbarLayout.layoutParams = lp
-    }
-
-    private fun enableToolbar(fragmentActivity: FragmentActivity) {
-        val appbarLayout = fragmentActivity.findViewById<AppBarLayout>(R.id.appBarLayout)
-        val lp = appbarLayout.layoutParams as CoordinatorLayout.LayoutParams
-        lp.height = initToolbarHeight
-        appbarLayout.layoutParams = lp
     }
 
     companion object {

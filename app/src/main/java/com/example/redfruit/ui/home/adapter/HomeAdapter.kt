@@ -2,7 +2,6 @@ package com.example.redfruit.ui.home.adapter
 
 import android.view.ViewGroup
 import androidx.fragment.app.FragmentManager
-import androidx.lifecycle.Lifecycle
 import androidx.recyclerview.widget.DiffUtil
 import com.example.redfruit.R
 import com.example.redfruit.data.model.Post
@@ -19,24 +18,23 @@ import kotlinx.coroutines.withContext
 
 /**
  * Adapter for the RecyclerView of the SubredditPostsFragment
- * @property lifeCycle to properly release YoutubePlayerView
+ * @property fm FragmentManager to create new fragments on click events
  */
 class HomeAdapter(
     private val fm : FragmentManager,
-    private val lifeCycle: Lifecycle,
     items: MutableList<Post>,
     listener: (Post) -> Unit
 ) : GenericAdapter<Post>(items, listener) {
 
     override fun getViewHolder(parent: ViewGroup, viewType: Int): AbstractViewHolder<Post> {
         if (viewType == R.layout.post_item_youtube) {
-            return PostWithYoutubeViewHolder(parent, lifeCycle)
+            return PostWithYoutubeViewHolder(parent, fm)
         }
         else if (viewType == R.layout.post_item_reddit_video) {
             return PostWithRedditVideoViewHolder(parent)
         }
         else if (viewType == R.layout.post_item_image) {
-            return PostWithImageViewHolder(fm, parent)
+            return PostWithImageViewHolder(parent, fm)
         }
         return PostTextOnlyViewHolder(parent)
     }
