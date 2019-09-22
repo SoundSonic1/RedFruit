@@ -63,3 +63,34 @@ fun addFragment(
 
     return true
 }
+
+/**
+ * Adds/Shows fragment in container and hides all other fragments
+ *
+ * @author https://stackoverflow.com/questions/42795611/fragmenttransaction-hide-show-doesnt-work-sometimes
+ */
+fun addOrShowFragment(
+    fm: FragmentManager,
+    containerViewId: Int,
+    fragment: Fragment,
+    tag: String
+) {
+    fm.beginTransaction().apply {
+
+        setCustomAnimations(R.anim.fade_in, R.anim.fade_out, R.anim.fade_in, R.anim.fade_out)
+
+        if (fragment.isAdded) {
+            show(fragment)
+        } else {
+            add(containerViewId, fragment, tag)
+        }
+
+        fm.fragments.forEach {
+            if (it != fragment && it.isAdded) {
+                hide(it)
+            }
+        }
+
+        addToBackStack(null)
+    }.commit()
+}

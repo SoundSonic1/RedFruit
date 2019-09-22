@@ -10,7 +10,7 @@ import com.example.redfruit.databinding.PostItemImageBinding
 import com.example.redfruit.ui.base.AbstractViewHolder
 import com.example.redfruit.ui.home.fragment.ImageFragment
 import com.example.redfruit.util.Constants
-import com.example.redfruit.util.addFragment
+import com.example.redfruit.util.addOrShowFragment
 import kotlinx.android.synthetic.main.post_item_image.view.*
 
 class PostWithImageViewHolder(
@@ -29,7 +29,7 @@ class PostWithImageViewHolder(
         }
 
         itemView.postImageView.setOnClickListener {
-            addFragment(
+            addOrShowFragment(
                 fm,
                 R.id.mainContent,
                 ImageFragment.newInstance(item.preview.firstImageSource?.url ?: ""),

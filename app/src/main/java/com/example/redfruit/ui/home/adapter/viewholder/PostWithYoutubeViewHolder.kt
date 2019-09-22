@@ -10,7 +10,7 @@ import com.example.redfruit.databinding.PostItemYoutubeBinding
 import com.example.redfruit.ui.base.AbstractViewHolder
 import com.example.redfruit.ui.home.fragment.YoutubeFragment
 import com.example.redfruit.util.Constants
-import com.example.redfruit.util.addFragment
+import com.example.redfruit.util.addOrShowFragment
 import kotlinx.android.synthetic.main.post_item_youtube.view.*
 
 class PostWithYoutubeViewHolder(
@@ -28,7 +28,7 @@ class PostWithYoutubeViewHolder(
             listener(item)
         }
         itemView.postYoutubeImageView.setOnClickListener {
-            addFragment(
+            addOrShowFragment(
                 fm,
                 R.id.mainContent,
                 YoutubeFragment.newInstance(item.secureMedia?.youtubeoEmbed?.youtubeId ?: ""),

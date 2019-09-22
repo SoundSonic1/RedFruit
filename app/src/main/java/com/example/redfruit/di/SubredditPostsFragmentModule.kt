@@ -14,7 +14,7 @@ import com.example.redfruit.ui.home.fragment.childfragments.SubredditPostsFragme
 import com.example.redfruit.ui.home.viewmodel.HomePostsViewModel
 import com.example.redfruit.util.BaseVMFactory
 import com.example.redfruit.util.Constants
-import com.example.redfruit.util.addFragment
+import com.example.redfruit.util.addOrShowFragment
 import com.example.redfruit.util.findOrCreateFragment
 import dagger.Module
 import dagger.Provides
@@ -55,7 +55,7 @@ class SubredditPostsFragmentModule {
                     val fragment = findOrCreateFragment(fm, Constants.COMMENTS_FRAGMENT_TAG) {
                         CommentsFragment()
                     }
-                    addFragment(fm, R.id.mainContent, fragment, Constants.COMMENTS_FRAGMENT_TAG)
+                    addOrShowFragment(fm, R.id.mainContent, fragment, Constants.COMMENTS_FRAGMENT_TAG)
                 }
             }
         }

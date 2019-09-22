@@ -18,8 +18,8 @@ import com.example.redfruit.databinding.ActivityMainBinding
 import com.example.redfruit.ui.home.fragment.HomeFragment
 import com.example.redfruit.ui.shared.SubredditAboutViewModel
 import com.example.redfruit.util.Constants
+import com.example.redfruit.util.addOrShowFragment
 import com.example.redfruit.util.isValidSub
-import com.example.redfruit.util.replaceFragment
 import com.example.redfruit.util.replaceFragmentIgnoreBackstack
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.navigation.NavigationView
@@ -182,7 +182,7 @@ class MainActivity : DaggerAppCompatActivity(), NavigationView.OnNavigationItemS
             if (isValidSub(sub)) {
                 // set new subreddit
                 subredditAboutViewModel.setSub(sub)
-                replaceFragment(
+                addOrShowFragment(
                     supportFragmentManager,
                     R.id.mainContent,
                     homeFragment,
