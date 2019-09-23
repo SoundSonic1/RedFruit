@@ -4,7 +4,7 @@
     <color name="colorPrimaryDark">#00574B</color>
     <color name="colorAccent">#D81B60</color>
     <color name="colorPostIcons">#D3D3D3</color>
-    <color name="colorTextTitle">#F0EEEE</color>
-    <color name="colorCardViewBackground">#AAAAAA</color>
-    <color name="colorBackground">#EEEEEE</color>
+    <color name="colorTextTitle">#000000</color>
+    <color name="colorCardViewBackground">#FFFFFF</color>
+    <color name="colorBackground">#FFFFFF</color>
 </resources>
