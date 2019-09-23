@@ -9,16 +9,18 @@ import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.appcompat.widget.SearchView
 import androidx.appcompat.widget.Toolbar
+import androidx.core.content.edit
 import androidx.core.view.GravityCompat
 import androidx.databinding.DataBindingUtil
 import androidx.drawerlayout.widget.DrawerLayout
+import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import com.example.redfruit.R
 import com.example.redfruit.databinding.ActivityMainBinding
 import com.example.redfruit.ui.home.fragment.HomeFragment
 import com.example.redfruit.ui.shared.SubredditAboutViewModel
 import com.example.redfruit.util.Constants
-import com.example.redfruit.util.addOrShowFragment
+import com.example.redfruit.util.findOrCreateFragment
 import com.example.redfruit.util.isValidSub
 import com.example.redfruit.util.replaceFragmentIgnoreBackstack
 import com.google.android.material.navigation.NavigationView
@@ -30,6 +32,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import java.util.*
 import javax.inject.Inject
+import javax.inject.Provider
 
 
 /**
@@ -42,13 +45,15 @@ import javax.inject.Inject
 class MainActivity : DaggerAppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
 
     @Inject
-    lateinit var homeFragment: HomeFragment
+    lateinit var homeFragmentProvider: Provider<HomeFragment>
 
     @Inject
     lateinit var sharedPref: SharedPreferences
 
     @Inject
     lateinit var subredditAboutViewModel: SubredditAboutViewModel
+
+    lateinit var homeFragment: Fragment
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -78,11 +83,12 @@ class MainActivity : DaggerAppCompatActivity(), NavigationView.OnNavigationItemS
             // TODO: change title via data binding
             supportActionBar?.title = it.display_name
             // save latest subreddit
-            with (sharedPref.edit()) {
-                putString(getString(R.string.saved_subreddit), it.display_name)
-                commit()
-            }
+            sharedPref.edit { putString(getString(R.string.saved_subreddit), it.display_name) }
         })
+
+        homeFragment = findOrCreateFragment(supportFragmentManager, Constants.HOME_FRAGMENT_TAG) {
+            homeFragmentProvider.get()
+        }
 
         // Start with home fragment
         if (savedInstanceState == null) {
@@ -175,12 +181,12 @@ class MainActivity : DaggerAppCompatActivity(), NavigationView.OnNavigationItemS
             if (isValidSub(sub)) {
                 // set new subreddit
                 subredditAboutViewModel.setSub(sub)
-                addOrShowFragment(
+                /*addOrShowFragment(
                     supportFragmentManager,
                     R.id.mainContent,
                     homeFragment,
                     Constants.HOME_FRAGMENT_TAG
-                )
+                )*/
             } else {
                 Toast.makeText(
                     this@MainActivity,
