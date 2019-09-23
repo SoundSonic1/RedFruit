@@ -104,16 +104,12 @@ open class SubredditPostsRepository(private val subredditMap: MutableMap<String,
             val jsonArrayImages = jsonPreview?.getAsJsonArray("images")
 
             val gson = Gson()
-            // get images only if preview is enabled
-            val images = if (enabled) {
-                jsonArrayImages?.map {
+
+            val images = jsonArrayImages?.map {
                 RedditImage(
                     source = gson.fromJson(it.asJsonObject.get("source"), ImageSource::class.java),
                     resolutions = gson.fromJson(it.asJsonObject.get("resolutions"), object : TypeToken<List<ImageSource>>() {}.type)
                 )
-            }
-            } else {
-                listOf()
             }
 
             val secureMedia: SecureMedia? = if (jsonData.get("secure_media").isJsonNull) {

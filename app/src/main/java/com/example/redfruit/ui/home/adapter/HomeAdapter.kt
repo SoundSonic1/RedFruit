@@ -31,7 +31,7 @@ class HomeAdapter(
             return PostWithYoutubeViewHolder(parent, fm)
         }
         else if (viewType == R.layout.post_item_reddit_video) {
-            return PostWithRedditVideoViewHolder(parent)
+            return PostWithRedditVideoViewHolder(parent, fm)
         }
         else if (viewType == R.layout.post_item_image) {
             return PostWithImageViewHolder(parent, fm)

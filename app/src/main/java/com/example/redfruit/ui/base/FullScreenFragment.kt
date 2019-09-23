@@ -9,12 +9,12 @@ import com.google.android.material.appbar.AppBarLayout
 /**
  * Abstract class which implements functions to enable/disable the toolbar in MainActivity
  */
-abstract class BaseFullScreenFragment : Fragment() {
+abstract class FullScreenFragment : Fragment() {
 // TODO: hide navigation bar
 
     private var initToolbarHeight: Int = 0
 
-    protected fun disableToolbar(fragmentActivity: FragmentActivity) {
+    private fun disableToolbar(fragmentActivity: FragmentActivity) {
         val appbarLayout = fragmentActivity.findViewById<AppBarLayout>(R.id.appBarLayout)
         val lp = appbarLayout.layoutParams as CoordinatorLayout.LayoutParams
         initToolbarHeight = lp.height
@@ -22,10 +22,20 @@ abstract class BaseFullScreenFragment : Fragment() {
         appbarLayout.layoutParams = lp
     }
 
-    protected fun enableToolbar(fragmentActivity: FragmentActivity) {
+    private fun enableToolbar(fragmentActivity: FragmentActivity) {
         val appbarLayout = fragmentActivity.findViewById<AppBarLayout>(R.id.appBarLayout)
         val lp = appbarLayout.layoutParams as CoordinatorLayout.LayoutParams
         lp.height = initToolbarHeight
         appbarLayout.layoutParams = lp
+    }
+
+    override fun onResume() {
+        super.onResume()
+        disableToolbar(activity!!)
+    }
+
+    override fun onPause() {
+        super.onPause()
+        enableToolbar(activity!!)
     }
 }

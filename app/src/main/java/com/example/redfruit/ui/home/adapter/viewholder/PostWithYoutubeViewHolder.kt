@@ -8,7 +8,7 @@ import com.example.redfruit.R
 import com.example.redfruit.data.model.Post
 import com.example.redfruit.databinding.PostItemYoutubeBinding
 import com.example.redfruit.ui.base.AbstractViewHolder
-import com.example.redfruit.ui.home.fragment.YoutubeFragment
+import com.example.redfruit.ui.media.fragment.YoutubeFragment
 import com.example.redfruit.util.Constants
 import com.example.redfruit.util.addOrShowFragment
 import kotlinx.android.synthetic.main.post_item_youtube.view.*

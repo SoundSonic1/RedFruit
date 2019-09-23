@@ -1,4 +1,4 @@
-package com.example.redfruit.ui.home.fragment
+package com.example.redfruit.ui.media.fragment
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -8,10 +8,10 @@ import androidx.core.os.bundleOf
 import androidx.databinding.DataBindingUtil
 import com.example.redfruit.R
 import com.example.redfruit.databinding.ImageFragmentBinding
-import com.example.redfruit.ui.base.BaseFullScreenFragment
+import com.example.redfruit.ui.base.FullScreenFragment
 
 
-class ImageFragment : BaseFullScreenFragment() {
+class ImageFragment : FullScreenFragment() {
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -24,14 +24,7 @@ class ImageFragment : BaseFullScreenFragment() {
         binding.lifecycleOwner = viewLifecycleOwner
         binding.item = url
 
-        disableToolbar(activity!!)
-
         return binding.root
-    }
-
-    override fun onPause() {
-        super.onPause()
-        enableToolbar(activity!!)
     }
 
     companion object {

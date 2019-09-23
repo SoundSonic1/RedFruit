@@ -37,10 +37,11 @@
                     android:adjustViewBounds="true"
                     android:scaleType="fitCenter"
                     android:contentDescription="@string/image_view_content_descr"
+                    android:visibility="@{item.preview.enabled ? View.VISIBLE : View.GONE}"
                     app:layout_constraintTop_toBottomOf="@id/postTitleAuthorIncludeImage"
                     app:layout_constraintBottom_toTopOf="@id/postMiscImage"
                     app:layout_constraintLeft_toLeftOf="parent"
-                    app:imageSource="@{item.Preview.firstImageSource}"
+                    app:imagePreview="@{item.preview}"
             />
 
             <include
