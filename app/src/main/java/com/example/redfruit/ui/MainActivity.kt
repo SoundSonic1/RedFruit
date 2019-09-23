@@ -21,9 +21,7 @@ import com.example.redfruit.util.Constants
 import com.example.redfruit.util.addOrShowFragment
 import com.example.redfruit.util.isValidSub
 import com.example.redfruit.util.replaceFragmentIgnoreBackstack
-import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.navigation.NavigationView
-import com.google.android.material.snackbar.Snackbar
 import dagger.android.support.DaggerAppCompatActivity
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.app_bar_main.*
@@ -66,11 +64,6 @@ class MainActivity : DaggerAppCompatActivity(), NavigationView.OnNavigationItemS
         setSupportActionBar(toolbar)
         AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
 
-        val fab: FloatingActionButton = findViewById(R.id.fab)
-        fab.setOnClickListener { view ->
-            Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                .setAction("Action", null).show()
-        }
         val toggle = ActionBarDrawerToggle(
             this, drawer_layout, toolbar,
             R.string.navigation_drawer_open,
