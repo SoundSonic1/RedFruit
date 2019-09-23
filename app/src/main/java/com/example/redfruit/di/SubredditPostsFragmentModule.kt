@@ -18,6 +18,7 @@ import com.example.redfruit.util.addOrShowFragment
 import com.example.redfruit.util.findOrCreateFragment
 import dagger.Module
 import dagger.Provides
+import jp.wasabeef.recyclerview.animators.SlideInDownAnimator
 import javax.inject.Named
 
 @Module
@@ -87,5 +88,9 @@ class SubredditPostsFragmentModule {
             }
             return vm
         }
+
+        @JvmStatic
+        @Provides
+        fun provideSlideInDownAnimator() = SlideInDownAnimator()
     }
 }

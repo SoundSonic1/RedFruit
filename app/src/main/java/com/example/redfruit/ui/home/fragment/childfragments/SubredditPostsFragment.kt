@@ -19,6 +19,7 @@ import com.example.redfruit.ui.home.viewmodel.HomePostsViewModel
 import com.example.redfruit.ui.shared.SubredditAboutViewModel
 import com.example.redfruit.util.Constants
 import dagger.android.support.DaggerFragment
+import jp.wasabeef.recyclerview.animators.SlideInDownAnimator
 import kotlinx.android.synthetic.main.subreddit_posts_fragment.view.*
 import javax.inject.Inject
 import javax.inject.Provider
@@ -36,6 +37,9 @@ class SubredditPostsFragment : DaggerFragment() {
 
     @Inject
     lateinit var linearLayoutManagerProvider: Provider<LinearLayoutManager>
+
+    @Inject
+    lateinit var slideInDownAnimator: SlideInDownAnimator
 
     @Inject
     lateinit var homeAdapter: HomeAdapter
@@ -65,7 +69,14 @@ class SubredditPostsFragment : DaggerFragment() {
         val recyclerView = binding.root.recyclerViewPosts.apply {
             layoutManager = linearLayoutManagerProvider.get()
             adapter = homeAdapter
+            itemAnimator = slideInDownAnimator
             setHasFixedSize(true)
+        }
+        recyclerView.itemAnimator?.apply {
+            addDuration = 600
+            removeDuration = 600
+            moveDuration = 600
+            changeDuration = 600
         }
         recyclerView.addOnScrollListener(object : RecyclerView.OnScrollListener() {
             override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
