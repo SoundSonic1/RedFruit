@@ -16,7 +16,8 @@ class AppModule {
 
     @Provides
     @Singleton
-    fun provideContext(app: Application): Context = app
+    @Named("ApplicationContext")
+    fun provideApplicationContext(app: Application): Context = app
 
     @Provides
     @Singleton
@@ -25,8 +26,10 @@ class AppModule {
 
     @Provides
     @Named("savedSub")
-    fun provideSavedSub(pref: SharedPreferences, context: Context) =
-        pref.getString(
+    fun provideSavedSub(
+        pref: SharedPreferences,
+        @Named("ApplicationContext") context: Context
+    ) = pref.getString(
             context.getString(R.string.saved_subreddit),
             Constants.DEFAULT_SUB
         ) ?: Constants.DEFAULT_SUB

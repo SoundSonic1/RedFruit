@@ -32,6 +32,11 @@ class SubredditPostsFragmentModule {
 
         @JvmStatic
         @Provides
+        fun provideActivityContext(subredditPostsFragment: SubredditPostsFragment) =
+            subredditPostsFragment.requireContext()
+
+        @JvmStatic
+        @Provides
         fun provideLinearLayoutManager(context: Context) = LinearLayoutManager(context)
 
         /**
