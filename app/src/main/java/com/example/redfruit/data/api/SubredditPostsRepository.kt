@@ -21,8 +21,8 @@ import java.lang.reflect.Type
  * Implements the Repository pattern
  * @property subredditMap collects the subreddit
  */
-open class SubredditPostsRepository(private val subredditMap: MutableMap<String, SubredditListing>
-                          = mutableMapOf()
+open class SubredditPostsRepository(
+    private val subredditMap: MutableMap<Pair<String, SortBy>, SubredditListing> = mutableMapOf()
 ) : IPostsRepository<List<Post>> {
 
     /**
@@ -36,7 +36,7 @@ open class SubredditPostsRepository(private val subredditMap: MutableMap<String,
      */
     override fun getData(sub: String, sortBy: SortBy, limit: Int): List<Post> {
         // TODO: check if sub is valid
-        val subReddit = subredditMap.getOrPut(sub) { SubredditListing(sub) }
+        val subReddit = subredditMap.getOrPut(Pair(sub, sortBy)) { SubredditListing(sub) }
         var redditUrl = "${Constants.BASE_URL}${subReddit.name}/${sortBy.name}.json?limit=$limit&raw_json=1"
         if (subReddit.after.isNotBlank()) {
             redditUrl = "$redditUrl&after=${subReddit.after}"

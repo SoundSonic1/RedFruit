@@ -24,13 +24,20 @@ class SubredditPostsRepositoryTest : SubredditPostsRepository() {
 
     @Test
     fun getDataCountTest() {
-        assertEquals(10, repo.getData(Constants.DEFAULT_SUB, SortBy.new, 10).size)
+
+        val sortByNew = SortBy.new
+
+        assertEquals(10, repo.getData(Constants.DEFAULT_SUB, sortByNew, 10).size)
         assertEquals(
             "Should add new posts on top of old ones",
             20,
             repo.getData(Constants.DEFAULT_SUB, SortBy.new, 10).size
         )
-        assertEquals(0, repo.getData("empty", SortBy.new, 10).size)
+        assertEquals(0, repo.getData("empty", sortByNew, 10).size)
+
+        assertEquals(10, repo.getData(Constants.DEFAULT_SUB, SortBy.controversial, 10).size)
+        assertEquals(20, repo.getData(Constants.DEFAULT_SUB, SortBy.controversial, 10).size)
+        assertEquals(10, repo.getData(Constants.DEFAULT_SUB, SortBy.rising, 10).size)
     }
 
     @Test
