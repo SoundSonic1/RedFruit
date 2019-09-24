@@ -9,7 +9,7 @@ import com.example.redfruit.R
 import com.example.redfruit.data.api.SubredditPostsRepository
 import com.example.redfruit.data.model.enumeration.SortBy
 import com.example.redfruit.ui.comments.fragment.CommentsFragment
-import com.example.redfruit.ui.home.adapter.HomeAdapter
+import com.example.redfruit.ui.home.adapter.PostListAdapter
 import com.example.redfruit.ui.home.fragment.childfragments.SubredditPostsFragment
 import com.example.redfruit.ui.home.viewmodel.HomePostsViewModel
 import com.example.redfruit.util.BaseVMFactory
@@ -49,20 +49,18 @@ class SubredditPostsFragmentModule {
 
         @JvmStatic
         @Provides
-        fun provideHomeAdapter(
-            fragmentManager: FragmentManager?,
+        fun provideHomeListAdapter(
+            fm: FragmentManager?,
             homePostsViewModel: HomePostsViewModel
-        ): HomeAdapter {
-            // restore data if possible
-            val dataList = homePostsViewModel.data.value?.toMutableList() ?: mutableListOf()
-
-            return HomeAdapter(fragmentManager!!, dataList) {
-                fragmentManager.let { fm ->
-                    val fragment = findOrCreateFragment(fm, Constants.COMMENTS_FRAGMENT_TAG) {
-                        CommentsFragment()
-                    }
-                    addOrShowFragment(fm, R.id.mainContent, fragment, Constants.COMMENTS_FRAGMENT_TAG)
+        ): PostListAdapter {
+            return PostListAdapter(fm!!) {
+                val fragment = findOrCreateFragment(fm, Constants.COMMENTS_FRAGMENT_TAG) {
+                    CommentsFragment()
                 }
+                addOrShowFragment(fm, R.id.mainContent, fragment, Constants.COMMENTS_FRAGMENT_TAG)
+
+            }.apply {
+                submitList(homePostsViewModel.data.value ?: listOf())
             }
         }
 

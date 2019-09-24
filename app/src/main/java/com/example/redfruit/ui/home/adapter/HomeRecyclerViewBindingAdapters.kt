@@ -20,8 +20,8 @@ object HomeRecyclerViewBindingAdapters {
     @JvmStatic
     @BindingAdapter("items")
     fun setRecyclerViewProperties(recyclerViewHome: RecyclerView, items: List<Post>?) {
-        if (items != null && recyclerViewHome.adapter is HomeAdapter) {
-            (recyclerViewHome.adapter as HomeAdapter).notifyChanges(items)
+        if (items != null && recyclerViewHome.adapter is PostListAdapter) {
+            (recyclerViewHome.adapter as PostListAdapter).submitList(items)
         }
     }
 

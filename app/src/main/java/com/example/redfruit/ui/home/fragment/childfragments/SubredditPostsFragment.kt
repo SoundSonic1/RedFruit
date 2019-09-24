@@ -14,7 +14,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.redfruit.R
 import com.example.redfruit.data.model.enumeration.SortBy
 import com.example.redfruit.databinding.SubredditPostsFragmentBinding
-import com.example.redfruit.ui.home.adapter.HomeAdapter
+import com.example.redfruit.ui.home.adapter.PostListAdapter
 import com.example.redfruit.ui.home.viewmodel.HomePostsViewModel
 import com.example.redfruit.ui.shared.SubredditAboutViewModel
 import com.example.redfruit.util.Constants
@@ -28,7 +28,7 @@ import javax.inject.Provider
  * Fragment that displays the posts of a subreddit
  * @property homePostsViewModel control logic of the fragment
  * @property linearLayoutManagerProvider gets new instance of LayoutManager
- * @property homeAdapter used for RecyclerView
+ * @property postListAdapter used for RecyclerView
  */
 class SubredditPostsFragment : DaggerFragment() {
 
@@ -42,7 +42,7 @@ class SubredditPostsFragment : DaggerFragment() {
     lateinit var slideInDownAnimator: SlideInDownAnimator
 
     @Inject
-    lateinit var homeAdapter: HomeAdapter
+    lateinit var postListAdapter: PostListAdapter
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -68,7 +68,7 @@ class SubredditPostsFragment : DaggerFragment() {
 
         val recyclerView = binding.root.recyclerViewPosts.apply {
             layoutManager = linearLayoutManagerProvider.get()
-            adapter = homeAdapter
+            adapter = postListAdapter
             itemAnimator = slideInDownAnimator
             setHasFixedSize(true)
         }
