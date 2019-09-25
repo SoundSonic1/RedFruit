@@ -14,7 +14,7 @@
                 android:id="@+id/imageViewFragment"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                app:imageFragment="@{item}">
+                app:imageUrl="@{item}">
 
         </com.ortiz.touchview.TouchImageView>
 

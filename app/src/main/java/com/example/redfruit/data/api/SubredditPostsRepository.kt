@@ -125,6 +125,7 @@ open class SubredditPostsRepository(
                 author = jsonData.get("author")?.asString ?: "Unknown",
                 score = jsonData.get("score")?.asString ?: "0",
                 num_comments = jsonData.get("num_comments")?.asString ?: "0",
+                post_hint = jsonData.get("post_hint")?.asString ?: "",
                 preview = Preview(
                     enabled = enabled,
                     images = images ?: listOf()

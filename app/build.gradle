@@ -64,6 +64,8 @@ dependencies {
     implementation("io.coil-kt:coil:0.7.0")
     // pinch to zoom etc. for images
     implementation 'com.github.MikeOrtiz:TouchImageView:2.2.0'
+    // url preview
+    implementation 'com.github.SoundSonic1:urlembeddedview:-SNAPSHOT'
     // custom item animators for RecyclerView
     implementation 'jp.wasabeef:recyclerview-animators:3.0.0'
     // for advanced video playback

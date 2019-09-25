@@ -7,10 +7,7 @@ import androidx.recyclerview.widget.ListAdapter
 import com.example.redfruit.R
 import com.example.redfruit.data.model.Post
 import com.example.redfruit.ui.base.AbstractViewHolder
-import com.example.redfruit.ui.home.adapter.viewholder.PostTextOnlyViewHolder
-import com.example.redfruit.ui.home.adapter.viewholder.PostWithImageViewHolder
-import com.example.redfruit.ui.home.adapter.viewholder.PostWithRedditVideoViewHolder
-import com.example.redfruit.ui.home.adapter.viewholder.PostWithYoutubeViewHolder
+import com.example.redfruit.ui.home.adapter.viewholder.*
 
 /**
  * Adapter for SubredditPostsFragment
@@ -22,16 +19,19 @@ class PostListAdapter(
 
     override fun getItemViewType(position: Int): Int {
         val item = getItem(position)
-        // TODO: support more oEmbed
         if (item.secureMedia?.youtubeoEmbed?.provider_url == "https://www.youtube.com/") {
             return R.layout.post_item_youtube
         }
         else if (item.secureMedia?.redditVideo != null) {
             return R.layout.post_item_reddit_video
         }
-        else if (item.preview.images.isNotEmpty()) {
+        else if (item.post_hint == "image") {
             return R.layout.post_item_image
         }
+        else if (item.post_hint == "link") {
+            return R.layout.post_item_link
+        }
+
         return R.layout.post_item_text
     }
 
@@ -44,6 +44,9 @@ class PostListAdapter(
         }
         else if (viewType == R.layout.post_item_image) {
             return PostWithImageViewHolder(parent, fm)
+        }
+        else if (viewType == R.layout.post_item_link) {
+            return PostWithLinkViewHolder(parent)
         }
         return PostTextOnlyViewHolder(parent)
     }

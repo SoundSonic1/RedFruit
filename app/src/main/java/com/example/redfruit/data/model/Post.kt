@@ -2,6 +2,7 @@ package com.example.redfruit.data.model
 
 import com.example.redfruit.data.model.interfaces.ISource
 import com.example.redfruit.data.model.media.SecureMedia
+import com.nguyencse.URLEmbeddedData
 
 /** Contains the necessary information of a reddit post
  *
@@ -23,11 +24,13 @@ data class Post(
     val author: String,
     val score: String,
     val num_comments: String,
+    val post_hint: String,
     val preview: Preview,
     val secureMedia: SecureMedia?,
     val gildings: Gildings,
     val over_18: Boolean,
     val stickied: Boolean,
     val selftext: String,
+    var urlEmbeddedData: URLEmbeddedData? = null,
     override val url: String
 ) : ISource
