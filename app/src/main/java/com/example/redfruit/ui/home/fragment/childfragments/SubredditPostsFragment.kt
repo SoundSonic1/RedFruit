@@ -49,8 +49,8 @@ class SubredditPostsFragment : DaggerFragment() {
         savedInstanceState: Bundle?
     ): View? {
         // get SubredditAboutViewModel instance from the MainActivity
-        val sharedViewModel by activityViewModels<SubredditAboutViewModel>()
-        sharedViewModel.data.observe(viewLifecycleOwner, Observer {sub ->
+        val subredditAboutViewModel by activityViewModels<SubredditAboutViewModel>()
+        subredditAboutViewModel.data.observe(viewLifecycleOwner, Observer { sub ->
             if (sub.display_name != homePostsViewModel.subReddit) {
                 homePostsViewModel.changeSub(sub.display_name)
             }

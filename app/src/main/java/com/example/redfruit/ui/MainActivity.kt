@@ -4,10 +4,8 @@ import android.content.SharedPreferences
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
-import android.widget.Toast
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AppCompatDelegate
-import androidx.appcompat.widget.SearchView
 import androidx.appcompat.widget.Toolbar
 import androidx.core.content.edit
 import androidx.core.view.GravityCompat
@@ -21,16 +19,11 @@ import com.example.redfruit.ui.home.fragment.HomeFragment
 import com.example.redfruit.ui.shared.SubredditAboutViewModel
 import com.example.redfruit.util.Constants
 import com.example.redfruit.util.findOrCreateFragment
-import com.example.redfruit.util.isValidSub
 import com.example.redfruit.util.replaceFragmentIgnoreBackstack
 import com.google.android.material.navigation.NavigationView
 import dagger.android.support.DaggerAppCompatActivity
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.app_bar_main.*
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
-import java.util.*
 import javax.inject.Inject
 import javax.inject.Provider
 
@@ -112,26 +105,6 @@ class MainActivity : DaggerAppCompatActivity(), NavigationView.OnNavigationItemS
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
         // Inflate the menu; this adds items to the action bar if it is present.
         menuInflater.inflate(R.menu.main, menu)
-        val searchItem = menu.findItem(R.id.action_search_subreddit)
-        val searchView = searchItem.actionView as SearchView
-
-        searchView.setOnQueryTextListener(object :  SearchView.OnQueryTextListener {
-
-            override fun onQueryTextChange(newText: String): Boolean {
-                return false
-            }
-
-            override fun onQueryTextSubmit(query: String): Boolean {
-                if (subredditAboutViewModel.data.value?.display_name?.toLowerCase(Locale.ENGLISH)
-                    != query.toLowerCase(Locale.ENGLISH)) {
-                    changeSubIfValid(query)
-                }
-                // collapse menu item
-                searchItem.collapseActionView()
-                return true
-            }
-
-        })
 
         return true
     }
@@ -173,27 +146,4 @@ class MainActivity : DaggerAppCompatActivity(), NavigationView.OnNavigationItemS
         return true
     }
 
-    /**
-     * Checks whether the requested sub from the user exists
-     */
-    private fun changeSubIfValid(sub: String) {
-        CoroutineScope(Dispatchers.Main).launch {
-            if (isValidSub(sub)) {
-                // set new subreddit
-                subredditAboutViewModel.setSub(sub)
-                /*addOrShowFragment(
-                    supportFragmentManager,
-                    R.id.mainContent,
-                    homeFragment,
-                    Constants.HOME_FRAGMENT_TAG
-                )*/
-            } else {
-                Toast.makeText(
-                    this@MainActivity,
-                    "The subreddit $sub could not be found.",
-                    Toast.LENGTH_SHORT
-                ).show()
-            }
-        }
-    }
 }

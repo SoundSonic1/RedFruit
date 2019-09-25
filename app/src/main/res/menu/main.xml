@@ -5,12 +5,4 @@
           android:title="@string/action_settings"
           android:orderInCategory="100"
           app:showAsAction="never"/>
-    <item
-            android:id="@+id/action_search_subreddit"
-            android:icon="@drawable/ic_search_white_24dp"
-            android:title="@string/search_hint"
-            app:showAsAction="ifRoom|collapseActionView"
-            app:actionViewClass="androidx.appcompat.widget.SearchView">
-
-    </item>
 </menu>
