@@ -7,8 +7,8 @@ import com.google.gson.annotations.SerializedName
  * Note a reddit video does not contain any sound
  */
 data class RedditVideo(
-    @SerializedName("fallback_url")
-    override val url: String,
+    @SerializedName("dash_url")
+    override val url: String = "",
     val height: Int,
     val width: Int
 ) : ISource

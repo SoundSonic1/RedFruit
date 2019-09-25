@@ -69,6 +69,7 @@ dependencies {
     // for advanced video playback
     implementation "com.google.android.exoplayer:exoplayer-core:$exo_version"
     implementation "com.google.android.exoplayer:exoplayer-ui:$exo_version"
+    implementation "com.google.android.exoplayer:exoplayer-dash:$exo_version"
     implementation 'com.github.PierfrancescoSoffritti:AndroidYouTubePlayer:10.0.4'
     // for dependency injection
     implementation "com.google.dagger:dagger:$dagger_version"

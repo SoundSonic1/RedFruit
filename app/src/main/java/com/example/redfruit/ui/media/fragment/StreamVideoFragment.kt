@@ -10,7 +10,7 @@ import com.example.redfruit.R
 import com.example.redfruit.ui.base.DaggerFullScreenFragment
 import com.example.redfruit.util.Constants
 import com.google.android.exoplayer2.ExoPlayer
-import com.google.android.exoplayer2.source.ProgressiveMediaSource
+import com.google.android.exoplayer2.source.dash.DashMediaSource
 import com.google.android.exoplayer2.ui.PlayerView
 import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory
 import com.google.android.exoplayer2.util.Util
@@ -40,7 +40,7 @@ class StreamVideoFragment : DaggerFullScreenFragment() {
         val userAgent = Util.getUserAgent(requireContext(), Constants.USER_AGENT)
 
         if (url.isNotBlank()) {
-            val mediaSource = ProgressiveMediaSource
+            val mediaSource = DashMediaSource
                 .Factory(DefaultDataSourceFactory(requireContext(), userAgent))
                 .createMediaSource(Uri.parse(url))
             exoPlayer.prepare(mediaSource)
