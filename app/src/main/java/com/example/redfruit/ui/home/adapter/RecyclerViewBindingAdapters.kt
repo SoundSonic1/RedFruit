@@ -3,6 +3,7 @@ package com.example.redfruit.ui.home.adapter
 import android.widget.ImageView
 import androidx.databinding.BindingAdapter
 import androidx.recyclerview.widget.RecyclerView
+import coil.Coil
 import coil.api.load
 import com.example.redfruit.data.model.Post
 import com.example.redfruit.data.model.Preview
@@ -39,10 +40,21 @@ object RecyclerViewBindingAdapters {
 
     @JvmStatic
     @BindingAdapter("imageUrl")
-    fun loadImageToFragment(imageView: ImageView, url: String) {
+    fun loadImageToView(imageView: ImageView, url: String) {
         if (url.isNotBlank()) {
             imageView.load(url) {
                 crossfade(true)
+            }
+        }
+    }
+
+    @JvmStatic
+    @BindingAdapter("imageDrawable")
+    fun loadDrawableIntoImageView(imageView: ImageView, url: String) {
+        // TODO: use ViewTarget
+        Coil.load(imageView.context, url) {
+            target {
+                imageView.setImageDrawable(it)
             }
         }
     }

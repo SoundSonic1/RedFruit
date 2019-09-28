@@ -22,7 +22,7 @@ class ImageFragment : FullScreenFragment() {
         val binding: ImageFragmentBinding =
             DataBindingUtil.inflate(inflater, R.layout.image_fragment, container, false)
         binding.lifecycleOwner = viewLifecycleOwner
-        binding.item = url
+        binding.url = url
 
         return binding.root
     }
