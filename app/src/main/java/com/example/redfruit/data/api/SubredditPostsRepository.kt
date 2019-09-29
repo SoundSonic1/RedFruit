@@ -23,7 +23,7 @@ import java.lang.reflect.Type
  */
 open class SubredditPostsRepository(
     private val subredditMap: MutableMap<Pair<String, SortBy>, SubredditListing> = mutableMapOf()
-) : IPostsRepository<List<Post>> {
+) : IPostsRepository {
 
     /**
      * Main function that returns a list of posts from a given subreddit
@@ -135,6 +135,7 @@ open class SubredditPostsRepository(
                 over_18 = jsonData.get("over_18")?.asBoolean ?: false,
                 stickied = jsonData.get("stickied")?.asBoolean ?: false,
                 selftext = jsonData.get("selftext")?.asString ?: "",
+                subreddit = jsonData.get("subreddit")?.asString ?: "",
                 url = jsonData.get("url")?.asString ?: ""
             )
         }

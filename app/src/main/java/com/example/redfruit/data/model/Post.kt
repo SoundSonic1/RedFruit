@@ -31,6 +31,7 @@ data class Post(
     val over_18: Boolean,
     val stickied: Boolean,
     val selftext: String,
+    val subreddit: String,
     var urlEmbeddedData: URLEmbeddedData? = null,
     override val url: String
 ) : ISource

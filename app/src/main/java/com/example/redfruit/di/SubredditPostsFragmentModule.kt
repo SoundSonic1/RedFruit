@@ -53,9 +53,9 @@ class SubredditPostsFragmentModule {
             fm: FragmentManager?,
             homePostsViewModel: HomePostsViewModel
         ): PostListAdapter {
-            return PostListAdapter(fm!!) {
+            return PostListAdapter(fm!!) { post ->
                 val fragment = findOrCreateFragment(fm, Constants.COMMENTS_FRAGMENT_TAG) {
-                    CommentsFragment()
+                    CommentsFragment.newInstance(post)
                 }
                 addOrShowFragment(fm, R.id.mainContent, fragment, Constants.COMMENTS_FRAGMENT_TAG)
 

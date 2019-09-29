@@ -19,9 +19,9 @@ import com.example.redfruit.ui.home.viewmodel.HomePostsViewModel
 import com.example.redfruit.ui.shared.SubredditAboutViewModel
 import com.example.redfruit.util.Constants
 import dagger.android.support.DaggerFragment
-import jp.wasabeef.recyclerview.animators.SlideInDownAnimator
 import kotlinx.android.synthetic.main.subreddit_posts_fragment.view.*
 import javax.inject.Inject
+import javax.inject.Named
 import javax.inject.Provider
 
 /**
@@ -39,7 +39,8 @@ class SubredditPostsFragment : DaggerFragment() {
     lateinit var linearLayoutManagerProvider: Provider<LinearLayoutManager>
 
     @Inject
-    lateinit var slideInDownAnimator: SlideInDownAnimator
+    @field:Named("ItemAnimator")
+    lateinit var customItemAnimator: RecyclerView.ItemAnimator
 
     @Inject
     lateinit var postListAdapter: PostListAdapter
@@ -78,7 +79,7 @@ class SubredditPostsFragment : DaggerFragment() {
         val recyclerView = binding.root.recyclerViewPosts.apply {
             layoutManager = linearLayoutManagerProvider.get()
             adapter = postListAdapter
-            itemAnimator = slideInDownAnimator
+            itemAnimator = customItemAnimator
             setHasFixedSize(true)
         }
         recyclerView.itemAnimator?.apply {
@@ -116,10 +117,10 @@ class SubredditPostsFragment : DaggerFragment() {
          * Provide SortBy preference
          */
         fun newInstance(sortBy: SortBy): SubredditPostsFragment {
-            val fragment = SubredditPostsFragment()
-            fragment.arguments = bundleOf(Constants.SORT_BY_KEY to sortBy.name)
 
-            return fragment
+            return SubredditPostsFragment().apply {
+                arguments = bundleOf(Constants.SORT_BY_KEY to sortBy.name)
+            }
         }
     }
 }

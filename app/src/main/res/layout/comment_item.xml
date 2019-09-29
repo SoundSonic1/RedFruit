@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto">
+    <data>
+        <variable
+                name="item"
+                type="com.example.redfruit.data.model.Comment" />
+        <variable
+                name="clickListener"
+                type="com.xwray.groupie.ExpandableGroup" />
+    </data>
+    <!-- Note: do not add more layouts into LinearLayout because of comment separator -->
+    <LinearLayout
+            android:id="@+id/comment_item_linear_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:onClick="@{() -> clickListener.onToggleExpanded()}">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/comment_item_constraint_layout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="10dp">
+            <androidx.appcompat.widget.AppCompatTextView
+                    android:id="@+id/author_comment_view"
+                    android:text="@{item.author}"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/colorAccent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    >
+
+            </androidx.appcompat.widget.AppCompatTextView>
+
+            <androidx.appcompat.widget.AppCompatTextView
+                    android:id="@+id/comment_body_view"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:onClick="@{() -> clickListener.onToggleExpanded()}"
+                    app:markDownText="@{item.body}"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/author_comment_view"
+                    app:layout_constraintBottom_toTopOf="@+id/comment_score_text_view"
+                    >
+
+            </androidx.appcompat.widget.AppCompatTextView>
+
+            <androidx.appcompat.widget.AppCompatTextView
+                    android:id="@+id/comment_score_text_view"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:drawableStart="@drawable/ic_favorite_border_grey_14dp"
+                    android:drawablePadding="5dp"
+                    android:text="@{String.valueOf(item.score)}"
+                    app:layout_constraintTop_toBottomOf="@+id/comment_body_view"
+                    app:layout_constraintStart_toStartOf="parent">
+
+            </androidx.appcompat.widget.AppCompatTextView>
+
+            <androidx.appcompat.widget.AppCompatTextView
+                    android:id="@+id/comment_replies_view"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="5dp"
+                    android:drawableStart="@drawable/ic_message_grey_14dp"
+                    android:drawablePadding="5dp"
+                    android:text="@{String.valueOf(item.replies.size())}"
+                    app:layout_constraintLeft_toRightOf="@+id/comment_score_text_view"
+                    app:layout_constraintTop_toBottomOf="@+id/comment_body_view">
+
+            </androidx.appcompat.widget.AppCompatTextView>
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </LinearLayout>
+</layout>

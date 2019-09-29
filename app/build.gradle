@@ -43,6 +43,8 @@ dependencies {
     def dagger_version = "2.24"
     def ktx_version = "1.1.0"
     def exo_version = "2.10.4"
+    def markwon_version = "4.1.1"
+    def groupie_version = "2.6.0"
 
     implementation fileTree(dir: 'libs', include: ['*.jar'])
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
@@ -79,6 +81,12 @@ dependencies {
     implementation "com.google.dagger:dagger-android-support:$dagger_version"
     kapt "com.google.dagger:dagger-android-processor:$dagger_version"
     kapt "com.google.dagger:dagger-compiler:$dagger_version"
+    // for markdown support in TextView
+    implementation "io.noties.markwon:core:$markwon_version"
+    // for complex RecyclerView layouts
+    implementation "com.xwray:groupie:$groupie_version"
+    implementation "com.xwray:groupie-kotlin-android-extensions:$groupie_version"
+    implementation "com.xwray:groupie-databinding:$groupie_version"
     // testing
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'androidx.test:runner:1.2.0'

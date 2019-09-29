@@ -1,14 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:tools="http://schemas.android.com/tools"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        tools:context=".ui.comments.fragment.CommentsFragment">
+<layout xmlns:app="http://schemas.android.com/apk/res-auto">
+    <data>
+        <variable
+                name="viewModel"
+                type="com.example.redfruit.ui.comments.viewmodel.CommentsViewModel" />
+    </data>
 
-    <TextView
-            android:id="@+id/commentsTextView"
+    <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+            xmlns:tools="http://schemas.android.com/tools"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:text="@string/app_name" />
+            tools:context=".ui.comments.fragment.CommentsFragment">
+        <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/recycler_view_comments"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                app:comments="@{viewModel.data}">
 
-</FrameLayout>
+        </androidx.recyclerview.widget.RecyclerView>
+
+    </FrameLayout>
+</layout>

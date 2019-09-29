@@ -15,7 +15,7 @@ abstract class FragmentsBindingModule {
     @ContributesAndroidInjector(modules = [SubredditPostsFragmentModule::class])
     abstract fun fragmentHomeSortBy(): SubredditPostsFragment
 
-    @ContributesAndroidInjector
+    @ContributesAndroidInjector(modules = [CommentsFragmentModule::class])
     abstract fun fragmentComments(): CommentsFragment
 
     @ContributesAndroidInjector(modules = [StreamVideoFragmentModule::class])

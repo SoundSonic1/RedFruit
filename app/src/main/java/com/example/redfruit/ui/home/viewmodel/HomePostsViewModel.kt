@@ -22,7 +22,7 @@ import java.util.*
 class HomePostsViewModel(
     private var _subReddit: String,
     var sortBy: SortBy,
-    private val repo: IPostsRepository<List<Post>>
+    private val repo: IPostsRepository
 ) : ViewModel(), IViewModel<List<Post>> {
 
     val subReddit get() = _subReddit
