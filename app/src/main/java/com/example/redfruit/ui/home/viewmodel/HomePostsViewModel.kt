@@ -21,7 +21,7 @@ import java.util.*
  */
 class HomePostsViewModel(
     private var _subReddit: String,
-    private val sortBy: SortBy,
+    var sortBy: SortBy,
     private val repo: IPostsRepository<List<Post>>
 ) : ViewModel(), IViewModel<List<Post>> {
 

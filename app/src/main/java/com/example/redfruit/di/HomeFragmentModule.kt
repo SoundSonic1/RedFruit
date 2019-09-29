@@ -25,7 +25,7 @@ class HomeFragmentModule {
         @Provides
         fun provideTabAdapter(fragmentManager: FragmentManager) =
             SubredditPagerAdapter(
-                listOf(SortBy.hot.name, SortBy.new.name, "about"),
+                mutableListOf(SortBy.hot.name, "About"),
                 fragmentManager
             )
 

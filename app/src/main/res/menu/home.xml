@@ -9,4 +9,12 @@
             app:actionViewClass="androidx.appcompat.widget.SearchView">
 
     </item>
+
+    <item
+            android:id="@+id/sortMenu"
+            android:title="@string/menu_sortBy"
+            android:icon="@drawable/ic_sort_24dp"
+            app:showAsAction="ifRoom"
+            >
+    </item>
 </menu>

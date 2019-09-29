@@ -13,8 +13,15 @@
     <string name="menu_tools">Tools</string>
     <string name="menu_share">Share</string>
     <string name="menu_send">Send</string>
+    <string name="menu_sortBy">Sort</string>
     <string name="search_hint">Search for subreddit</string>
     <string name="saved_subreddit">SAVED_SUBREDDIT</string>
+
+    <string name="Hot">Hot</string>
+    <string name="New">New</string>
+    <string name="Top">Top</string>
+    <string name="Rising">Rising</string>
+    <string name="Controversial">Controversial</string>
 
     <string name="image_view_content_descr">image of the preview</string>
     <string name="stickied">stickied</string>

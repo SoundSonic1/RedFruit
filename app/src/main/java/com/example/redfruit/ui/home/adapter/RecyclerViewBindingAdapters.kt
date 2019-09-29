@@ -66,25 +66,11 @@ object RecyclerViewBindingAdapters {
             urlEmbeddedView.setURL(post.url, object : URLEmbeddedView.OnLoadURLListener {
                 override fun onLoadURLCompleted(data: URLEmbeddedData) {
                     post.urlEmbeddedData = data
-
-                    urlEmbeddedView.apply {
-                        title(data.title)
-                        description(data.description)
-                        host(data.host)
-                        thumbnail(data.thumbnailURL)
-                        favor(data.favorURL)
-                    }
+                    urlEmbeddedView.setData(data)
                 }
             })
         } else {
-            urlEmbeddedView.apply {
-                title(post.urlEmbeddedData?.title)
-                description(post.urlEmbeddedData?.description)
-                host(post.urlEmbeddedData?.host)
-                thumbnail(post.urlEmbeddedData?.thumbnailURL)
-                favor(post.urlEmbeddedData?.favorURL)
-            }
+            urlEmbeddedView.setData(post.urlEmbeddedData!!)
         }
-
     }
 }

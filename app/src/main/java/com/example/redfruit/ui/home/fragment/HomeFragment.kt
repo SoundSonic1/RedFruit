@@ -3,10 +3,12 @@ package com.example.redfruit.ui.home.fragment
 import android.os.Bundle
 import android.view.*
 import android.widget.Toast
+import androidx.appcompat.widget.PopupMenu
 import androidx.appcompat.widget.SearchView
 import androidx.fragment.app.activityViewModels
 import androidx.recyclerview.widget.RecyclerView
 import com.example.redfruit.R
+import com.example.redfruit.data.model.enumeration.SortBy
 import com.example.redfruit.ui.home.adapter.SubredditPagerAdapter
 import com.example.redfruit.ui.shared.SubredditAboutViewModel
 import com.example.redfruit.util.isValidSub
@@ -67,11 +69,11 @@ class HomeFragment : DaggerFragment() {
     }
 
     /**
-     * Create search view to search for subreddits
+     * Create menu for home section
      */
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
         super.onCreateOptionsMenu(menu, inflater)
-        inflater.inflate(R.menu.search, menu)
+        inflater.inflate(R.menu.home, menu)
 
         val searchItem = menu.findItem(R.id.action_search_subreddit)
         val searchView = searchItem.actionView as SearchView
@@ -93,6 +95,61 @@ class HomeFragment : DaggerFragment() {
             }
 
         })
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        return when(item.itemId) {
+            R.id.sortMenu -> {
+                showPopUpSortMenu()
+                true
+            }
+            else -> super.onOptionsItemSelected(item)
+        }
+    }
+
+    private fun showPopUpSortMenu() {
+        val item = activity?.findViewById<View>(R.id.sortMenu)
+        item?.let{
+            val menu = PopupMenu(requireContext(), it).apply {
+                inflate(R.menu.sortby_menu)
+                show()
+            }
+            menu.setOnMenuItemClickListener {
+                when(it.itemId) {
+                    R.id.sortByHot -> {
+                        subredditAboutViewModel.setSort(SortBy.hot)
+                        changeSortByTitle(SortBy.hot)
+                        true
+                    }
+                    R.id.sortByNew -> {
+                        subredditAboutViewModel.setSort(SortBy.new)
+                        changeSortByTitle(SortBy.new)
+                        true
+                    }
+                    R.id.sortByTop -> {
+                        subredditAboutViewModel.setSort(SortBy.top)
+                        changeSortByTitle(SortBy.top)
+                        true
+                    }
+                    R.id.sortByRising -> {
+                        subredditAboutViewModel.setSort(SortBy.rising)
+                        changeSortByTitle(SortBy.rising)
+                        true
+                    }
+                    R.id.sortByControversial -> {
+                        subredditAboutViewModel.setSort(SortBy.controversial)
+                        changeSortByTitle(SortBy.controversial)
+                        true
+                    }
+                    else -> false
+                }
+            }
+        }
+    }
+
+    private fun changeSortByTitle(sortBy: SortBy) {
+        subredditPagerAdapter.categories[0] = sortBy.name
+        subredditPagerAdapter.notifyDataSetChanged()
     }
 
     /**

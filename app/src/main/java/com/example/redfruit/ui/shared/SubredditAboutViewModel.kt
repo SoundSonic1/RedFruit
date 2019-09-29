@@ -6,6 +6,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.redfruit.data.api.SubredditAboutRepository
 import com.example.redfruit.data.model.SubredditAbout
+import com.example.redfruit.data.model.enumeration.SortBy
 import com.example.redfruit.ui.base.IViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -28,7 +29,11 @@ class SubredditAboutViewModel(subreddit: String,
         }
     }
 
+    private val _sortBy: MutableLiveData<SortBy> = MutableLiveData(SortBy.hot)
+
     override val data: LiveData<SubredditAbout> get() = _data
+
+    val sortBy: LiveData<SortBy> get() = _sortBy
 
     /**
      * Only set lower case
@@ -37,6 +42,10 @@ class SubredditAboutViewModel(subreddit: String,
         viewModelScope.launch {
             _data.value = getSubredditAbout(sub)
         }
+    }
+
+    fun setSort(sortBy: SortBy) {
+        _sortBy.value = sortBy
     }
 
     private suspend fun getSubredditAbout(sub: String) = withContext(Dispatchers.IO) {

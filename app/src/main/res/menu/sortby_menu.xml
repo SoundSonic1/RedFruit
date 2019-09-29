@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+            android:id="@+id/sortByHot"
+            android:title="@string/Hot"
+            >
+
+    </item>
+
+    <item
+            android:id="@+id/sortByNew"
+            android:title="@string/New">
+
+    </item>
+
+    <item
+            android:id="@+id/sortByTop"
+            android:title="@string/Top">
+
+    </item>
+
+    <item
+            android:id="@+id/sortByRising"
+            android:title="@string/Rising"
+            >
+
+    </item>
+
+    <item
+            android:id="@+id/sortByControversial"
+            android:title="@string/Controversial"
+            >
+
+    </item>
+</menu>

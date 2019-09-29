@@ -50,9 +50,18 @@ class SubredditPostsFragment : DaggerFragment() {
     ): View? {
         // get SubredditAboutViewModel instance from the MainActivity
         val subredditAboutViewModel by activityViewModels<SubredditAboutViewModel>()
+
         subredditAboutViewModel.data.observe(viewLifecycleOwner, Observer { sub ->
             if (sub.display_name != homePostsViewModel.subReddit) {
                 homePostsViewModel.changeSub(sub.display_name)
+            }
+        })
+
+        subredditAboutViewModel.sortBy.observe(viewLifecycleOwner, Observer {
+            if (it != homePostsViewModel.sortBy) {
+                postListAdapter.submitList(listOf())
+                homePostsViewModel.sortBy = it
+                homePostsViewModel.loadMoreData(Constants.LIMIT)
             }
         })
 

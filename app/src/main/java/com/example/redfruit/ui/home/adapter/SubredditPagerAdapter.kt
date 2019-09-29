@@ -11,7 +11,7 @@ import com.example.redfruit.ui.home.fragment.childfragments.SubredditPostsFragme
  * Show posts based on SortBy preference and About page of the subreddit
  */
 class SubredditPagerAdapter(
-    private val categories: List<String>,
+    val categories: MutableList<String>,
     fm: FragmentManager
 ) : FragmentPagerAdapter(fm, BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT) {
 
@@ -20,11 +20,10 @@ class SubredditPagerAdapter(
      */
     override fun getItem(position: Int): Fragment = when(position) {
         0 -> SubredditPostsFragment.newInstance(SortBy.hot)
-        1 -> SubredditPostsFragment.newInstance(SortBy.new)
         else -> SubredditAboutFragment()
     }
 
-    override fun getCount() = 3
+    override fun getCount() = 2
 
     override fun getPageTitle(position: Int) = categories[position]
 
