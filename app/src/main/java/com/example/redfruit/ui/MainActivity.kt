@@ -60,7 +60,6 @@ class MainActivity : DaggerAppCompatActivity(), NavigationView.OnNavigationItemS
         collapsingToolbarLayout.isTitleEnabled = false
         val toolbar: Toolbar = findViewById(R.id.toolbar)
         setSupportActionBar(toolbar)
-        AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
 
         val toggle = ActionBarDrawerToggle(
             this, drawer_layout, toolbar,
@@ -71,6 +70,28 @@ class MainActivity : DaggerAppCompatActivity(), NavigationView.OnNavigationItemS
         toggle.syncState()
 
         nav_view.setNavigationItemSelectedListener(this)
+
+        switch_compat.isChecked = sharedPref.getBoolean(Constants.SWITCH_TOGGLE_KEY, false)
+
+        AppCompatDelegate.setDefaultNightMode(
+            sharedPref.getInt(Constants.DARK_THEME_ON_KEY, AppCompatDelegate.MODE_NIGHT_NO)
+        )
+
+        switch_compat.setOnCheckedChangeListener { _, b ->
+            if (b) {
+                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
+                sharedPref.edit {
+                    putBoolean(Constants.SWITCH_TOGGLE_KEY, b)
+                    putInt(Constants.DARK_THEME_ON_KEY, AppCompatDelegate.MODE_NIGHT_YES)
+                }
+            } else {
+                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
+                sharedPref.edit {
+                    putBoolean(Constants.SWITCH_TOGGLE_KEY, b)
+                    putInt(Constants.DARK_THEME_ON_KEY, AppCompatDelegate.MODE_NIGHT_NO)
+                }
+            }
+        }
 
         subredditAboutViewModel.data.observe(this, Observer {
             // TODO: change title via data binding

@@ -29,7 +29,22 @@
                 android:layout_gravity="start"
                 android:fitsSystemWindows="true"
                 app:headerLayout="@layout/nav_header_main"
-                app:menu="@menu/activity_main_drawer"/>
+                app:menu="@menu/activity_main_drawer"
+                >
+            <androidx.appcompat.widget.SwitchCompat
+                    android:id="@+id/switch_compat"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="10dp"
+                    android:layout_marginEnd="5dp"
+                    android:drawableStart="@drawable/ic_moon_20dp"
+                    android:drawablePadding="10dp"
+                    android:layout_gravity="bottom|end"
+                    >
+
+            </androidx.appcompat.widget.SwitchCompat>
+
+        </com.google.android.material.navigation.NavigationView>
 
     </androidx.drawerlayout.widget.DrawerLayout>
 

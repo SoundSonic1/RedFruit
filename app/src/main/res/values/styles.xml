@@ -21,7 +21,7 @@
     </style>
 
     <style name="CardViewStyle" parent="CardView">
-        <item name="cardCornerRadius">4dp</item>
+        <item name="cardCornerRadius">15dp</item>
         <item name="cardElevation">4dp</item>
         <item name="cardBackgroundColor">@color/colorCardViewBackground</item>
     </style>
