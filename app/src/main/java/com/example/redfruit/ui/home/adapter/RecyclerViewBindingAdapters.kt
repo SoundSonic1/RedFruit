@@ -5,6 +5,7 @@ import androidx.databinding.BindingAdapter
 import androidx.recyclerview.widget.RecyclerView
 import coil.Coil
 import coil.api.load
+import com.example.redfruit.R
 import com.example.redfruit.data.model.Post
 import com.example.redfruit.data.model.Preview
 import com.example.redfruit.util.SizableColorDrawable
@@ -40,9 +41,13 @@ object RecyclerViewBindingAdapters {
 
     @JvmStatic
     @BindingAdapter("imageUrl")
-    fun loadImageToView(imageView: ImageView, url: String) {
-        if (url.isNotBlank()) {
+    fun loadImageToView(imageView: ImageView, url: String?) {
+        if (!url.isNullOrBlank()) {
             imageView.load(url) {
+                crossfade(true)
+            }
+        } else {
+            imageView.load(R.drawable.ic_link) {
                 crossfade(true)
             }
         }

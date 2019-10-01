@@ -28,7 +28,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:visibility="@{item.over_18 ? View.VISIBLE : View.GONE}"
-                android:layout_marginRight="5dp"
+                android:layout_marginEnd="5dp"
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintRight_toLeftOf="@id/stickiedCardView"
                 app:cardBackgroundColor="@color/colorAccent"
@@ -79,6 +79,9 @@
                 android:padding="10dp"
                 android:text="@{item.title}"
                 android:textColor="@color/colorTextTitle"
+                android:maxLines="4"
+                android:ellipsize="end"
+                app:autoSizeTextType="uniform"
                 app:layout_constraintTop_toBottomOf="@id/postAuthor"
                 app:layout_constraintLeft_toLeftOf="parent"
                 />
