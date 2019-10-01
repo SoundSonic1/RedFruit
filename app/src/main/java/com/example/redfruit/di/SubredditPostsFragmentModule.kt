@@ -1,7 +1,6 @@
 package com.example.redfruit.di
 
 import android.content.Context
-import android.util.Log
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -66,24 +65,10 @@ class SubredditPostsFragmentModule {
 
         @JvmStatic
         @Provides
-        fun provideSortBy(subredditPostsFragment: SubredditPostsFragment): SortBy {
-            val sortByString =
-                subredditPostsFragment.arguments?.getString(Constants.SORT_BY_KEY) ?: "hot"
-
-            try {
-                return SortBy.valueOf(sortByString)
-            } catch (e: IllegalArgumentException) {
-                Log.d("SortBy", "Illegal SortBy argument: ${sortByString}")
-                return SortBy.hot
-            }
-        }
-
-        @JvmStatic
-        @Provides
         fun provideHomeViewModel(
             fragment: SubredditPostsFragment,
             @Named("savedSub") savedSub: String,
-            sortBy: SortBy,
+            @Named("savedSorting") sortBy: SortBy,
             repo: SubredditPostsRepository
         ): HomePostsViewModel {
             val vm by fragment.viewModels<HomePostsViewModel> {

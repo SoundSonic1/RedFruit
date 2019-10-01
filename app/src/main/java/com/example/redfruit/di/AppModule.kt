@@ -6,6 +6,7 @@ import android.content.SharedPreferences
 import androidx.preference.PreferenceManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.redfruit.R
+import com.example.redfruit.data.model.enumeration.SortBy
 import com.example.redfruit.util.Constants
 import dagger.Module
 import dagger.Provides
@@ -35,6 +36,15 @@ class AppModule {
             context.getString(R.string.saved_subreddit),
             Constants.DEFAULT_SUB
         ) ?: Constants.DEFAULT_SUB
+
+    @Provides
+    @Named("savedSorting")
+    fun provideSavedSortPref(
+        pref: SharedPreferences
+    ): SortBy {
+        val sort = pref.getString(Constants.SORTBY_SHARED_KEY, SortBy.hot.name) ?: SortBy.hot.name
+        return SortBy.valueOf(sort)
+    }
 
     @Provides
     @Named("ItemAnimator")

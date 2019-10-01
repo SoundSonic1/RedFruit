@@ -3,7 +3,6 @@ package com.example.redfruit.ui.home.adapter
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentPagerAdapter
-import com.example.redfruit.data.model.enumeration.SortBy
 import com.example.redfruit.ui.home.fragment.childfragments.SubredditAboutFragment
 import com.example.redfruit.ui.home.fragment.childfragments.SubredditPostsFragment
 
@@ -19,7 +18,7 @@ class SubredditPagerAdapter(
      * Returns NEW fragment instance
      */
     override fun getItem(position: Int): Fragment = when(position) {
-        0 -> SubredditPostsFragment.newInstance(SortBy.hot)
+        0 -> SubredditPostsFragment()
         else -> SubredditAboutFragment()
     }
 

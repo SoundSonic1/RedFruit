@@ -6,6 +6,7 @@ import com.example.redfruit.ui.home.adapter.SubredditPagerAdapter
 import com.example.redfruit.ui.home.fragment.HomeFragment
 import dagger.Module
 import dagger.Provides
+import javax.inject.Named
 
 @Module
 class HomeFragmentModule {
@@ -23,9 +24,11 @@ class HomeFragmentModule {
 
         @JvmStatic
         @Provides
-        fun provideTabAdapter(fragmentManager: FragmentManager) =
-            SubredditPagerAdapter(
-                mutableListOf(SortBy.hot.name, "About"),
+        fun provideTabAdapter(
+            fragmentManager: FragmentManager,
+            @Named("savedSorting") sortBy: SortBy
+        ) = SubredditPagerAdapter(
+                mutableListOf(sortBy.name, "About"),
                 fragmentManager
             )
 

@@ -18,6 +18,7 @@ import java.util.*
  * For now, we specify the type at compile time
  */
 class SubredditAboutViewModel(subreddit: String,
+                              sorting: SortBy,
                               private val repo: SubredditAboutRepository
 ) : ViewModel(), IViewModel<SubredditAbout> {
 
@@ -29,7 +30,7 @@ class SubredditAboutViewModel(subreddit: String,
         }
     }
 
-    private val _sortBy: MutableLiveData<SortBy> = MutableLiveData(SortBy.hot)
+    private val _sortBy: MutableLiveData<SortBy> = MutableLiveData(sorting)
 
     override val data: LiveData<SubredditAbout> get() = _data
 

@@ -1,18 +1,18 @@
 package com.example.redfruit.ui.home.fragment.childfragments
 
+import android.content.SharedPreferences
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.content.ContextCompat
-import androidx.core.os.bundleOf
+import androidx.core.content.edit
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.redfruit.R
-import com.example.redfruit.data.model.enumeration.SortBy
 import com.example.redfruit.databinding.SubredditPostsFragmentBinding
 import com.example.redfruit.ui.home.adapter.PostListAdapter
 import com.example.redfruit.ui.home.viewmodel.HomePostsViewModel
@@ -31,6 +31,9 @@ import javax.inject.Provider
  * @property postListAdapter used for RecyclerView
  */
 class SubredditPostsFragment : DaggerFragment() {
+
+    @Inject
+    lateinit var sharedPref: SharedPreferences
 
     @Inject
     lateinit var homePostsViewModel: HomePostsViewModel
@@ -60,6 +63,9 @@ class SubredditPostsFragment : DaggerFragment() {
 
         subredditAboutViewModel.sortBy.observe(viewLifecycleOwner, Observer {
             if (it != homePostsViewModel.sortBy) {
+                sharedPref.edit {
+                    putString(Constants.SORTBY_SHARED_KEY, it.name)
+                }
                 postListAdapter.submitList(listOf())
                 homePostsViewModel.sortBy = it
                 homePostsViewModel.loadMoreData(Constants.LIMIT)
@@ -110,17 +116,5 @@ class SubredditPostsFragment : DaggerFragment() {
         }
 
         return binding.root
-    }
-
-    companion object {
-        /**
-         * Provide SortBy preference
-         */
-        fun newInstance(sortBy: SortBy): SubredditPostsFragment {
-
-            return SubredditPostsFragment().apply {
-                arguments = bundleOf(Constants.SORT_BY_KEY to sortBy.name)
-            }
-        }
     }
 }
