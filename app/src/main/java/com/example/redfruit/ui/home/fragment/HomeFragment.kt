@@ -6,6 +6,7 @@ import android.widget.Toast
 import androidx.appcompat.widget.PopupMenu
 import androidx.appcompat.widget.SearchView
 import androidx.fragment.app.activityViewModels
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.RecyclerView
 import com.example.redfruit.R
 import com.example.redfruit.data.model.enumeration.SortBy
@@ -15,8 +16,6 @@ import com.example.redfruit.util.isValidSub
 import com.google.android.material.tabs.TabLayout
 import dagger.android.support.DaggerFragment
 import kotlinx.android.synthetic.main.home_fragment.view.*
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import java.util.*
 import javax.inject.Inject
@@ -156,7 +155,7 @@ class HomeFragment : DaggerFragment() {
      * Checks whether the requested sub from the user exists
      */
     private fun changeSubIfValid(sub: String) {
-        CoroutineScope(Dispatchers.Main).launch {
+        lifecycleScope.launch {
             if (isValidSub(sub)) {
                 // set new subreddit
                 subredditAboutViewModel.setSub(sub)
