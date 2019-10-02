@@ -11,6 +11,7 @@ import com.example.redfruit.util.Constants
 import dagger.Module
 import dagger.Provides
 import jp.wasabeef.recyclerview.animators.SlideInDownAnimator
+import java.util.*
 import javax.inject.Named
 import javax.inject.Singleton
 
@@ -45,6 +46,11 @@ class AppModule {
         val sort = pref.getString(Constants.SORTBY_SHARED_KEY, SortBy.hot.name) ?: SortBy.hot.name
         return SortBy.valueOf(sort)
     }
+
+    @Provides
+    @Named("DeviceId")
+    fun provideDeviceId(sharedPref: SharedPreferences) =
+        sharedPref.getString(Constants.DEVICE_ID_KEY, null) ?: UUID.randomUUID().toString()
 
     @Provides
     @Named("ItemAnimator")
