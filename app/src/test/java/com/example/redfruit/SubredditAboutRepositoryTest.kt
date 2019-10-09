@@ -1,8 +1,9 @@
 package com.example.redfruit
 
 import com.example.redfruit.data.api.SubredditAboutRepository
-import com.example.redfruit.data.model.SubredditAbout
+import kotlinx.coroutines.runBlocking
 import org.junit.Assert.assertEquals
+import org.junit.Assert.assertTrue
 import org.junit.Before
 import org.junit.Test
 
@@ -17,17 +18,31 @@ class SubredditAboutRepositoryTest {
 
     @Test
     fun getValidDataTest() {
-        val subredditAbout = repo.getData("android")
+        runBlocking {
+            val subredditAbout = repo.getData("android")
 
-        assertEquals("Android", subredditAbout.display_name)
-        assertEquals(false, subredditAbout.over_18)
+            assertEquals("Android", subredditAbout?.display_name)
+            assertEquals(false, subredditAbout?.over_18)
+        }
+
+        runBlocking {
+            val subredditAbout = repo.getData("memes_of_dank")
+            assertTrue("Underscore is valid", subredditAbout != null)
+        }
 
     }
 
     @Test
     fun getInvalidDataTest() {
-        val subredditAbout = repo.getData("androidd")
+        runBlocking {
+            assertEquals("Subreddit androidd does not exist.", null, repo.getData("androidd"))
+        }
+        runBlocking {
+            assertEquals("Empty sub name is not allowed.",null, repo.getData(""))
+        }
 
-        assertEquals(SubredditAbout("androidd"), subredditAbout)
+        runBlocking {
+            assertEquals("Spaces are not allowed", null, repo.getData("dank memes"))
+        }
     }
 }

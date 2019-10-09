@@ -5,23 +5,38 @@ import com.example.redfruit.util.Constants
 import com.example.redfruit.util.getResponse
 import com.google.gson.Gson
 import com.google.gson.JsonParser
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 
-class SubredditAboutRepository(private val subreddits: MutableMap<String, SubredditAbout>) {
+class SubredditAboutRepository(private val subreddits: MutableMap<String, SubredditAbout?>) {
 
-    fun getData(sub: String): SubredditAbout = subreddits.getOrPut(sub) {
+    suspend fun getData(sub: String): SubredditAbout? = subreddits.getOrPut(sub) {
         fetchSubredditAbout(sub)
     }
 
-    fun fetchSubredditAbout(sub: String): SubredditAbout {
-        val response = getResponse("${Constants.BASE_URL}${sub}/about/.json?raw_json=1")
-        if (response.isBlank()) {
-            return SubredditAbout(sub)
-        }
-        val responseJsonObj = JsonParser().parse(response).asJsonObject
-        if (responseJsonObj.get("kind").asString != "t5") {
-            return SubredditAbout(sub)
-        }
+    suspend fun fetchSubredditAbout(sub: String) = withContext(Dispatchers.Default) {
 
-        return Gson().fromJson(responseJsonObj.get("data"), SubredditAbout::class.java)
+        val subredditJson = fetchSubredditJson(sub)
+
+        if (subredditJson != null) {
+            Gson().fromJson(subredditJson.get("data"), SubredditAbout::class.java)
+        } else {
+            null
+        }
+    }
+
+    suspend fun fetchSubredditJson(sub: String) = withContext(Dispatchers.IO) {
+        val response = getResponse("${Constants.BASE_URL}$sub/about.json?raw_json=1")
+        if(response.isNotBlank()) {
+            val jsonResponse = JsonParser().parse(response).asJsonObject
+            // t5 represents subreddit
+            if (jsonResponse.get("kind")?.asString == "t5") {
+                jsonResponse
+            } else {
+                null
+            }
+        } else {
+            null
+        }
     }
 }

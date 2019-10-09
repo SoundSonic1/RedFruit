@@ -8,9 +8,7 @@ import com.example.redfruit.data.api.SubredditAboutRepository
 import com.example.redfruit.data.model.SubredditAbout
 import com.example.redfruit.data.model.enumeration.SortBy
 import com.example.redfruit.ui.base.IViewModel
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 import java.util.*
 
 /**
@@ -25,7 +23,7 @@ class SubredditAboutViewModel(subreddit: String,
     private val _data: MutableLiveData<SubredditAbout> by lazy {
         MutableLiveData<SubredditAbout>().also {
             viewModelScope.launch {
-                it.value = getSubredditAbout(subreddit)
+                it.value = repo.getData(subreddit.toLowerCase(Locale.ENGLISH))
             }
         }
     }
@@ -37,19 +35,20 @@ class SubredditAboutViewModel(subreddit: String,
     val sortBy: LiveData<SortBy> get() = _sortBy
 
     /**
-     * Only set lower case
+     * Sets the new subreddit about if the page exists and returns true
+     * in that case.
      */
-    fun setSub(sub: String) {
-        viewModelScope.launch {
-            _data.value = getSubredditAbout(sub)
+    suspend fun setSub(sub: String): Boolean {
+        val subredditAbout = repo.getData(sub.toLowerCase(Locale.ENGLISH))
+        if (subredditAbout != null) {
+            _data.value = subredditAbout
+            return true
+        } else {
+            return false
         }
     }
 
     fun setSort(sortBy: SortBy) {
         _sortBy.value = sortBy
-    }
-
-    private suspend fun getSubredditAbout(sub: String) = withContext(Dispatchers.IO) {
-        repo.getData(sub.toLowerCase(Locale.ENGLISH))
     }
 }

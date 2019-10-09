@@ -1,9 +1,6 @@
 package com.example.redfruit.util
 
 import android.util.Log
-import com.google.gson.JsonParser
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.withContext
 import okhttp3.FormBody
 import okhttp3.Request
 import java.net.URL
@@ -53,18 +50,3 @@ fun createTokenRequest(clientId: String, deviceId: String): Request {
         url(accessTokenUrl)
     }.build()
 }
-
-/**
- * Returns true if the given sub name is a valid subreddit
- */
-suspend fun isValidSub(sub: String): Boolean =
-    withContext(Dispatchers.Default) {
-        val response = getResponse("${Constants.BASE_URL}$sub/about.json?raw_json=1")
-        if(response.isBlank()) {
-            false
-        } else {
-            val jsonResponse = JsonParser().parse(response).asJsonObject
-            // t5 represents subreddit
-            jsonResponse.get("kind")?.asString == "t5"
-        }
-    }

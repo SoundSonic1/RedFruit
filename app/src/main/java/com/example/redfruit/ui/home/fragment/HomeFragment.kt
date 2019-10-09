@@ -12,7 +12,6 @@ import com.example.redfruit.R
 import com.example.redfruit.data.model.enumeration.SortBy
 import com.example.redfruit.ui.home.adapter.SubredditPagerAdapter
 import com.example.redfruit.ui.shared.SubredditAboutViewModel
-import com.example.redfruit.util.isValidSub
 import com.google.android.material.tabs.TabLayout
 import dagger.android.support.DaggerFragment
 import kotlinx.android.synthetic.main.home_fragment.view.*
@@ -156,10 +155,7 @@ class HomeFragment : DaggerFragment() {
      */
     private fun changeSubIfValid(sub: String) {
         lifecycleScope.launch {
-            if (isValidSub(sub)) {
-                // set new subreddit
-                subredditAboutViewModel.setSub(sub)
-            } else {
+            if (!subredditAboutViewModel.setSub(sub)) {
                 Toast.makeText(
                     requireContext(),
                     "The subreddit $sub could not be found.",
