@@ -4,9 +4,9 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.redfruit.data.api.IPostsRepository
 import com.example.redfruit.data.model.Post
 import com.example.redfruit.data.model.enumeration.SortBy
+import com.example.redfruit.data.repositories.IPostsRepository
 import com.example.redfruit.ui.base.IViewModel
 import com.example.redfruit.util.Constants
 import kotlinx.coroutines.launch

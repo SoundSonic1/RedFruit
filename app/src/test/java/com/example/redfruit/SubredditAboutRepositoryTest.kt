@@ -1,6 +1,10 @@
 package com.example.redfruit
 
-import com.example.redfruit.data.api.*
+import com.example.redfruit.data.api.IRedditApi
+import com.example.redfruit.data.api.RedditApi
+import com.example.redfruit.data.api.TokenAuthenticator
+import com.example.redfruit.data.api.TokenProvider
+import com.example.redfruit.data.repositories.SubredditAboutRepository
 import kotlinx.coroutines.runBlocking
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertTrue
@@ -18,7 +22,10 @@ class SubredditAboutRepositoryTest {
 
     @Before
     fun setUp() {
-        repo = SubredditAboutRepository(redditApi, mutableMapOf())
+        repo = SubredditAboutRepository(
+            redditApi,
+            mutableMapOf()
+        )
     }
 
     @Test

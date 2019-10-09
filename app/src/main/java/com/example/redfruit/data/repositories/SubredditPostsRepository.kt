@@ -1,5 +1,6 @@
-package com.example.redfruit.data.api
+package com.example.redfruit.data.repositories
 
+import com.example.redfruit.data.api.IRedditApi
 import com.example.redfruit.data.model.Gildings
 import com.example.redfruit.data.model.Post
 import com.example.redfruit.data.model.Preview
@@ -20,7 +21,7 @@ import java.lang.reflect.Type
  * Implements the Repository pattern
  * @property subredditMap collects the subreddit
  */
-open class SubredditPostsRepository(
+class SubredditPostsRepository(
     private val redditApi: IRedditApi,
     private val subredditMap: MutableMap<Pair<String, SortBy>, SubredditListing> = mutableMapOf()
 ) : IPostsRepository {
@@ -72,7 +73,9 @@ open class SubredditPostsRepository(
         }
 
         val gson = GsonBuilder()
-            .registerTypeAdapter(Post::class.java, PostDeserializer())
+            .registerTypeAdapter(Post::class.java,
+                PostDeserializer()
+            )
             .create()
 
         subReddit.children.addAll(

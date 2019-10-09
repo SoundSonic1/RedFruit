@@ -1,6 +1,10 @@
 package com.example.redfruit
 
-import com.example.redfruit.data.api.*
+import com.example.redfruit.data.api.IRedditApi
+import com.example.redfruit.data.api.RedditApi
+import com.example.redfruit.data.api.TokenAuthenticator
+import com.example.redfruit.data.api.TokenProvider
+import com.example.redfruit.data.repositories.CommentsRepository
 import kotlinx.coroutines.runBlocking
 import org.junit.Assert
 import org.junit.Test
@@ -14,7 +18,11 @@ class CommentsRepositoryTest {
     @Test
     fun testArchivedPostComments() {
         runBlocking {
-            val repo = CommentsRepository(redditApi,"redditdev", "9ncg2r")
+            val repo = CommentsRepository(
+                redditApi,
+                "redditdev",
+                "9ncg2r"
+            )
             val comments = repo.getComments(50)
 
             Assert.assertEquals(3, comments.size)
@@ -47,12 +55,13 @@ class CommentsRepositoryTest {
 
     @Test
     fun testWrongInput() {
-        var repo = CommentsRepository(redditApi,"redditdev", "")
+        var repo =
+            CommentsRepository(redditApi, "redditdev", "")
         runBlocking {
             Assert.assertEquals(0, repo.getComments(50).size)
         }
 
-        repo = CommentsRepository(redditApi,"", "123456")
+        repo = CommentsRepository(redditApi, "", "123456")
         runBlocking {
             Assert.assertEquals(0, repo.getComments(50).size)
         }
@@ -61,7 +70,11 @@ class CommentsRepositoryTest {
     @Test
     fun testLargeCommentCount() {
         // contains kind: more
-        val repo = CommentsRepository(redditApi,"grandorder", "d2n1a8")
+        val repo = CommentsRepository(
+            redditApi,
+            "grandorder",
+            "d2n1a8"
+        )
         runBlocking {
             Assert.assertTrue(repo.getComments(100).isNotEmpty())
         }

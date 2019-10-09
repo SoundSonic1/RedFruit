@@ -1,4 +1,4 @@
-package com.example.redfruit.data.api
+package com.example.redfruit.data.repositories
 
 import com.example.redfruit.data.model.Post
 import com.example.redfruit.data.model.enumeration.SortBy

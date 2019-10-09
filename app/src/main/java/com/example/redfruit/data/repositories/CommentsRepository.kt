@@ -1,5 +1,6 @@
-package com.example.redfruit.data.api
+package com.example.redfruit.data.repositories
 
+import com.example.redfruit.data.api.IRedditApi
 import com.example.redfruit.data.model.Comment
 import com.example.redfruit.data.model.Gildings
 import com.google.gson.*

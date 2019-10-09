@@ -4,9 +4,9 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.redfruit.data.api.SubredditAboutRepository
 import com.example.redfruit.data.model.SubredditAbout
 import com.example.redfruit.data.model.enumeration.SortBy
+import com.example.redfruit.data.repositories.SubredditAboutRepository
 import com.example.redfruit.ui.base.IViewModel
 import kotlinx.coroutines.launch
 import java.util.*

@@ -4,7 +4,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.redfruit.data.api.ICommentsRepository
+import com.example.redfruit.data.repositories.ICommentsRepository
 import com.example.redfruit.ui.base.IViewModel
 import com.example.redfruit.ui.comments.groupie.CommentExpandableGroup
 import kotlinx.coroutines.launch

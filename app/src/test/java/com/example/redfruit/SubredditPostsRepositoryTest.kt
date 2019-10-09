@@ -1,9 +1,13 @@
 package com.example.redfruit
 
-import com.example.redfruit.data.api.*
+import com.example.redfruit.data.api.IRedditApi
+import com.example.redfruit.data.api.RedditApi
+import com.example.redfruit.data.api.TokenAuthenticator
+import com.example.redfruit.data.api.TokenProvider
 import com.example.redfruit.data.model.Post
 import com.example.redfruit.data.model.enumeration.SortBy
 import com.example.redfruit.data.model.images.ImageSource
+import com.example.redfruit.data.repositories.SubredditPostsRepository
 import com.example.redfruit.util.Constants
 import com.google.gson.GsonBuilder
 import com.google.gson.JsonParser
