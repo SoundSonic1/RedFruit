@@ -70,7 +70,7 @@ dependencies {
     // for fetching images
     implementation("io.coil-kt:coil:0.7.0")
     // pinch to zoom etc. for images
-    implementation 'com.github.MikeOrtiz:TouchImageView:2.2.0'
+    implementation 'com.github.MikeOrtiz:TouchImageView:2.3.0'
     // url preview
     implementation 'com.github.SoundSonic1:urlembeddedview:fa6c86375f'
     // custom item animators for RecyclerView
