@@ -14,7 +14,7 @@ class SubredditAboutRepository(private val subreddits: MutableMap<String, Subred
         fetchSubredditAbout(sub)
     }
 
-    suspend fun fetchSubredditAbout(sub: String) = withContext(Dispatchers.Default) {
+    private suspend fun fetchSubredditAbout(sub: String) = withContext(Dispatchers.Default) {
 
         val subredditJson = fetchSubredditJson(sub)
 
@@ -25,7 +25,7 @@ class SubredditAboutRepository(private val subreddits: MutableMap<String, Subred
         }
     }
 
-    suspend fun fetchSubredditJson(sub: String) = withContext(Dispatchers.IO) {
+    private suspend fun fetchSubredditJson(sub: String) = withContext(Dispatchers.IO) {
         val response = getResponse("${Constants.BASE_URL}$sub/about.json?raw_json=1")
         if(response.isNotBlank()) {
             val jsonResponse = JsonParser().parse(response).asJsonObject

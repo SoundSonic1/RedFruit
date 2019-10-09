@@ -9,9 +9,7 @@ import com.example.redfruit.data.model.Post
 import com.example.redfruit.data.model.enumeration.SortBy
 import com.example.redfruit.ui.base.IViewModel
 import com.example.redfruit.util.Constants
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 import java.util.*
 
 /**
@@ -47,10 +45,13 @@ class HomePostsViewModel(
 
     // api call must be in a separat thread
     fun loadMoreData(count: Int) {
-        isLoading.value = true
         viewModelScope.launch {
-            _data.value = get(count)
-            isLoading.value = false
+            isLoading.value = true
+            try {
+                _data.value = get(count)
+            } finally {
+                isLoading.value = false
+            }
         }
     }
 
@@ -66,8 +67,5 @@ class HomePostsViewModel(
 
     // call to the api
     private suspend fun get(count: Int) =
-        withContext(Dispatchers.IO) {
-            /* perform network IO here */
-            repo.getData(_subReddit.toLowerCase(Locale.ENGLISH), sortBy, count)
-        }
+        repo.getData(_subReddit.toLowerCase(Locale.ENGLISH), sortBy, count)
 }

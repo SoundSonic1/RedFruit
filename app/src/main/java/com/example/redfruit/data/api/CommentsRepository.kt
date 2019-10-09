@@ -5,6 +5,8 @@ import com.example.redfruit.data.model.Gildings
 import com.example.redfruit.util.Constants
 import com.example.redfruit.util.getResponse
 import com.google.gson.*
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 import java.lang.reflect.Type
 
 /**
@@ -21,17 +23,18 @@ class CommentsRepository(
     /**
      * Returns a list of comments which belong to the post
      */
-    override fun getComments(limit: Int): List<Comment> {
+    override suspend fun getComments(limit: Int): List<Comment> = withContext(Dispatchers.Default)
+    {
         val url = "${Constants.BASE_URL}${subreddit}/comments/${postId}.json?limit=${limit}&raw_json=1"
         val response = getResponse(url)
         // bad response
-        if (response.isBlank()) return listOf()
+        if (response.isBlank()) return@withContext listOf<Comment>()
         val resp = JsonParser().parse(response)
 
         val jsonArrayResponse = if (resp.isJsonArray) {
             resp.asJsonArray
         } else {
-            return listOf()
+            return@withContext listOf<Comment>()
         }
 
         val comments = jsonArrayResponse.filter { elem ->
@@ -43,7 +46,7 @@ class CommentsRepository(
             parseComments(it.asJsonObject)
         }
 
-        return comments
+        comments
     }
 
     private fun parseComments(jsonObj: JsonObject): List<Comment> {

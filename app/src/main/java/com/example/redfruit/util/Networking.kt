@@ -1,6 +1,8 @@
 package com.example.redfruit.util
 
 import android.util.Log
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 import okhttp3.FormBody
 import okhttp3.Request
 import java.net.URL
@@ -10,16 +12,18 @@ import java.util.*
  * @param url to fetch response
  * @return the response as a string
  */
-fun getResponse(url: String): String = try {
-    URL(urlEncode(url)).openConnection().apply {
-        setRequestProperty("User-Agent", Constants.USER_AGENT)
-    }.getInputStream().use {
-        it.bufferedReader().readLine()
+suspend fun getResponse(url: String): String = withContext(Dispatchers.IO) {
+    try {
+        URL(urlEncode(url)).openConnection().apply {
+            setRequestProperty("User-Agent", Constants.USER_AGENT)
+        }.getInputStream().use {
+            it.bufferedReader().readLine()
+        }
+    } catch (e: Exception) {
+        Log.d("getResponse", "bad url: $url")
+        // invalid url
+        ""
     }
-} catch (e: Exception) {
-    Log.d("getResponse", "bad url: $url")
-    // invalid url
-    ""
 }
 
 // TODO: use library for url encoding

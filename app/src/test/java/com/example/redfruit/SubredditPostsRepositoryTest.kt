@@ -8,6 +8,7 @@ import com.example.redfruit.util.Constants
 import com.google.gson.GsonBuilder
 import com.google.gson.JsonParser
 import com.google.gson.reflect.TypeToken
+import kotlinx.coroutines.runBlocking
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertFalse
 import org.junit.Before
@@ -26,24 +27,28 @@ class SubredditPostsRepositoryTest : SubredditPostsRepository() {
     fun getDataCountTest() {
 
         val sortByNew = SortBy.new
+        runBlocking {
+            assertEquals(10, repo.getData(Constants.DEFAULT_SUB, sortByNew, 10).size)
+            assertEquals(
+                "Should add new posts on top of old ones",
+                20,
+                repo.getData(Constants.DEFAULT_SUB, SortBy.new, 10).size
+            )
+            assertEquals(0, repo.getData("empty", sortByNew, 10).size)
 
-        assertEquals(10, repo.getData(Constants.DEFAULT_SUB, sortByNew, 10).size)
-        assertEquals(
-            "Should add new posts on top of old ones",
-            20,
-            repo.getData(Constants.DEFAULT_SUB, SortBy.new, 10).size
-        )
-        assertEquals(0, repo.getData("empty", sortByNew, 10).size)
+            assertEquals(10, repo.getData(Constants.DEFAULT_SUB, SortBy.controversial, 10).size)
+            assertEquals(20, repo.getData(Constants.DEFAULT_SUB, SortBy.controversial, 10).size)
+            assertEquals(10, repo.getData(Constants.DEFAULT_SUB, SortBy.rising, 10).size)
+        }
 
-        assertEquals(10, repo.getData(Constants.DEFAULT_SUB, SortBy.controversial, 10).size)
-        assertEquals(20, repo.getData(Constants.DEFAULT_SUB, SortBy.controversial, 10).size)
-        assertEquals(10, repo.getData(Constants.DEFAULT_SUB, SortBy.rising, 10).size)
     }
 
     @Test
     fun getInvalidDataTest() {
-        assertEquals(listOf<Post>(), repo.getData("androidd", SortBy.new, 10))
-        assertEquals(listOf<Post>(), repo.getData("lounge", SortBy.new, 10))
+        runBlocking {
+            assertEquals(listOf<Post>(), repo.getData("androidd", SortBy.new, 10))
+            assertEquals(listOf<Post>(), repo.getData("lounge", SortBy.new, 10))
+        }
     }
 
     @Test

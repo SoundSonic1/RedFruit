@@ -15,6 +15,8 @@ import com.example.redfruit.util.Constants
 import com.example.redfruit.util.getResponse
 import com.google.gson.*
 import com.google.gson.reflect.TypeToken
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 import java.lang.reflect.Type
 
 /**
@@ -34,7 +36,11 @@ open class SubredditPostsRepository(
      * @param limit the amount of the posts that are to be fetched
      * @return a list of reddit posts
      */
-    override fun getData(sub: String, sortBy: SortBy, limit: Int): List<Post> {
+    override suspend fun getData(
+        sub: String,
+        sortBy: SortBy,
+        limit: Int
+    ): List<Post> = withContext(Dispatchers.Default) {
         // TODO: check if sub is valid
         val subReddit = subredditMap.getOrPut(Pair(sub, sortBy)) { SubredditListing(sub) }
         var redditUrl = "${Constants.BASE_URL}${subReddit.name}/${sortBy.name}.json?limit=$limit&raw_json=1"
@@ -45,13 +51,13 @@ open class SubredditPostsRepository(
         Log.d("repo", redditUrl)
         val response = getResponse(redditUrl)
         if (response.isBlank()) {
-            return listOf()
+            return@withContext listOf<Post>()
         }
 
         val jsonObjResponse = JsonParser().parse(response).asJsonObject
         if (jsonObjResponse.get("kind")?.asString != "Listing") {
             // either private or banned sub
-            return listOf()
+            return@withContext listOf<Post>()
         }
         val jsonData = jsonObjResponse.getAsJsonObject("data")
         // JSONArray of children aka posts
@@ -59,7 +65,7 @@ open class SubredditPostsRepository(
 
         // check if children are posts
         if (jsonChildren.any { it.asJsonObject.get("kind").asString != "t3" }) {
-            return listOf()
+            return@withContext listOf<Post>()
         }
 
         // bookmark beginning and ending of the listing
@@ -70,7 +76,7 @@ open class SubredditPostsRepository(
         if (!jsonData.get("after").isJsonNull) {
             subReddit.after = jsonData.get("after").asString
         } else if (jsonData.get("after").isJsonNull && subReddit.children.size > 0) {
-            return subReddit.children.toList()
+            return@withContext subReddit.children.toList()
         }
 
         val gson = GsonBuilder()
@@ -80,7 +86,7 @@ open class SubredditPostsRepository(
         subReddit.children.addAll(
             gson.fromJson(jsonChildren, object: TypeToken<List<Post>>() {}.type))
 
-        return subReddit.children.toList()
+        subReddit.children.toList()
     }
 
     /**
