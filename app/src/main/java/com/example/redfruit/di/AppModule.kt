@@ -3,9 +3,15 @@ package com.example.redfruit.di
 import android.app.Application
 import android.content.Context
 import android.content.SharedPreferences
+import androidx.core.content.edit
 import androidx.preference.PreferenceManager
 import androidx.recyclerview.widget.RecyclerView
+import com.example.redfruit.BuildConfig
 import com.example.redfruit.R
+import com.example.redfruit.data.api.IRedditApi
+import com.example.redfruit.data.api.RedditApi
+import com.example.redfruit.data.api.TokenAuthenticator
+import com.example.redfruit.data.api.TokenProvider
 import com.example.redfruit.data.model.enumeration.SortBy
 import com.example.redfruit.util.Constants
 import dagger.Module
@@ -48,9 +54,33 @@ class AppModule {
     }
 
     @Provides
+    @Singleton
     @Named("DeviceId")
-    fun provideDeviceId(sharedPref: SharedPreferences) =
-        sharedPref.getString(Constants.DEVICE_ID_KEY, null) ?: UUID.randomUUID().toString()
+    fun provideDeviceId(sharedPref: SharedPreferences): String {
+        val id = sharedPref.getString(Constants.DEVICE_ID_KEY, null)
+        if (id.isNullOrBlank()) {
+            val newId = UUID.randomUUID().toString()
+            sharedPref.edit {
+                putString(Constants.DEVICE_ID_KEY, newId)
+            }
+            return newId
+        } else {
+            return id
+        }
+    }
+
+    @Provides
+    @Singleton
+    fun provideTokenProvider(@Named("DeviceId") deviceId: String)
+            = TokenProvider(BuildConfig.ClientId, deviceId)
+
+    @Provides
+    @Singleton
+    fun provideTokenAuthenticator(tokenProvider: TokenProvider) = TokenAuthenticator(tokenProvider)
+
+    @Provides
+    @Singleton
+    fun provideRedditApi(authenticator: TokenAuthenticator): IRedditApi = RedditApi(authenticator)
 
     @Provides
     @Named("ItemAnimator")

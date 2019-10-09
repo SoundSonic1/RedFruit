@@ -1,19 +1,24 @@
 package com.example.redfruit
 
-import com.example.redfruit.data.api.SubredditAboutRepository
+import com.example.redfruit.data.api.*
 import kotlinx.coroutines.runBlocking
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertTrue
 import org.junit.Before
 import org.junit.Test
+import java.util.*
 
 class SubredditAboutRepositoryTest {
 
+    private val redditApi: IRedditApi =
+        RedditApi(TokenAuthenticator(TokenProvider(BuildConfig.ClientId, UUID.randomUUID().toString())))
+
     private lateinit var repo: SubredditAboutRepository
+
 
     @Before
     fun setUp() {
-        repo = SubredditAboutRepository(mutableMapOf())
+        repo = SubredditAboutRepository(redditApi, mutableMapOf())
     }
 
     @Test

@@ -2,8 +2,6 @@ package com.example.redfruit.data.api
 
 import com.example.redfruit.data.model.Comment
 import com.example.redfruit.data.model.Gildings
-import com.example.redfruit.util.Constants
-import com.example.redfruit.util.getResponse
 import com.google.gson.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
@@ -13,6 +11,7 @@ import java.lang.reflect.Type
  * Repository for fetching comments
  */
 class CommentsRepository(
+    private val redditApi: IRedditApi,
     private val subreddit: String,
     private val postId: String
 ) : ICommentsRepository {
@@ -25,8 +24,7 @@ class CommentsRepository(
      */
     override suspend fun getComments(limit: Int): List<Comment> = withContext(Dispatchers.Default)
     {
-        val url = "${Constants.BASE_URL}${subreddit}/comments/${postId}.json?limit=${limit}&raw_json=1"
-        val response = getResponse(url)
+        val response = redditApi.getComments(subreddit, postId, limit)
         // bad response
         if (response.isBlank()) return@withContext listOf<Comment>()
         val resp = JsonParser().parse(response)

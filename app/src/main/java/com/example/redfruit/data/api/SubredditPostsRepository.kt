@@ -1,6 +1,5 @@
 package com.example.redfruit.data.api
 
-import android.util.Log
 import com.example.redfruit.data.model.Gildings
 import com.example.redfruit.data.model.Post
 import com.example.redfruit.data.model.Preview
@@ -11,8 +10,6 @@ import com.example.redfruit.data.model.images.RedditImage
 import com.example.redfruit.data.model.media.RedditVideo
 import com.example.redfruit.data.model.media.SecureMedia
 import com.example.redfruit.data.model.media.YoutubeoEmbed
-import com.example.redfruit.util.Constants
-import com.example.redfruit.util.getResponse
 import com.google.gson.*
 import com.google.gson.reflect.TypeToken
 import kotlinx.coroutines.Dispatchers
@@ -24,6 +21,7 @@ import java.lang.reflect.Type
  * @property subredditMap collects the subreddit
  */
 open class SubredditPostsRepository(
+    private val redditApi: IRedditApi,
     private val subredditMap: MutableMap<Pair<String, SortBy>, SubredditListing> = mutableMapOf()
 ) : IPostsRepository {
 
@@ -41,15 +39,9 @@ open class SubredditPostsRepository(
         sortBy: SortBy,
         limit: Int
     ): List<Post> = withContext(Dispatchers.Default) {
-        // TODO: check if sub is valid
         val subReddit = subredditMap.getOrPut(Pair(sub, sortBy)) { SubredditListing(sub) }
-        var redditUrl = "${Constants.BASE_URL}${subReddit.name}/${sortBy.name}.json?limit=$limit&raw_json=1"
-        if (subReddit.after.isNotBlank()) {
-            redditUrl = "$redditUrl&after=${subReddit.after}"
-        }
-        // For debug purposes
-        Log.d("repo", redditUrl)
-        val response = getResponse(redditUrl)
+
+        val response = redditApi.getSubredditPosts(sub, sortBy, subReddit.after, limit)
         if (response.isBlank()) {
             return@withContext listOf<Post>()
         }
@@ -95,7 +87,7 @@ open class SubredditPostsRepository(
     override fun clearData() = subredditMap.clear()
 
 
-    protected class PostDeserializer : JsonDeserializer<Post> {
+    class PostDeserializer : JsonDeserializer<Post> {
         /**
          * Used to deserialize a json array
          */

@@ -5,6 +5,7 @@ import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.redfruit.data.api.CommentsRepository
 import com.example.redfruit.data.api.ICommentsRepository
+import com.example.redfruit.data.api.IRedditApi
 import com.example.redfruit.ui.comments.fragment.CommentsFragment
 import com.example.redfruit.ui.comments.viewmodel.CommentsViewModel
 import com.example.redfruit.util.BaseVMFactory
@@ -48,9 +49,10 @@ class CommentsFragmentModule {
         @Provides
         @JvmStatic
         fun provideCommentsRepo(
+            redditApi: IRedditApi,
             @Named("SubredditName") sub: String,
             @Named("PostId") id: String
-        ): ICommentsRepository = CommentsRepository(sub, id)
+        ): ICommentsRepository = CommentsRepository(redditApi, sub, id)
 
         @Provides
         @JvmStatic

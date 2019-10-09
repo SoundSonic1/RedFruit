@@ -1,5 +1,6 @@
 package com.example.redfruit.data.api
 
+import android.util.Log
 import com.example.redfruit.data.model.Token
 import com.example.redfruit.util.Constants
 import com.google.gson.Gson
@@ -8,6 +9,9 @@ import okhttp3.OkHttpClient
 import okhttp3.Request
 import java.util.*
 
+/**
+ * Manages the access token which is required for api calls
+ */
 class TokenProvider(
     private val clientId: String,
     private val deviceId: String
@@ -17,18 +21,20 @@ class TokenProvider(
 
     override val token get() = _token
 
+    /**
+     * Refresh the token if the current token is invalid
+     */
     override fun refreshToken(): Token? {
+        Log.d("TokenAuthenticator", "requesting new token")
 
         val clientIdPw = "$clientId:"
-        val accessTokenUrl = "https://www.reddit.com/api/v1/access_token"
-        val grantType = "https://oauth.reddit.com/grants/installed_client"
 
         val encodeClientID = String(Base64.getEncoder().encode(clientIdPw.toByteArray()))
 
         val basic = "Basic $encodeClientID"
 
         val body = FormBody.Builder().apply {
-            add("grant_type", grantType)
+            add("grant_type", GRANT_TYPE)
             add("device_id", deviceId)
         }.build()
 
@@ -37,7 +43,7 @@ class TokenProvider(
             addHeader("Content-Type", "application/x-www-form-urlencoded")
             addHeader("Authorization", basic)
             post(body)
-            url(accessTokenUrl)
+            url(ACCESS_TOKEN_URL)
         }.build()
 
         val client = OkHttpClient()
@@ -48,5 +54,10 @@ class TokenProvider(
         } else {
             return null
         }
+    }
+
+    companion object {
+        private const val ACCESS_TOKEN_URL = "https://www.reddit.com/api/v1/access_token"
+        private const val GRANT_TYPE = "https://oauth.reddit.com/grants/installed_client"
     }
 }

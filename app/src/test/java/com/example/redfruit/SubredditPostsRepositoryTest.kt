@@ -1,6 +1,6 @@
 package com.example.redfruit
 
-import com.example.redfruit.data.api.SubredditPostsRepository
+import com.example.redfruit.data.api.*
 import com.example.redfruit.data.model.Post
 import com.example.redfruit.data.model.enumeration.SortBy
 import com.example.redfruit.data.model.images.ImageSource
@@ -13,14 +13,19 @@ import org.junit.Assert.assertEquals
 import org.junit.Assert.assertFalse
 import org.junit.Before
 import org.junit.Test
+import java.util.*
 
-class SubredditPostsRepositoryTest : SubredditPostsRepository() {
+class SubredditPostsRepositoryTest {
+
+    private val redditApi: IRedditApi =
+        RedditApi(TokenAuthenticator(TokenProvider(BuildConfig.ClientId, UUID.randomUUID().toString())))
 
     private lateinit var repo: SubredditPostsRepository
 
+
     @Before
     fun setUp() {
-        repo = SubredditPostsRepository()
+        repo = SubredditPostsRepository(redditApi)
     }
 
     @Test
@@ -54,7 +59,7 @@ class SubredditPostsRepositoryTest : SubredditPostsRepository() {
     @Test
     fun postDeserializerTest() {
         val gson = GsonBuilder()
-            .registerTypeAdapter(Post::class.java, PostDeserializer())
+            .registerTypeAdapter(Post::class.java, SubredditPostsRepository.PostDeserializer())
             .create()
         val jsonChildren = JsonParser().parse(validPostString).asJsonArray
 

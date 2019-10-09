@@ -1,6 +1,7 @@
 package com.example.redfruit.di
 
 import androidx.activity.viewModels
+import com.example.redfruit.data.api.IRedditApi
 import com.example.redfruit.data.api.SubredditAboutRepository
 import com.example.redfruit.data.model.enumeration.SortBy
 import com.example.redfruit.ui.MainActivity
@@ -23,7 +24,8 @@ class MainActivityModule {
         // TODO: inject shared preferences
         @JvmStatic
         @Provides
-        fun provideSubredditAboutRepo() = SubredditAboutRepository(mutableMapOf())
+        fun provideSubredditAboutRepo(redditApi: IRedditApi) =
+            SubredditAboutRepository(redditApi, mutableMapOf())
 
         @JvmStatic
         @Provides

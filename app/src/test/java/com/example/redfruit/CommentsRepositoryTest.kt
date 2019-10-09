@@ -1,16 +1,20 @@
 package com.example.redfruit
 
-import com.example.redfruit.data.api.CommentsRepository
+import com.example.redfruit.data.api.*
 import kotlinx.coroutines.runBlocking
 import org.junit.Assert
 import org.junit.Test
+import java.util.*
 
 class CommentsRepositoryTest {
+
+    private val redditApi: IRedditApi =
+        RedditApi(TokenAuthenticator(TokenProvider(BuildConfig.ClientId, UUID.randomUUID().toString())))
 
     @Test
     fun testArchivedPostComments() {
         runBlocking {
-            val repo = CommentsRepository("redditdev", "9ncg2r")
+            val repo = CommentsRepository(redditApi,"redditdev", "9ncg2r")
             val comments = repo.getComments(50)
 
             Assert.assertEquals(3, comments.size)
@@ -43,12 +47,12 @@ class CommentsRepositoryTest {
 
     @Test
     fun testWrongInput() {
-        var repo = CommentsRepository("redditdev", "")
+        var repo = CommentsRepository(redditApi,"redditdev", "")
         runBlocking {
             Assert.assertEquals(0, repo.getComments(50).size)
         }
 
-        repo = CommentsRepository("", "123456")
+        repo = CommentsRepository(redditApi,"", "123456")
         runBlocking {
             Assert.assertEquals(0, repo.getComments(50).size)
         }
@@ -57,7 +61,7 @@ class CommentsRepositoryTest {
     @Test
     fun testLargeCommentCount() {
         // contains kind: more
-        val repo = CommentsRepository("grandorder", "d2n1a8")
+        val repo = CommentsRepository(redditApi,"grandorder", "d2n1a8")
         runBlocking {
             Assert.assertTrue(repo.getComments(100).isNotEmpty())
         }
