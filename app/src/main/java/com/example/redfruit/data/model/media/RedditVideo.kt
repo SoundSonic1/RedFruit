@@ -1,13 +1,13 @@
 package com.example.redfruit.data.model.media
 
+import com.beust.klaxon.Json
 import com.example.redfruit.data.model.interfaces.ISource
-import com.google.gson.annotations.SerializedName
 
 /**
- * Note a reddit video does not contain any sound
+ * Streamable video via dash url
  */
 data class RedditVideo(
-    @SerializedName("dash_url")
+    @Json(name = "dash_url")
     override val url: String = "",
     val height: Int,
     val width: Int

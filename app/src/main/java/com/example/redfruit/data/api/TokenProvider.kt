@@ -1,9 +1,9 @@
 package com.example.redfruit.data.api
 
 import android.util.Log
+import com.beust.klaxon.Klaxon
 import com.example.redfruit.data.model.Token
 import com.example.redfruit.util.Constants
-import com.google.gson.Gson
 import okhttp3.FormBody
 import okhttp3.OkHttpClient
 import okhttp3.Request
@@ -21,7 +21,7 @@ class TokenProvider(
 
     override val token get() = _token
 
-    private val gson = Gson()
+    private val klaxon = Klaxon()
 
     /**
      * Refresh the token if the current token is invalid
@@ -51,7 +51,7 @@ class TokenProvider(
         val client = OkHttpClient()
         val response = client.newCall(request).execute()
         if (response.isSuccessful) {
-            _token = gson.fromJson(response.body?.string(), Token::class.java)
+            _token = klaxon.parse<Token>(response.body!!.string())
             return token
         } else {
             return null

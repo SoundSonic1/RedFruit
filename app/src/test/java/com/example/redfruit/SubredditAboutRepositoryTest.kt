@@ -1,5 +1,7 @@
 package com.example.redfruit
 
+import com.beust.klaxon.Klaxon
+import com.beust.klaxon.Parser
 import com.example.redfruit.data.api.IRedditApi
 import com.example.redfruit.data.api.RedditApi
 import com.example.redfruit.data.api.TokenAuthenticator
@@ -7,7 +9,7 @@ import com.example.redfruit.data.api.TokenProvider
 import com.example.redfruit.data.repositories.SubredditAboutRepository
 import kotlinx.coroutines.runBlocking
 import org.junit.Assert.assertEquals
-import org.junit.Assert.assertTrue
+import org.junit.Assert.assertNotNull
 import org.junit.Before
 import org.junit.Test
 import java.util.*
@@ -15,7 +17,11 @@ import java.util.*
 class SubredditAboutRepositoryTest {
 
     private val redditApi: IRedditApi =
-        RedditApi(TokenAuthenticator(TokenProvider(BuildConfig.ClientId, UUID.randomUUID().toString())))
+        RedditApi(
+            TokenAuthenticator(TokenProvider(BuildConfig.ClientId, UUID.randomUUID().toString())),
+            Klaxon(),
+            Parser.default()
+        )
 
     private lateinit var repo: SubredditAboutRepository
 
@@ -39,7 +45,8 @@ class SubredditAboutRepositoryTest {
 
         runBlocking {
             val subredditAbout = repo.getData("memes_of_dank")
-            assertTrue("Underscore is valid", subredditAbout != null)
+            assertNotNull("Underscore is valid", subredditAbout)
+            assertEquals("Memes_of_dank", subredditAbout?.display_name)
         }
 
     }

@@ -6,6 +6,8 @@ import android.content.SharedPreferences
 import androidx.core.content.edit
 import androidx.preference.PreferenceManager
 import androidx.recyclerview.widget.RecyclerView
+import com.beust.klaxon.Klaxon
+import com.beust.klaxon.Parser
 import com.example.redfruit.BuildConfig
 import com.example.redfruit.R
 import com.example.redfruit.data.api.IRedditApi
@@ -79,8 +81,16 @@ class AppModule {
     fun provideTokenAuthenticator(tokenProvider: TokenProvider) = TokenAuthenticator(tokenProvider)
 
     @Provides
+    fun provideKlaxon() = Klaxon()
+
+    @Provides
+    fun provideParser() = Parser.default()
+
+    @Provides
     @Singleton
-    fun provideRedditApi(authenticator: TokenAuthenticator): IRedditApi = RedditApi(authenticator)
+    fun provideRedditApi(
+        authenticator: TokenAuthenticator, klaxon: Klaxon, parser: Parser
+    ): IRedditApi = RedditApi(authenticator, klaxon, parser)
 
     @Provides
     @Named("ItemAnimator")

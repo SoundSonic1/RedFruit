@@ -1,10 +1,11 @@
 package com.example.redfruit.data.api
 
+import com.beust.klaxon.JsonObject
+import com.beust.klaxon.Klaxon
+import com.beust.klaxon.Parser
 import com.example.redfruit.data.model.SubredditAbout
 import com.example.redfruit.data.model.enumeration.SortBy
 import com.example.redfruit.util.Constants
-import com.google.gson.Gson
-import com.google.gson.JsonParser
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import okhttp3.HttpUrl
@@ -12,10 +13,12 @@ import okhttp3.OkHttpClient
 import okhttp3.Request
 
 /**
- * Responsible for all api requests
+ * Responsible for all api requests to reddit
  */
 class RedditApi(
-    private val authenticator: TokenAuthenticator
+    private val authenticator: TokenAuthenticator,
+    private val klaxon: Klaxon,
+    private val parser: Parser
 ) : IRedditApi {
 
     private fun buildRequest(url: HttpUrl) = Request.Builder().apply {
@@ -80,10 +83,14 @@ class RedditApi(
 
         response.body?.let {
 
-            val jsonResponse = JsonParser().parse(it.string()).asJsonObject
+            val jsonString = StringBuilder(it.string())
 
-            if (jsonResponse.get("kind").asString == "t5") {
-                return@withContext Gson().fromJson(jsonResponse.get("data"), SubredditAbout::class.java)
+            val json = parser.parse(jsonString) as JsonObject
+
+            if (json.string("kind") == "t5") {
+                json.obj("data")?.let { dataObj ->
+                    return@withContext klaxon.parse<SubredditAbout>(dataObj.toJsonString())
+                }
             }
         }
 

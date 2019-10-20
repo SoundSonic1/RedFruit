@@ -19,4 +19,5 @@ object Constants {
     const val SWITCH_TOGGLE_KEY = "SWITCH_TOGGLE_KEY"
     const val DARK_THEME_ON_KEY = "DARK_THEME_ON_KEY"
     const val DEVICE_ID_KEY = "DEVICE_ID_KEY"
+    const val SUGGESTIONS = "SUGGESTIONS"
 }

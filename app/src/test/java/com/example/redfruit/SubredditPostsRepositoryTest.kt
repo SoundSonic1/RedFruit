@@ -1,5 +1,9 @@
 package com.example.redfruit
 
+import com.beust.klaxon.JsonArray
+import com.beust.klaxon.JsonObject
+import com.beust.klaxon.Klaxon
+import com.beust.klaxon.Parser
 import com.example.redfruit.data.api.IRedditApi
 import com.example.redfruit.data.api.RedditApi
 import com.example.redfruit.data.api.TokenAuthenticator
@@ -10,9 +14,6 @@ import com.example.redfruit.data.model.enumeration.SortBy
 import com.example.redfruit.data.model.images.ImageSource
 import com.example.redfruit.data.repositories.SubredditPostsRepository
 import com.example.redfruit.util.Constants
-import com.google.gson.GsonBuilder
-import com.google.gson.JsonParser
-import com.google.gson.reflect.TypeToken
 import kotlinx.coroutines.runBlocking
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertFalse
@@ -23,7 +24,11 @@ import java.util.*
 class SubredditPostsRepositoryTest {
 
     private val redditApi: IRedditApi =
-        RedditApi(TokenAuthenticator(TokenProvider(BuildConfig.ClientId, UUID.randomUUID().toString())))
+        RedditApi(
+            TokenAuthenticator(TokenProvider(BuildConfig.ClientId, UUID.randomUUID().toString())),
+            Klaxon(),
+            Parser.default()
+        )
 
     private lateinit var repo: SubredditPostsRepository
 
@@ -45,9 +50,6 @@ class SubredditPostsRepositoryTest {
                 repo.getData(Constants.DEFAULT_SUB, SortBy.new, 10).size
             )
             assertEquals(0, repo.getData("empty", sortByNew, 10).size)
-
-            assertEquals(10, repo.getData(Constants.DEFAULT_SUB, SortBy.controversial, 10).size)
-            assertEquals(20, repo.getData(Constants.DEFAULT_SUB, SortBy.controversial, 10).size)
             assertEquals(10, repo.getData(Constants.DEFAULT_SUB, SortBy.rising, 10).size)
         }
 
@@ -63,12 +65,14 @@ class SubredditPostsRepositoryTest {
 
     @Test
     fun postDeserializerTest() {
-        val gson = GsonBuilder()
-            .registerTypeAdapter(Post::class.java, PostDeserializer())
-            .create()
-        val jsonChildren = JsonParser().parse(validPostString).asJsonArray
 
-        val children: List<Post> = gson.fromJson(jsonChildren, object: TypeToken<List<Post>>() {}.type)
+        val stringBuilder = StringBuilder(validPostString)
+        val jsonObj = Parser.default().parse(stringBuilder) as JsonArray<JsonObject>
+        val deserializer = PostDeserializer(Klaxon())
+
+        val children = jsonObj.map {
+            deserializer.deserialize(it)
+        }
 
         assertEquals("Should only be one child", 1, children.size)
 

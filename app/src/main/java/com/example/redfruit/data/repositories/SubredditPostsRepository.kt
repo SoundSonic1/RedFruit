@@ -1,27 +1,25 @@
 package com.example.redfruit.data.repositories
 
+import com.beust.klaxon.JsonObject
+import com.beust.klaxon.Klaxon
+import com.beust.klaxon.Parser
 import com.example.redfruit.data.api.IRedditApi
 import com.example.redfruit.data.deserializer.PostDeserializer
 import com.example.redfruit.data.model.Post
 import com.example.redfruit.data.model.SubredditListing
 import com.example.redfruit.data.model.enumeration.SortBy
-import com.google.gson.GsonBuilder
-import com.google.gson.JsonParser
-import com.google.gson.reflect.TypeToken
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
 /**
- * Implements the Repository pattern
- * @property subredditMap collects the subreddit
+ * Repository which manages subreddit posts
  */
 class SubredditPostsRepository(
     private val redditApi: IRedditApi,
     private val subredditMap: MutableMap<Pair<String, SortBy>, SubredditListing> = mutableMapOf()
 ) : IPostsRepository {
-
-    private val gson = GsonBuilder()
-        .registerTypeAdapter(Post::class.java, PostDeserializer()).create()
+    // TODO: inject
+    private val deserializer = PostDeserializer(Klaxon())
 
     /**
      * Main function that returns a list of posts from a given subreddit
@@ -43,37 +41,37 @@ class SubredditPostsRepository(
         }
 
         val response = redditApi.getSubredditPosts(sub, sortBy, subreddit.after, limit)
-        if (response.isBlank()) {
-            return@withContext listOf<Post>()
-        }
 
-        val jsonObjResponse = JsonParser().parse(response).asJsonObject
-        if (jsonObjResponse.get("kind")?.asString != "Listing") {
+        if (response.isBlank()) return@withContext listOf<Post>()
+
+        val stringBuilder = StringBuilder(response)
+        val jsonObj = Parser.default().parse(stringBuilder) as JsonObject
+        if (jsonObj.string("kind") != "Listing") {
             // either private or banned sub
             return@withContext listOf<Post>()
         }
-        val jsonData = jsonObjResponse.getAsJsonObject("data")
+        val data = jsonObj.obj("data")!!
         // JSONArray of children aka posts
-        val jsonChildren = jsonData.getAsJsonArray("children")
+        val children = data.array<JsonObject>("children")
 
         // check if children are posts
-        if (jsonChildren.any { it.asJsonObject.get("kind").asString != "t3" }) {
+        if (children!!.any { it.string("kind") != "t3" }) {
             return@withContext listOf<Post>()
         }
 
-        // bookmark beginning and ending of the listing
-        if (!jsonData.get("before").isJsonNull) {
-            subreddit.before = jsonData.get("before").asString
-        }
+        subreddit.before = data.string("before") ?: ""
 
-        if (!jsonData.get("after").isJsonNull) {
-            subreddit.after = jsonData.get("after").asString
-        } else if (jsonData.get("after").isJsonNull && subreddit.children.size > 0) {
+        if (data.get("after") != null) {
+            subreddit.after = data.string("after") ?: ""
+        } else if (data.get("after") == null && subreddit.children.size > 0) {
             return@withContext subreddit.children.toList()
         }
 
-        subreddit.children.addAll(
-            gson.fromJson(jsonChildren, object: TypeToken<List<Post>>() {}.type))
+        val posts = children.map {
+            deserializer.deserialize(it)
+        }
+
+        subreddit.children.addAll(posts)
 
         subreddit.children.toList()
     }

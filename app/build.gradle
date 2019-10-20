@@ -58,7 +58,7 @@ dependencies {
     implementation "androidx.fragment:fragment-ktx:$ktx_version"
     implementation "androidx.preference:preference-ktx:$ktx_version"
     // json deserializer
-    implementation 'com.google.code.gson:gson:2.8.5'
+    implementation 'com.beust:klaxon:5.0.11'
     // for api calls
     implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-android:1.3.2'
     implementation("com.squareup.okhttp3:okhttp:4.2.2")

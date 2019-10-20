@@ -1,12 +1,15 @@
 package com.example.redfruit.data.model
 
-import com.google.gson.annotations.SerializedName
+import com.beust.klaxon.Json
 
+/**
+ * Stores given awards to posts/comments
+ */
 data class Gildings(
-    @SerializedName("gid_1")
+    @Json(name = "gid_1")
     val silverCount: Int = 0,
-    @SerializedName("gid_2")
+    @Json(name = "gid_2")
     val goldCount: Int = 0,
-    @SerializedName("gid_3")
+    @Json(name = "gid_3")
     val platinumCount: Int = 0
 )

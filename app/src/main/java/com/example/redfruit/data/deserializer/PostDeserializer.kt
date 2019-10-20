@@ -1,5 +1,7 @@
 package com.example.redfruit.data.deserializer
 
+import com.beust.klaxon.JsonObject
+import com.beust.klaxon.Klaxon
 import com.example.redfruit.data.model.Gildings
 import com.example.redfruit.data.model.Post
 import com.example.redfruit.data.model.Preview
@@ -8,72 +10,60 @@ import com.example.redfruit.data.model.images.RedditImage
 import com.example.redfruit.data.model.media.RedditVideo
 import com.example.redfruit.data.model.media.SecureMedia
 import com.example.redfruit.data.model.media.YoutubeoEmbed
-import com.google.gson.*
-import com.google.gson.reflect.TypeToken
-import java.lang.reflect.Type
 
 /**
- * Custom deserializer for Posts
+ * Custom deserializer for json post
  */
-class PostDeserializer : JsonDeserializer<Post> {
+class PostDeserializer(
+    private val klaxon: Klaxon
+) : IDeserializer<Post> {
 
-    private val gson = Gson()
+    override fun deserialize(json: JsonObject): Post {
+        val data = json.obj("data")!!
+        val preview = data.obj("preview")
+        val enabled = preview?.boolean("enabled") ?: false
 
-    override fun deserialize(
-        json: JsonElement?,
-        typeOfT: Type?,
-        context: JsonDeserializationContext?
-    ): Post {
-
-        val jsonObj = json!!.asJsonObject
-        val data = jsonObj.getAsJsonObject("data")
-        val preview = data.getAsJsonObject("preview")
-
-        val enabled = preview?.get("enabled")?.asBoolean ?: false
-        val jsonImages = preview?.getAsJsonArray("images")
-
-        val images = jsonImages?.map {
+        val arrayImages = preview?.array<JsonObject>("images")
+        val images = arrayImages?.map {
             RedditImage(
-                source = gson.fromJson(it.asJsonObject.get("source"), ImageSource::class.java),
-                resolutions = gson.fromJson(it.asJsonObject.get("resolutions"), object : TypeToken<List<ImageSource>>() {}.type)
+                source = klaxon.parse<ImageSource>(it.obj("source")!!.toJsonString())!!,
+                resolutions = klaxon.parseArray(it.array<JsonObject>("resolutions")!!.toJsonString()) ?: listOf()
             )
         }
-        val secureMedia: SecureMedia? = if (data.get("secure_media").isJsonNull) {
-            null
-        } else {
-            getSecureMedia(data.getAsJsonObject("secure_media"))
+
+        val secureMedia: SecureMedia? = data.obj("secure_media")?.let {
+            getSecureMedia(it)
         }
 
         return Post(
-            id = data.get("id").asString,
-            title = data.get("title").asString,
-            author = data.get("author")?.asString ?: "Unknown",
-            score = data.get("score")?.asString ?: "0",
-            num_comments = data.get("num_comments")?.asString ?: "0",
-            post_hint = data.get("post_hint")?.asString ?: "",
+            id = data.string("id") ?: "",
+            title = data.string("title") ?: "",
+            author = data.string("author") ?: "Unknown",
+            score = (data.int("score") ?: 0).toString(),
+            num_comments = (data.int("num_comments") ?: 0).toString(),
+            post_hint = data.string("post_hint") ?: "",
             preview = Preview(
                 enabled = enabled,
                 images = images ?: listOf()
             ),
             secureMedia = secureMedia,
-            gildings = gson.fromJson(data.get("gildings"), Gildings::class.java),
-            over_18 = data.get("over_18")?.asBoolean ?: false,
-            stickied = data.get("stickied")?.asBoolean ?: false,
-            selftext = data.get("selftext")?.asString ?: "",
-            subreddit = data.get("subreddit")?.asString ?: "",
-            url = data.get("url")?.asString ?: ""
+            gildings = klaxon.parse<Gildings>(data.obj("gildings")!!.toJsonString())!!,
+            over_18 = data.boolean("over_18") ?: false,
+            stickied = data.boolean("stickied") ?: false,
+            selftext = data.string("selftext") ?: "",
+            subreddit = data.string("subreddit") ?: "",
+            url = data.string("url") ?: ""
         )
-
     }
 
     private fun getSecureMedia(jsonObj: JsonObject): SecureMedia {
-        val redditVideo = jsonObj.get("reddit_video")?.let {
-            gson.fromJson(it.asJsonObject, RedditVideo::class.java)
+        val redditVideo = jsonObj.obj("reddit_video")?.let {
+            klaxon.parse<RedditVideo>(it.toJsonString())
         }
 
-        val youtubeOembed = if (jsonObj.get("type")?.asString == "youtube.com") {
-            jsonObj.get("oembed")?.let {
-                gson.fromJson(it.asJsonObject, YoutubeoEmbed::class.java)
+        val youtubeOembed = if (jsonObj.string("type") == "youtube.com") {
+            jsonObj.obj("oembed")?.let {
+                klaxon.parse<YoutubeoEmbed>(it.toJsonString())
             }
         } else {
             null

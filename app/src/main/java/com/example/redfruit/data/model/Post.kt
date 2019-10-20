@@ -4,9 +4,10 @@ import com.example.redfruit.data.model.interfaces.ISource
 import com.example.redfruit.data.model.media.SecureMedia
 import com.nguyencse.URLEmbeddedData
 
-/** Contains the necessary information of a reddit post
+/**
+ * Class which contains detailed information about subreddit post
  *
- * @property id unique
+ * @property id of post
  * @property title of the post
  * @property author of the post
  * @property score total score after calculating ups and downs (might fluctuate)
