@@ -21,6 +21,8 @@ class TokenProvider(
 
     override val token get() = _token
 
+    private val gson = Gson()
+
     /**
      * Refresh the token if the current token is invalid
      */
@@ -49,7 +51,7 @@ class TokenProvider(
         val client = OkHttpClient()
         val response = client.newCall(request).execute()
         if (response.isSuccessful) {
-            _token = Gson().fromJson(response.body?.string(), Token::class.java)
+            _token = gson.fromJson(response.body?.string(), Token::class.java)
             return token
         } else {
             return null

@@ -1,21 +1,15 @@
 package com.example.redfruit.data.repositories
 
 import com.example.redfruit.data.api.IRedditApi
-import com.example.redfruit.data.model.Gildings
+import com.example.redfruit.data.deserializer.PostDeserializer
 import com.example.redfruit.data.model.Post
-import com.example.redfruit.data.model.Preview
 import com.example.redfruit.data.model.SubredditListing
 import com.example.redfruit.data.model.enumeration.SortBy
-import com.example.redfruit.data.model.images.ImageSource
-import com.example.redfruit.data.model.images.RedditImage
-import com.example.redfruit.data.model.media.RedditVideo
-import com.example.redfruit.data.model.media.SecureMedia
-import com.example.redfruit.data.model.media.YoutubeoEmbed
-import com.google.gson.*
+import com.google.gson.GsonBuilder
+import com.google.gson.JsonParser
 import com.google.gson.reflect.TypeToken
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
-import java.lang.reflect.Type
 
 /**
  * Implements the Repository pattern
@@ -25,6 +19,9 @@ class SubredditPostsRepository(
     private val redditApi: IRedditApi,
     private val subredditMap: MutableMap<Pair<String, SortBy>, SubredditListing> = mutableMapOf()
 ) : IPostsRepository {
+
+    private val gson = GsonBuilder()
+        .registerTypeAdapter(Post::class.java, PostDeserializer()).create()
 
     /**
      * Main function that returns a list of posts from a given subreddit
@@ -40,9 +37,12 @@ class SubredditPostsRepository(
         sortBy: SortBy,
         limit: Int
     ): List<Post> = withContext(Dispatchers.Default) {
-        val subReddit = subredditMap.getOrPut(Pair(sub, sortBy)) { SubredditListing(sub) }
 
-        val response = redditApi.getSubredditPosts(sub, sortBy, subReddit.after, limit)
+        val subreddit = subredditMap.getOrPut(Pair(sub, sortBy)) {
+            SubredditListing(sub)
+        }
+
+        val response = redditApi.getSubredditPosts(sub, sortBy, subreddit.after, limit)
         if (response.isBlank()) {
             return@withContext listOf<Post>()
         }
@@ -63,25 +63,19 @@ class SubredditPostsRepository(
 
         // bookmark beginning and ending of the listing
         if (!jsonData.get("before").isJsonNull) {
-            subReddit.before = jsonData.get("before").asString
+            subreddit.before = jsonData.get("before").asString
         }
 
         if (!jsonData.get("after").isJsonNull) {
-            subReddit.after = jsonData.get("after").asString
-        } else if (jsonData.get("after").isJsonNull && subReddit.children.size > 0) {
-            return@withContext subReddit.children.toList()
+            subreddit.after = jsonData.get("after").asString
+        } else if (jsonData.get("after").isJsonNull && subreddit.children.size > 0) {
+            return@withContext subreddit.children.toList()
         }
 
-        val gson = GsonBuilder()
-            .registerTypeAdapter(Post::class.java,
-                PostDeserializer()
-            )
-            .create()
-
-        subReddit.children.addAll(
+        subreddit.children.addAll(
             gson.fromJson(jsonChildren, object: TypeToken<List<Post>>() {}.type))
 
-        subReddit.children.toList()
+        subreddit.children.toList()
     }
 
     /**
@@ -89,73 +83,4 @@ class SubredditPostsRepository(
      */
     override fun clearData() = subredditMap.clear()
 
-
-    class PostDeserializer : JsonDeserializer<Post> {
-        /**
-         * Used to deserialize a json array
-         */
-        override fun deserialize(json: JsonElement?,
-                                 typeOfT: Type?,
-                                 context: JsonDeserializationContext?
-        ): Post {
-            // Throw NPE here if there is no JsonObject data
-            val jsonData = json!!.asJsonObject.getAsJsonObject("data")
-            val jsonPreview = jsonData.getAsJsonObject("preview")
-            val enabled = jsonPreview?.get("enabled")?.asBoolean ?: false
-            val jsonArrayImages = jsonPreview?.getAsJsonArray("images")
-
-            val gson = Gson()
-
-            val images = jsonArrayImages?.map {
-                RedditImage(
-                    source = gson.fromJson(it.asJsonObject.get("source"), ImageSource::class.java),
-                    resolutions = gson.fromJson(it.asJsonObject.get("resolutions"), object : TypeToken<List<ImageSource>>() {}.type)
-                )
-            }
-
-            val secureMedia: SecureMedia? = if (jsonData.get("secure_media").isJsonNull) {
-                null
-            } else {
-                getSecureMedia(jsonData.getAsJsonObject("secure_media"))
-            }
-
-
-            return Post(
-                id = jsonData.get("id").asString,
-                title = jsonData.get("title").asString,
-                author = jsonData.get("author")?.asString ?: "Unknown",
-                score = jsonData.get("score")?.asString ?: "0",
-                num_comments = jsonData.get("num_comments")?.asString ?: "0",
-                post_hint = jsonData.get("post_hint")?.asString ?: "",
-                preview = Preview(
-                    enabled = enabled,
-                    images = images ?: listOf()
-                ),
-                secureMedia = secureMedia,
-                gildings = gson.fromJson(jsonData.get("gildings"), Gildings::class.java),
-                over_18 = jsonData.get("over_18")?.asBoolean ?: false,
-                stickied = jsonData.get("stickied")?.asBoolean ?: false,
-                selftext = jsonData.get("selftext")?.asString ?: "",
-                subreddit = jsonData.get("subreddit")?.asString ?: "",
-                url = jsonData.get("url")?.asString ?: ""
-            )
-        }
-
-        private fun getSecureMedia(jsonObj: JsonObject): SecureMedia {
-            val redditVideo = jsonObj.get("reddit_video")?.let {
-                Gson().fromJson(it.asJsonObject, RedditVideo::class.java)
-            }
-
-            val youtubeOembed = if (jsonObj.get("type")?.asString == "youtube.com") {
-                jsonObj.get("oembed")?.let {
-                    Gson().fromJson(it.asJsonObject, YoutubeoEmbed::class.java)
-                }
-            } else {
-                null
-            }
-
-            return SecureMedia(redditVideo, youtubeOembed)
-        }
-
-    }
 }

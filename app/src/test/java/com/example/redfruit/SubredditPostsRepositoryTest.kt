@@ -4,6 +4,7 @@ import com.example.redfruit.data.api.IRedditApi
 import com.example.redfruit.data.api.RedditApi
 import com.example.redfruit.data.api.TokenAuthenticator
 import com.example.redfruit.data.api.TokenProvider
+import com.example.redfruit.data.deserializer.PostDeserializer
 import com.example.redfruit.data.model.Post
 import com.example.redfruit.data.model.enumeration.SortBy
 import com.example.redfruit.data.model.images.ImageSource
@@ -63,7 +64,7 @@ class SubredditPostsRepositoryTest {
     @Test
     fun postDeserializerTest() {
         val gson = GsonBuilder()
-            .registerTypeAdapter(Post::class.java, SubredditPostsRepository.PostDeserializer())
+            .registerTypeAdapter(Post::class.java, PostDeserializer())
             .create()
         val jsonChildren = JsonParser().parse(validPostString).asJsonArray
 

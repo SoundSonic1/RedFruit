@@ -1,7 +1,10 @@
 package com.example.redfruit.data.api
 
+import com.example.redfruit.data.model.SubredditAbout
 import com.example.redfruit.data.model.enumeration.SortBy
 import com.example.redfruit.util.Constants
+import com.google.gson.Gson
+import com.google.gson.JsonParser
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import okhttp3.HttpUrl
@@ -59,7 +62,7 @@ class RedditApi(
     /**
      * Returns the api response for the subreddit about page
      */
-    override suspend fun getSubreddditAbout(subreddit: String) = withContext(Dispatchers.IO) {
+    override suspend fun getSubreddditAbout(subreddit: String) = withContext(Dispatchers.Default) {
 
         val url = HttpUrl.Builder()
             .scheme("https")
@@ -72,14 +75,19 @@ class RedditApi(
 
         val client = createClient()
         val response = client.newCall(request).execute()
-        if (response.isSuccessful) {
-            response.body?.let {
-                return@withContext it.string()
+
+        if (!response.isSuccessful) return@withContext null
+
+        response.body?.let {
+
+            val jsonResponse = JsonParser().parse(it.string()).asJsonObject
+
+            if (jsonResponse.get("kind").asString == "t5") {
+                return@withContext Gson().fromJson(jsonResponse.get("data"), SubredditAbout::class.java)
             }
-            ""
-        } else {
-            ""
         }
+
+        null
     }
 
     /**
