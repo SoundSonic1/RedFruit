@@ -1,12 +1,12 @@
 package com.example.redfruit
 
-import com.beust.klaxon.Klaxon
 import com.beust.klaxon.Parser
 import com.example.redfruit.data.api.IRedditApi
 import com.example.redfruit.data.api.RedditApi
 import com.example.redfruit.data.api.TokenAuthenticator
 import com.example.redfruit.data.api.TokenProvider
 import com.example.redfruit.data.repositories.SubredditAboutRepository
+import com.example.redfruit.util.KlaxonFactory
 import kotlinx.coroutines.runBlocking
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertNotNull
@@ -19,7 +19,7 @@ class SubredditAboutRepositoryTest {
     private val redditApi: IRedditApi =
         RedditApi(
             TokenAuthenticator(TokenProvider(BuildConfig.ClientId, UUID.randomUUID().toString())),
-            Klaxon(),
+            KlaxonFactory(),
             Parser.default()
         )
 
@@ -40,7 +40,7 @@ class SubredditAboutRepositoryTest {
             val subredditAbout = repo.getData("android")
 
             assertEquals("Android", subredditAbout?.display_name)
-            assertEquals(false, subredditAbout?.over_18)
+            assertEquals(false, subredditAbout?.over18)
         }
 
         runBlocking {
@@ -62,6 +62,16 @@ class SubredditAboutRepositoryTest {
 
         runBlocking {
             assertEquals("Spaces are not allowed", null, repo.getData("dank memes"))
+        }
+    }
+
+    @Test
+    fun testFindSubreddits() {
+        runBlocking {
+
+            assertEquals(9, repo.findSubreddits("android", 9).size)
+            assertEquals(12, repo.findSubreddits("android", 12).size)
+            assertEquals("Private subreddit is searchable",1, repo.findSubreddits("fgousa", 1).size)
         }
     }
 }

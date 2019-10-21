@@ -3,9 +3,11 @@ package com.example.redfruit.data.api
 import com.beust.klaxon.JsonObject
 import com.beust.klaxon.Klaxon
 import com.beust.klaxon.Parser
+import com.example.redfruit.data.deserializer.SubredditsDeserializer
 import com.example.redfruit.data.model.SubredditAbout
 import com.example.redfruit.data.model.enumeration.SortBy
 import com.example.redfruit.util.Constants
+import com.example.redfruit.util.IFactory
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import okhttp3.HttpUrl
@@ -17,7 +19,7 @@ import okhttp3.Request
  */
 class RedditApi(
     private val authenticator: TokenAuthenticator,
-    private val klaxon: Klaxon,
+    private val klaxonFactory: IFactory<Klaxon>,
     private val parser: Parser
 ) : IRedditApi {
 
@@ -85,13 +87,15 @@ class RedditApi(
 
             val jsonString = StringBuilder(it.string())
 
-            val json = parser.parse(jsonString) as JsonObject
-
-            if (json.string("kind") == "t5") {
-                json.obj("data")?.let { dataObj ->
-                    return@withContext klaxon.parse<SubredditAbout>(dataObj.toJsonString())
+            val json = parser.parse(jsonString) as? JsonObject
+            json?.let {
+                if (json.string("kind") == "t5") {
+                    json.obj("data")?.let { dataObj ->
+                        return@withContext klaxonFactory.build().parse<SubredditAbout>(dataObj.toJsonString())
+                    }
                 }
             }
+
         }
 
         null
@@ -123,6 +127,37 @@ class RedditApi(
                 ""
             }
         }
+
+    override suspend fun findSubreddits(query: String, limit: Int): List<SubredditAbout> = withContext(Dispatchers.Default) {
+
+        if (query.isBlank()) return@withContext listOf<SubredditAbout>()
+
+        val url = HttpUrl.Builder()
+            .scheme("https")
+            .host(BASE_URL)
+            .addPathSegments("/subreddits/search")
+            .addQueryParameter("q", query)
+            .addQueryParameter("limit", limit.toString())
+            .addQueryParameter("raw_json", "1")
+            .build()
+
+        val request = buildRequest(url)
+
+        val response = createClient().newCall(request).execute()
+
+        if (response.isSuccessful) {
+            response.body?.let {
+
+                val stringBuilder = StringBuilder(it.string())
+                val json = parser.parse(stringBuilder) as? JsonObject
+                json?.let { jsonObj ->
+                   return@withContext SubredditsDeserializer(klaxonFactory.build()).deserialize(jsonObj)
+                }
+            }
+        }
+
+        listOf<SubredditAbout>()
+    }
 
     companion object {
         private const val BASE_URL = "oauth.reddit.com"

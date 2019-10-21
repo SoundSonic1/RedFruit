@@ -28,10 +28,10 @@ object ToolbarBindingAdapters {
     fun loadIconImage(imageView: ImageView, subredditAbout: SubredditAbout?) {
         subredditAbout?.let {
             // Not sure why there are two icons available
-            val url = if (it.icon_img.isNotBlank()) {
-                it.icon_img
+            val url = if (it.iconImg.isNotBlank()) {
+                it.iconImg
             } else {
-                it.community_icon
+                it.communityIcon
             }
             if (url.isBlank()) {
                 imageView.load(R.drawable.ic_reddit_24dp) {

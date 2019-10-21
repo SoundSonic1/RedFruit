@@ -7,21 +7,32 @@ import com.beust.klaxon.Json
  */
 data class SubredditAbout(
     val display_name: String,
-    val description: String = "",
-    val public_description: String = "",
-    val subscribers: Long = 0,
-    val over_18: Boolean = false,
+    @Json(name = "over_18")
+    private val _over18: Boolean? = false,
+    @Json(name = "subscribers")
+    private val _subscribers: Long? = 0,
+    @Json(name = "public_description")
+    private val _publicDescription: String? = "",
+    @Json(name = "description")
+    private val _description: String? = "",
     @Json(name = "icon_img")
-    private val _icon_img: String? = "",
+    private val _iconImg: String? = "",
     @Json(name = "community_icon")
-    private val _community_icon: String? = "",
+    private val _communityIcon: String? = "",
     @Json("header_img")
-    private val _header_img: String? = "",
+    private val _headerImg: String? = "",
     @Json("banner_background_image")
-    private val _banner_background_image: String? = ""
+    private val _bannerBackgroundImage: String? = "",
+    @Json("subreddit_type")
+    private val _subreddit_type: String? = ""
 ) {
-    val icon_img get() = _icon_img ?: ""
-    val community_icon get() = _community_icon ?: ""
-    val header_img get() = _header_img ?: ""
-    val banner_background_image get() = _banner_background_image ?: ""
+    val over18 get() = _over18 ?: false
+    val subscribers get() = _subscribers ?: 0
+    val publicDescription get() = _publicDescription ?: ""
+    val description get() = _description ?: ""
+    val iconImg get() = _iconImg ?: ""
+    val communityIcon get() = _communityIcon ?: ""
+    val headerImg get() = _headerImg ?: ""
+    val bannerBackgroundImage get() = _bannerBackgroundImage ?: ""
+    val subredditType = _subreddit_type ?: "private"
 }

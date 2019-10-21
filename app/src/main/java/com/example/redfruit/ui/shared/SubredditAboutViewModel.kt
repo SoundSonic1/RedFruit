@@ -30,9 +30,13 @@ class SubredditAboutViewModel(subreddit: String,
 
     private val _sortBy: MutableLiveData<SortBy> = MutableLiveData(sorting)
 
+    private val _subreddits: MutableLiveData<List<SubredditAbout>> = MutableLiveData()
+
     override val data: LiveData<SubredditAbout> get() = _data
 
     val sortBy: LiveData<SortBy> get() = _sortBy
+
+    val subreddits: LiveData<List<SubredditAbout>> get() = _subreddits
 
     /**
      * Sets the new subreddit about if the page exists and returns true
@@ -50,5 +54,28 @@ class SubredditAboutViewModel(subreddit: String,
 
     fun setSort(sortBy: SortBy) {
         _sortBy.value = sortBy
+    }
+
+    /**
+     * Finds subreddits based on query input from SearchView
+     */
+    fun findSubreddits(query: String) {
+        viewModelScope.launch {
+            _subreddits.value = repo.findSubreddits(query, limit)
+        }
+    }
+
+    /**
+     * Change subreddit on click
+     */
+    fun changeSubOnClick(pos: Int): Boolean {
+        if (subreddits.value?.size ?: -1 < pos) return false
+
+        _data.value = subreddits.value!![pos]
+        return true
+    }
+
+    companion object {
+        private const val limit = 6
     }
 }

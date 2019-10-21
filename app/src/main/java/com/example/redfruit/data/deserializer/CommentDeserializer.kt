@@ -45,7 +45,9 @@ class CommentDeserializer(
     override fun deserialize(json: JsonObject): List<Comment> {
         val data = json.obj("data") ?: return listOf()
 
-        return data.array<JsonObject>("children")!!.filter {
+        val array = data.array<JsonObject>("children") ?: return listOf()
+
+        return array.filter {
             it.string("kind") == "t1"
         }.map {
             deserializeDetail(it)

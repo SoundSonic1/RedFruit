@@ -1,17 +1,22 @@
 package com.example.redfruit.ui.home.fragment
 
+import android.database.MatrixCursor
 import android.os.Bundle
 import android.view.*
 import android.widget.Toast
 import androidx.appcompat.widget.PopupMenu
 import androidx.appcompat.widget.SearchView
+import androidx.cursoradapter.widget.CursorAdapter
 import androidx.fragment.app.activityViewModels
+import androidx.lifecycle.Observer
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.RecyclerView
 import com.example.redfruit.R
 import com.example.redfruit.data.model.enumeration.SortBy
+import com.example.redfruit.data.repositories.SubredditAboutRepository
 import com.example.redfruit.ui.home.adapter.SubredditPagerAdapter
 import com.example.redfruit.ui.shared.SubredditAboutViewModel
+import com.example.redfruit.util.Constants
 import com.google.android.material.tabs.TabLayout
 import dagger.android.support.DaggerFragment
 import kotlinx.android.synthetic.main.home_fragment.view.*
@@ -23,6 +28,12 @@ class HomeFragment : DaggerFragment() {
 
     @Inject
     lateinit var subredditPagerAdapter: SubredditPagerAdapter
+
+    @Inject
+    lateinit var cursorAdapter: CursorAdapter
+
+    @Inject
+    lateinit var repo: SubredditAboutRepository
 
     val subredditAboutViewModel by activityViewModels<SubredditAboutViewModel>()
 
@@ -63,6 +74,17 @@ class HomeFragment : DaggerFragment() {
             }
         )
 
+        subredditAboutViewModel.subreddits.observe(viewLifecycleOwner, Observer {
+            val cursor = MatrixCursor(arrayOf("_id", Constants.SUGGESTIONS))
+            it.forEach { sub ->
+                if (sub.subredditType != "private") {
+                    cursor.newRow().add(Constants.SUGGESTIONS, sub.display_name)
+                }
+            }
+            cursorAdapter.changeCursor(cursor)
+            cursorAdapter.notifyDataSetChanged()
+        })
+
         return homeView
     }
 
@@ -76,13 +98,27 @@ class HomeFragment : DaggerFragment() {
         val searchItem = menu.findItem(R.id.action_search_subreddit)
         val searchView = searchItem.actionView as SearchView
 
-        searchView.setOnQueryTextListener(object :  SearchView.OnQueryTextListener {
+        searchView.apply {
+            queryHint = getString(R.string.search_hint)
+            suggestionsAdapter = cursorAdapter
+        }
 
-            override fun onQueryTextChange(newText: String): Boolean {
-                return false
+        searchView.queryHint = getString(R.string.search_hint)
+
+        searchView.setOnQueryTextListener(object :  SearchView.OnQueryTextListener {
+            override fun onQueryTextChange(newText: String?): Boolean {
+
+                if (newText == null || newText.length < 4) return false
+
+                subredditAboutViewModel.findSubreddits(newText)
+
+                return true
             }
 
-            override fun onQueryTextSubmit(query: String): Boolean {
+            override fun onQueryTextSubmit(query: String?): Boolean {
+
+                if (query == null) return false
+
                 if (subredditAboutViewModel.data.value?.display_name?.toLowerCase(Locale.ENGLISH)
                     != query.toLowerCase(Locale.ENGLISH)) {
                     changeSubIfValid(query)
@@ -93,6 +129,20 @@ class HomeFragment : DaggerFragment() {
             }
 
         })
+
+        searchView.setOnSuggestionListener(object : SearchView.OnSuggestionListener {
+
+            override fun onSuggestionSelect(position: Int) = false
+
+            override fun onSuggestionClick(position: Int): Boolean {
+
+                searchItem.collapseActionView()
+
+                return subredditAboutViewModel.changeSubOnClick(position)
+            }
+        }
+
+        )
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {

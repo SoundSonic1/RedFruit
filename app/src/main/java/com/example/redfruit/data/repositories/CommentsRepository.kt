@@ -40,9 +40,9 @@ class CommentsRepository(
         }
 
         val comments = array.filter {
-            it.string("kind") == "Listing" && it.obj("data")!!.array<JsonObject>("children")!!.any {
+            it.string("kind") == "Listing" && it.obj("data")?.array<JsonObject>("children")?.any {
                 it.string("kind") == "t1"
-            }
+            } ?: false
         }.flatMap {
             deserializer.deserialize(it)
         }

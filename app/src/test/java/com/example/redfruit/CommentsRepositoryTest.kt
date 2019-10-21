@@ -1,12 +1,12 @@
 package com.example.redfruit
 
-import com.beust.klaxon.Klaxon
 import com.beust.klaxon.Parser
 import com.example.redfruit.data.api.IRedditApi
 import com.example.redfruit.data.api.RedditApi
 import com.example.redfruit.data.api.TokenAuthenticator
 import com.example.redfruit.data.api.TokenProvider
 import com.example.redfruit.data.repositories.CommentsRepository
+import com.example.redfruit.util.KlaxonFactory
 import kotlinx.coroutines.runBlocking
 import org.junit.Assert
 import org.junit.Test
@@ -17,7 +17,7 @@ class CommentsRepositoryTest {
     private val redditApi: IRedditApi =
         RedditApi(
             TokenAuthenticator(TokenProvider(BuildConfig.ClientId, UUID.randomUUID().toString())),
-            Klaxon(),
+            KlaxonFactory(),
             Parser.default()
         )
 

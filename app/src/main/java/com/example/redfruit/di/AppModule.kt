@@ -15,7 +15,10 @@ import com.example.redfruit.data.api.RedditApi
 import com.example.redfruit.data.api.TokenAuthenticator
 import com.example.redfruit.data.api.TokenProvider
 import com.example.redfruit.data.model.enumeration.SortBy
+import com.example.redfruit.data.repositories.SubredditAboutRepository
 import com.example.redfruit.util.Constants
+import com.example.redfruit.util.IFactory
+import com.example.redfruit.util.KlaxonFactory
 import dagger.Module
 import dagger.Provides
 import jp.wasabeef.recyclerview.animators.SlideInDownAnimator
@@ -81,7 +84,7 @@ class AppModule {
     fun provideTokenAuthenticator(tokenProvider: TokenProvider) = TokenAuthenticator(tokenProvider)
 
     @Provides
-    fun provideKlaxon() = Klaxon()
+    fun provideKlaxonFactory(): IFactory<Klaxon> = KlaxonFactory()
 
     @Provides
     fun provideParser() = Parser.default()
@@ -89,8 +92,11 @@ class AppModule {
     @Provides
     @Singleton
     fun provideRedditApi(
-        authenticator: TokenAuthenticator, klaxon: Klaxon, parser: Parser
-    ): IRedditApi = RedditApi(authenticator, klaxon, parser)
+        authenticator: TokenAuthenticator, klaxonFactory: IFactory<Klaxon>, parser: Parser
+    ): IRedditApi = RedditApi(authenticator, klaxonFactory, parser)
+
+    @Provides
+    fun provideSubredditAboutRepo(redditApi: IRedditApi) = SubredditAboutRepository(redditApi)
 
     @Provides
     @Named("ItemAnimator")

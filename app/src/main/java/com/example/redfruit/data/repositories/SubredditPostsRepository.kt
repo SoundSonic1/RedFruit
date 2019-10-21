@@ -45,17 +45,20 @@ class SubredditPostsRepository(
         if (response.isBlank()) return@withContext listOf<Post>()
 
         val stringBuilder = StringBuilder(response)
-        val jsonObj = Parser.default().parse(stringBuilder) as JsonObject
+
+        val jsonObj =
+            Parser.default().parse(stringBuilder) as? JsonObject ?: return@withContext listOf<Post>()
+
         if (jsonObj.string("kind") != "Listing") {
             // either private or banned sub
             return@withContext listOf<Post>()
         }
-        val data = jsonObj.obj("data")!!
+        val data = jsonObj.obj("data") ?: return@withContext listOf<Post>()
         // JSONArray of children aka posts
-        val children = data.array<JsonObject>("children")
+        val children = data.array<JsonObject>("children") ?: return@withContext listOf<Post>()
 
         // check if children are posts
-        if (children!!.any { it.string("kind") != "t3" }) {
+        if (children.any { it.string("kind") != "t3" }) {
             return@withContext listOf<Post>()
         }
 

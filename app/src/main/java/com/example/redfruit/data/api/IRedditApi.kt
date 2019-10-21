@@ -13,4 +13,6 @@ interface IRedditApi {
     suspend fun getSubreddditAbout(subreddit: String): SubredditAbout?
 
     suspend fun getComments(subreddit: String, postId: String, limit: Int): String
+
+    suspend fun findSubreddits(query: String, limit: Int): List<SubredditAbout>
 }
