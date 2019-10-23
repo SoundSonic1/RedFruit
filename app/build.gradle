@@ -42,7 +42,7 @@ tasks.withType(org.jetbrains.kotlin.gradle.tasks.KotlinCompile).all {
 }
 
 dependencies {
-    def dagger_version = "2.24"
+    def dagger_version = "2.25"
     def ktx_version = "1.1.0"
     def exo_version = "2.10.4"
     def markwon_version = "4.1.1"
