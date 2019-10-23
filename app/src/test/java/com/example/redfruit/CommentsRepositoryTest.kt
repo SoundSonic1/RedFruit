@@ -8,15 +8,19 @@ import com.example.redfruit.data.api.TokenProvider
 import com.example.redfruit.data.repositories.CommentsRepository
 import com.example.redfruit.util.KlaxonFactory
 import kotlinx.coroutines.runBlocking
+import okhttp3.OkHttpClient
 import org.junit.Assert
 import org.junit.Test
 import java.util.*
 
 class CommentsRepositoryTest {
 
+    private val authenticator = TokenAuthenticator(TokenProvider(BuildConfig.ClientId, UUID.randomUUID().toString()))
+
     private val redditApi: IRedditApi =
         RedditApi(
-            TokenAuthenticator(TokenProvider(BuildConfig.ClientId, UUID.randomUUID().toString())),
+            authenticator,
+            OkHttpClient.Builder().authenticator(authenticator).build(),
             KlaxonFactory(),
             Parser.default()
         )

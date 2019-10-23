@@ -2,7 +2,6 @@ package com.example.redfruit
 
 import com.beust.klaxon.JsonArray
 import com.beust.klaxon.JsonObject
-import com.beust.klaxon.Klaxon
 import com.beust.klaxon.Parser
 import com.example.redfruit.data.api.IRedditApi
 import com.example.redfruit.data.api.RedditApi
@@ -16,6 +15,7 @@ import com.example.redfruit.data.repositories.SubredditPostsRepository
 import com.example.redfruit.util.Constants
 import com.example.redfruit.util.KlaxonFactory
 import kotlinx.coroutines.runBlocking
+import okhttp3.OkHttpClient
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertFalse
 import org.junit.Before
@@ -24,9 +24,12 @@ import java.util.*
 
 class SubredditPostsRepositoryTest {
 
+    private val authenticator = TokenAuthenticator(TokenProvider(BuildConfig.ClientId, UUID.randomUUID().toString()))
+
     private val redditApi: IRedditApi =
         RedditApi(
-            TokenAuthenticator(TokenProvider(BuildConfig.ClientId, UUID.randomUUID().toString())),
+            authenticator,
+            OkHttpClient.Builder().authenticator(authenticator).build(),
             KlaxonFactory(),
             Parser.default()
         )
@@ -70,7 +73,7 @@ class SubredditPostsRepositoryTest {
         val stringBuilder = StringBuilder(validPostString)
         @Suppress("UNCHECKED_CAST")
         val jsonObj = Parser.default().parse(stringBuilder) as JsonArray<JsonObject>
-        val deserializer = PostDeserializer(Klaxon())
+        val deserializer = PostDeserializer(KlaxonFactory())
 
         val children = jsonObj.map {
             deserializer.deserialize(it)

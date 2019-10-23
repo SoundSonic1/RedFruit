@@ -10,15 +10,17 @@ import com.example.redfruit.data.model.images.RedditImage
 import com.example.redfruit.data.model.media.RedditVideo
 import com.example.redfruit.data.model.media.SecureMedia
 import com.example.redfruit.data.model.media.YoutubeoEmbed
+import com.example.redfruit.util.IFactory
 
 /**
  * Custom deserializer for json post
  */
 class PostDeserializer(
-    private val klaxon: Klaxon
+    private val klaxonFactory: IFactory<Klaxon>
 ) : IDeserializer<Post> {
 
     override fun deserialize(json: JsonObject): Post {
+        val klaxon = klaxonFactory.build()
         val data = json.obj("data")!!
         val preview = data.obj("preview")
         val enabled = preview?.boolean("enabled") ?: false
@@ -32,7 +34,7 @@ class PostDeserializer(
         }
 
         val secureMedia: SecureMedia? = data.obj("secure_media")?.let {
-            getSecureMedia(it)
+            getSecureMedia(it, klaxon)
         }
 
         return Post(
@@ -56,7 +58,8 @@ class PostDeserializer(
         )
     }
 
-    private fun getSecureMedia(jsonObj: JsonObject): SecureMedia {
+    private fun getSecureMedia(jsonObj: JsonObject, klaxon: Klaxon): SecureMedia {
+
         val redditVideo = jsonObj.obj("reddit_video")?.let {
             klaxon.parse<RedditVideo>(it.toJsonString())
         }

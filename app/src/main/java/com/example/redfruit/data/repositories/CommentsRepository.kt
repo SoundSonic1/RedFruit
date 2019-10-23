@@ -2,11 +2,11 @@ package com.example.redfruit.data.repositories
 
 import com.beust.klaxon.JsonArray
 import com.beust.klaxon.JsonObject
-import com.beust.klaxon.Klaxon
 import com.beust.klaxon.Parser
 import com.example.redfruit.data.api.IRedditApi
 import com.example.redfruit.data.deserializer.CommentDeserializer
 import com.example.redfruit.data.model.Comment
+import com.example.redfruit.util.KlaxonFactory
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
@@ -19,7 +19,7 @@ class CommentsRepository(
     private val postId: String
 ) : ICommentsRepository {
 
-    private val deserializer = CommentDeserializer(Klaxon())
+    private val deserializer = CommentDeserializer(KlaxonFactory())
     private val parser = Parser.default()
 
     /**

@@ -19,6 +19,7 @@ import okhttp3.Request
  */
 class RedditApi(
     private val authenticator: TokenAuthenticator,
+    private val client: OkHttpClient,
     private val klaxonFactory: IFactory<Klaxon>,
     private val parser: Parser
 ) : IRedditApi {
@@ -28,8 +29,6 @@ class RedditApi(
         addHeader("Authorization", "Bearer ${authenticator.currentToken?.access}")
         url(url)
     }.build()
-
-    private fun createClient() = OkHttpClient.Builder().authenticator(authenticator).build()
 
     /**
      * Returns api response for the subreddit posts
@@ -52,7 +51,6 @@ class RedditApi(
 
         val request = buildRequest(url)
 
-        val client = createClient()
         val response = client.newCall(request).execute()
         if (response.isSuccessful) {
             response.body?.let {
@@ -78,7 +76,6 @@ class RedditApi(
 
         val request = buildRequest(url)
 
-        val client = createClient()
         val response = client.newCall(request).execute()
 
         if (!response.isSuccessful) return@withContext null
@@ -116,7 +113,6 @@ class RedditApi(
 
             val request = buildRequest(url)
 
-            val client = createClient()
             val response = client.newCall(request).execute()
             if (response.isSuccessful) {
                 response.body?.let {
@@ -143,7 +139,7 @@ class RedditApi(
 
         val request = buildRequest(url)
 
-        val response = createClient().newCall(request).execute()
+        val response = client.newCall(request).execute()
 
         if (response.isSuccessful) {
             response.body?.let {
@@ -151,7 +147,7 @@ class RedditApi(
                 val stringBuilder = StringBuilder(it.string())
                 val json = parser.parse(stringBuilder) as? JsonObject
                 json?.let { jsonObj ->
-                   return@withContext SubredditsDeserializer(klaxonFactory.build()).deserialize(jsonObj)
+                   return@withContext SubredditsDeserializer(klaxonFactory).deserialize(jsonObj)
                 }
             }
         }

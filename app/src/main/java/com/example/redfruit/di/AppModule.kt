@@ -22,6 +22,7 @@ import com.example.redfruit.util.KlaxonFactory
 import dagger.Module
 import dagger.Provides
 import jp.wasabeef.recyclerview.animators.SlideInDownAnimator
+import okhttp3.OkHttpClient
 import java.util.*
 import javax.inject.Named
 import javax.inject.Singleton
@@ -84,6 +85,11 @@ class AppModule {
     fun provideTokenAuthenticator(tokenProvider: TokenProvider) = TokenAuthenticator(tokenProvider)
 
     @Provides
+    @Singleton
+    fun provideOkhttpClient(authenticator: TokenAuthenticator) =
+        OkHttpClient.Builder().authenticator(authenticator).build()
+
+    @Provides
     fun provideKlaxonFactory(): IFactory<Klaxon> = KlaxonFactory()
 
     @Provides
@@ -92,8 +98,8 @@ class AppModule {
     @Provides
     @Singleton
     fun provideRedditApi(
-        authenticator: TokenAuthenticator, klaxonFactory: IFactory<Klaxon>, parser: Parser
-    ): IRedditApi = RedditApi(authenticator, klaxonFactory, parser)
+        authenticator: TokenAuthenticator, client: OkHttpClient , klaxonFactory: IFactory<Klaxon>, parser: Parser
+    ): IRedditApi = RedditApi(authenticator, client, klaxonFactory, parser)
 
     @Provides
     fun provideSubredditAboutRepo(redditApi: IRedditApi) = SubredditAboutRepository(redditApi)

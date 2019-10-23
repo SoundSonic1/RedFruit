@@ -1,13 +1,13 @@
 package com.example.redfruit.data.repositories
 
 import com.beust.klaxon.JsonObject
-import com.beust.klaxon.Klaxon
 import com.beust.klaxon.Parser
 import com.example.redfruit.data.api.IRedditApi
 import com.example.redfruit.data.deserializer.PostDeserializer
 import com.example.redfruit.data.model.Post
 import com.example.redfruit.data.model.SubredditListing
 import com.example.redfruit.data.model.enumeration.SortBy
+import com.example.redfruit.util.KlaxonFactory
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
@@ -19,7 +19,7 @@ class SubredditPostsRepository(
     private val subredditMap: MutableMap<Pair<String, SortBy>, SubredditListing> = mutableMapOf()
 ) : IPostsRepository {
     // TODO: inject
-    private val deserializer = PostDeserializer(Klaxon())
+    private val deserializer = PostDeserializer(KlaxonFactory())
 
     /**
      * Main function that returns a list of posts from a given subreddit

@@ -8,6 +8,7 @@ import com.example.redfruit.data.api.TokenProvider
 import com.example.redfruit.data.repositories.SubredditAboutRepository
 import com.example.redfruit.util.KlaxonFactory
 import kotlinx.coroutines.runBlocking
+import okhttp3.OkHttpClient
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertNotNull
 import org.junit.Before
@@ -16,14 +17,17 @@ import java.util.*
 
 class SubredditAboutRepositoryTest {
 
+    private lateinit var repo: SubredditAboutRepository
+
+    private val authenticator = TokenAuthenticator(TokenProvider(BuildConfig.ClientId, UUID.randomUUID().toString()))
+
     private val redditApi: IRedditApi =
         RedditApi(
-            TokenAuthenticator(TokenProvider(BuildConfig.ClientId, UUID.randomUUID().toString())),
+            authenticator,
+            OkHttpClient.Builder().authenticator(authenticator).build(),
             KlaxonFactory(),
             Parser.default()
         )
-
-    private lateinit var repo: SubredditAboutRepository
 
 
     @Before
