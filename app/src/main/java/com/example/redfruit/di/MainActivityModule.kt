@@ -12,27 +12,22 @@ import dagger.Provides
 import javax.inject.Named
 
 @Module
-class MainActivityModule {
+object MainActivityModule {
 
-    @Module
-    companion object {
-        @JvmStatic
-        @Provides
-        fun provideHomeFragment() = HomeFragment()
+    @Provides
+    fun provideHomeFragment() = HomeFragment()
 
-        @JvmStatic
-        @Provides
-        fun provideSubredditViewModel(
-            mainActivity: MainActivity,
-            @Named("savedSub") sub: String,
-            @Named("savedSorting") sortBy: SortBy,
-            repo: SubredditAboutRepository
-        ): SubredditAboutViewModel {
-            val vm by mainActivity.viewModels<SubredditAboutViewModel> {
-                BaseVMFactory { SubredditAboutViewModel(sub, sortBy, repo) }
-            }
-            return vm
+    @Provides
+    fun provideSubredditViewModel(
+        mainActivity: MainActivity,
+        @Named("savedSub") sub: String,
+        @Named("savedSorting") sortBy: SortBy,
+        repo: SubredditAboutRepository
+    ): SubredditAboutViewModel {
+        val vm by mainActivity.viewModels<SubredditAboutViewModel> {
+            BaseVMFactory { SubredditAboutViewModel(sub, sortBy, repo) }
         }
+        return vm
     }
 
 }

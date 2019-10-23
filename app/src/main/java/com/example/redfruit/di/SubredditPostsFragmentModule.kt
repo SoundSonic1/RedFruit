@@ -22,65 +22,56 @@ import jp.wasabeef.recyclerview.animators.SlideInDownAnimator
 import javax.inject.Named
 
 @Module
-class SubredditPostsFragmentModule {
+object SubredditPostsFragmentModule {
 
-    @Module
-    companion object {
-        @JvmStatic
-        @Provides
-        fun provideSubredditRepo(redditApi: IRedditApi) =
-            SubredditPostsRepository(redditApi)
+    @Provides
+    fun provideSubredditRepo(redditApi: IRedditApi) =
+        SubredditPostsRepository(redditApi)
 
-        @JvmStatic
-        @Provides
-        fun provideActivityContext(subredditPostsFragment: SubredditPostsFragment) =
-            subredditPostsFragment.requireContext()
+    @Provides
+    fun provideActivityContext(subredditPostsFragment: SubredditPostsFragment) =
+        subredditPostsFragment.requireContext()
 
-        @JvmStatic
-        @Provides
-        fun provideLinearLayoutManager(context: Context) = LinearLayoutManager(context)
+    @Provides
+    fun provideLinearLayoutManager(context: Context) = LinearLayoutManager(context)
 
-        /**
-         * Require activity fragment manager to swap to CommentFragment
-         */
-        @JvmStatic
-        @Provides
-        fun provideFragmentManager(subredditPostsFragment: SubredditPostsFragment) =
-            subredditPostsFragment.activity?.supportFragmentManager
+    /**
+     * Require activity fragment manager to swap to CommentFragment
+     */
+    @JvmStatic
+    @Provides
+    fun provideFragmentManager(subredditPostsFragment: SubredditPostsFragment) =
+        subredditPostsFragment.activity?.supportFragmentManager
 
-        @JvmStatic
-        @Provides
-        fun provideHomeListAdapter(
-            fm: FragmentManager?,
-            homePostsViewModel: HomePostsViewModel
-        ): PostListAdapter {
-            return PostListAdapter(fm!!) { post ->
-                val fragment = findOrCreateFragment(fm, Constants.COMMENTS_FRAGMENT_TAG) {
-                    CommentsFragment.newInstance(post)
-                }
-                addOrShowFragment(fm, R.id.mainContent, fragment, Constants.COMMENTS_FRAGMENT_TAG)
-
-            }.apply {
-                submitList(homePostsViewModel.data.value ?: listOf())
+    @Provides
+    fun provideHomeListAdapter(
+        fm: FragmentManager?,
+        homePostsViewModel: HomePostsViewModel
+    ): PostListAdapter {
+        return PostListAdapter(fm!!) { post ->
+            val fragment = findOrCreateFragment(fm, Constants.COMMENTS_FRAGMENT_TAG) {
+                CommentsFragment.newInstance(post)
             }
-        }
+            addOrShowFragment(fm, R.id.mainContent, fragment, Constants.COMMENTS_FRAGMENT_TAG)
 
-        @JvmStatic
-        @Provides
-        fun provideHomeViewModel(
-            fragment: SubredditPostsFragment,
-            @Named("savedSub") savedSub: String,
-            @Named("savedSorting") sortBy: SortBy,
-            repo: SubredditPostsRepository
-        ): HomePostsViewModel {
-            val vm by fragment.viewModels<HomePostsViewModel> {
-                BaseVMFactory { HomePostsViewModel(savedSub, sortBy, repo) }
-            }
-            return vm
+        }.apply {
+            submitList(homePostsViewModel.data.value ?: listOf())
         }
-
-        @JvmStatic
-        @Provides
-        fun provideSlideInDownAnimator() = SlideInDownAnimator()
     }
+
+    @Provides
+    fun provideHomeViewModel(
+        fragment: SubredditPostsFragment,
+        @Named("savedSub") savedSub: String,
+        @Named("savedSorting") sortBy: SortBy,
+        repo: SubredditPostsRepository
+    ): HomePostsViewModel {
+        val vm by fragment.viewModels<HomePostsViewModel> {
+            BaseVMFactory { HomePostsViewModel(savedSub, sortBy, repo) }
+        }
+        return vm
+    }
+
+    @Provides
+    fun provideSlideInDownAnimator() = SlideInDownAnimator()
 }

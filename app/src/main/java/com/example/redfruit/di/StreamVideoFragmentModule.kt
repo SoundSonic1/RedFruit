@@ -8,19 +8,14 @@ import dagger.Module
 import dagger.Provides
 
 @Module
-class StreamVideoFragmentModule {
+object StreamVideoFragmentModule {
 
-    @Module
-    companion object {
+    @Provides
+    fun provideActivityContext(streamVideoFragment: StreamVideoFragment)
+            = streamVideoFragment.requireContext()
 
-        @JvmStatic
-        @Provides
-        fun provideActivityContext(streamVideoFragment: StreamVideoFragment)
-                = streamVideoFragment.requireContext()
+    @Provides
+    fun provideExoPlayer(context: Context): ExoPlayer =
+        ExoPlayerFactory.newSimpleInstance(context)
 
-        @JvmStatic
-        @Provides
-        fun provideExoPlayer(context: Context): ExoPlayer =
-            ExoPlayerFactory.newSimpleInstance(context)
-    }
 }

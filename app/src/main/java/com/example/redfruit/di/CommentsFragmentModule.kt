@@ -17,55 +17,44 @@ import dagger.Provides
 import javax.inject.Named
 
 @Module
-class CommentsFragmentModule {
+object CommentsFragmentModule {
 
-    @Module
-    companion object {
+    @Provides
+    fun provideContext(fragment: CommentsFragment) = fragment.requireContext()
 
-        @Provides
-        @JvmStatic
-        fun provideContext(fragment: CommentsFragment) = fragment.requireContext()
+    @Provides
+    @Named("SubredditName")
+    fun provideSubredditName(fragment: CommentsFragment) =
+        fragment.arguments?.getString(Constants.SUBREDDIT_NAME_KEY) ?: ""
 
-        @Provides
-        @JvmStatic
-        @Named("SubredditName")
-        fun provideSubredditName(fragment: CommentsFragment) =
-            fragment.arguments?.getString(Constants.SUBREDDIT_NAME_KEY) ?: ""
+    @Provides
+    @Named("PostId")
+    fun providePostId(fragment: CommentsFragment) =
+        fragment.arguments?.getString(Constants.POST_ID_KEY) ?: ""
 
-        @Provides
-        @JvmStatic
-        @Named("PostId")
-        fun providePostId(fragment: CommentsFragment) =
-            fragment.arguments?.getString(Constants.POST_ID_KEY) ?: ""
+    @Provides
+    fun provideGroupAdapter() = GroupAdapter<GroupieViewHolder>()
 
-        @Provides
-        @JvmStatic
-        fun provideGroupAdapter() = GroupAdapter<GroupieViewHolder>()
+    @Provides
+    fun provideLinearLayoutManager(context: Context) = LinearLayoutManager(context)
 
-        @Provides
-        @JvmStatic
-        fun provideLinearLayoutManager(context: Context) = LinearLayoutManager(context)
+    @Provides
+    fun provideCommentsRepo(
+        redditApi: IRedditApi,
+        @Named("SubredditName") sub: String,
+        @Named("PostId") id: String
+    ): ICommentsRepository =
+        CommentsRepository(redditApi, sub, id)
 
-        @Provides
-        @JvmStatic
-        fun provideCommentsRepo(
-            redditApi: IRedditApi,
-            @Named("SubredditName") sub: String,
-            @Named("PostId") id: String
-        ): ICommentsRepository =
-            CommentsRepository(redditApi, sub, id)
-
-        @Provides
-        @JvmStatic
-        fun provideCommentsVM(
-            repo: ICommentsRepository,
-            fragment: CommentsFragment
-        ): CommentsViewModel {
-            val vm by fragment.viewModels<CommentsViewModel> {
-                BaseVMFactory { CommentsViewModel(repo) }
-            }
-
-            return vm
+    @Provides
+    fun provideCommentsVM(
+        repo: ICommentsRepository,
+        fragment: CommentsFragment
+    ): CommentsViewModel {
+        val vm by fragment.viewModels<CommentsViewModel> {
+            BaseVMFactory { CommentsViewModel(repo) }
         }
+
+        return vm
     }
 }

@@ -12,38 +12,31 @@ import dagger.Provides
 import javax.inject.Named
 
 @Module
-class HomeFragmentModule {
+object HomeFragmentModule {
 
-    @Module
-    companion object {
+    @Provides
+    @JvmStatic
+    @Named("HomeFragmentContext")
+    fun provideContext(homeFragment: HomeFragment): Context? = homeFragment.context
 
-        @JvmStatic
-        @Provides
-        @Named("HomeFragmentContext")
-        fun provideContext(homeFragment: HomeFragment): Context? = homeFragment.context
+    /**
+     * Return childFragmentManager for TabAdapter
+     */
+    @Provides
+    fun provideChildFragmentManager(homeFragment: HomeFragment) =
+        homeFragment.childFragmentManager
 
-        /**
-         * Return childFragmentManager for TabAdapter
-         */
-        @JvmStatic
-        @Provides
-        fun provideChildFragmentManager(homeFragment: HomeFragment) =
-            homeFragment.childFragmentManager
+    @Provides
+    fun provideTabAdapter(
+        fragmentManager: FragmentManager,
+        @Named("savedSorting") sortBy: SortBy
+    ) = SubredditPagerAdapter(
+        mutableListOf(sortBy.name, "About"),
+        fragmentManager
+    )
 
-        @JvmStatic
-        @Provides
-        fun provideTabAdapter(
-            fragmentManager: FragmentManager,
-            @Named("savedSorting") sortBy: SortBy
-        ) = SubredditPagerAdapter(
-                mutableListOf(sortBy.name, "About"),
-                fragmentManager
-            )
+    @Provides
+    fun provideCursorAdapter(@Named("HomeFragmentContext") context: Context?): CursorAdapter =
+        SuggestionsAdapter(context, null, 0)
 
-        @JvmStatic
-        @Provides
-        fun provideCursorAdapter(@Named("HomeFragmentContext") context: Context?): CursorAdapter =
-            SuggestionsAdapter(context, null, 0)
-
-    }
 }

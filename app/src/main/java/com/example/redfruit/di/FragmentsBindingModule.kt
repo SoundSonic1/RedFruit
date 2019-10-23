@@ -13,7 +13,7 @@ abstract class FragmentsBindingModule {
     abstract fun fragmentHome(): HomeFragment
 
     @ContributesAndroidInjector(modules = [SubredditPostsFragmentModule::class])
-    abstract fun fragmentHomeSortBy(): SubredditPostsFragment
+    abstract fun fragmentSubredditPostsFragment(): SubredditPostsFragment
 
     @ContributesAndroidInjector(modules = [CommentsFragmentModule::class])
     abstract fun fragmentComments(): CommentsFragment
