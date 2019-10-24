@@ -4,6 +4,7 @@ import android.widget.ImageView
 import androidx.databinding.BindingAdapter
 import androidx.recyclerview.widget.RecyclerView
 import coil.Coil
+import coil.api.clear
 import coil.api.load
 import com.example.redfruit.R
 import com.example.redfruit.data.model.Post
@@ -31,10 +32,17 @@ object RecyclerViewBindingAdapters {
     @JvmStatic
     @BindingAdapter("imagePreview")
     fun loadImagePreview(imageView: ImageView, preview: Preview?) {
-        preview?.firstImageSource?.let {
-            imageView.load(it.url) {
+
+        val imageSource = preview?.firstImageSource
+
+        if (imageSource == null) {
+            imageView.clear()
+        } else {
+            imageView.load(imageSource.url) {
                 crossfade(true)
-                placeholder(SizableColorDrawable(0x222222, it.width, it.height))
+                placeholder(SizableColorDrawable(
+                    0x222222, imageSource.width, imageSource.height)
+                )
             }
         }
     }
