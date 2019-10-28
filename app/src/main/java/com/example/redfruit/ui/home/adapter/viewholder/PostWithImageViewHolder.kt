@@ -32,7 +32,7 @@ class PostWithImageViewHolder(
             addOrShowFragment(
                 fm,
                 R.id.mainContent,
-                ImageFragment.newInstance(item.preview.firstImageSource?.url ?: ""),
+                ImageFragment.newInstance(item.preview.firstImage?.source?.url ?: ""),
                 Constants.IMAGE_FRAGMENT_TAG
             )
         }

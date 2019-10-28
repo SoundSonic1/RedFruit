@@ -33,15 +33,17 @@ object RecyclerViewBindingAdapters {
     @BindingAdapter("imagePreview")
     fun loadImagePreview(imageView: ImageView, preview: Preview?) {
 
-        val imageSource = preview?.firstImageSource
+        // get the last resolution image instead of source to save bandwidth
+        // in RecyclerView
+        val image = preview?.firstImage?.resolutions?.last()
 
-        if (imageSource == null) {
+        if (image == null) {
             imageView.clear()
         } else {
-            imageView.load(imageSource.url) {
+            imageView.load(image.url) {
                 crossfade(true)
                 placeholder(SizableColorDrawable(
-                    0x222222, imageSource.width, imageSource.height)
+                    0x222222, image.width, image.height)
                 )
             }
         }

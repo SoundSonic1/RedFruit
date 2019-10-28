@@ -33,7 +33,7 @@
                         android:layout_height="match_parent"
                         android:src="@drawable/ic_link"
                         android:scaleType="centerCrop"
-                        app:imageUrl="@{item.preview.firstImageSource.url}"
+                        app:imageUrl="@{item.preview.firstImage.source.url}"
                         >
 
                 </androidx.appcompat.widget.AppCompatImageView>

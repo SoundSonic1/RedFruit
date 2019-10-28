@@ -94,7 +94,7 @@ class SubredditPostsRepositoryTest {
             500,
             534
         )
-        assertEquals(imageSource, child.preview.firstImageSource)
+        assertEquals(imageSource, child.preview.firstImage)
 
         assertEquals("1", child.score)
 

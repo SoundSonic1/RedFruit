@@ -13,5 +13,5 @@ data class Preview(
     val images: List<RedditImage> = listOf()
 ) {
 
-    val firstImageSource get() = images.firstOrNull()?.source
+    val firstImage get() = images.firstOrNull()
 }
