@@ -5,4 +5,7 @@
         <item name="cardElevation">4dp</item>
         <item name="cardBackgroundColor">@color/colorCardViewBackground</item>
     </style>
+    <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar">
+        <item name="android:colorBackground">@android:color/black</item>
+    </style>
 </resources>
