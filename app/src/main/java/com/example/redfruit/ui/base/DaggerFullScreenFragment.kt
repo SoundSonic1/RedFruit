@@ -42,9 +42,7 @@ abstract class DaggerFullScreenFragment : DaggerFragment() {
     private fun showSystemUI() {
         activity?.window?.decorView.apply {
             this?.let {
-                systemUiVisibility = (View.SYSTEM_UI_FLAG_LAYOUT_STABLE
-                        or View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
-                        or View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN)
+                systemUiVisibility = View.SYSTEM_UI_FLAG_VISIBLE
             }
         }
     }
