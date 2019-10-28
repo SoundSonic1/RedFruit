@@ -2,7 +2,7 @@
 <resources>
     <color name="colorPrimary">#872130</color>
     <color name="colorPrimaryDark">#742130</color>
-    <color name="colorBackground">#000000</color>
+    <color name="colorBackground">#121212</color>
     <color name="colorTextTitle">#F0EEEE</color>
-    <color name="colorCardViewBackground">#131313</color>
+    <color name="colorCardViewBackground">#212121</color>
 </resources>
