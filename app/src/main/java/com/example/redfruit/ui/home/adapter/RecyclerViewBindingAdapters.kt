@@ -24,8 +24,9 @@ object RecyclerViewBindingAdapters {
     @JvmStatic
     @BindingAdapter("items")
     fun setRecyclerViewProperties(recyclerViewHome: RecyclerView, items: List<Post>?) {
-        if (items != null && recyclerViewHome.adapter is PostListAdapter) {
-            (recyclerViewHome.adapter as PostListAdapter).submitList(items)
+        val adapter = recyclerViewHome.adapter
+        if (items != null && adapter is PostListAdapter) {
+            adapter.submitList(items)
         }
     }
 

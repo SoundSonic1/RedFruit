@@ -12,8 +12,9 @@ object CommentsBindingAdapter {
     @JvmStatic
     @BindingAdapter("comments")
     fun loadComments(recyclerView: RecyclerView, comments: List<CommentExpandableGroup>?) {
-        if (comments != null && recyclerView.adapter is GroupAdapter) {
-            (recyclerView.adapter as GroupAdapter).addAll(comments)
+        val adapter = recyclerView.adapter
+        if (comments != null && adapter is GroupAdapter) {
+            adapter.addAll(comments)
         }
     }
 
