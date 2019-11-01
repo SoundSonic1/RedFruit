@@ -1,5 +1,6 @@
 package com.example.redfruit.data.api
 
+import com.example.redfruit.data.model.Comment
 import com.example.redfruit.data.model.SubredditAbout
 import com.example.redfruit.data.model.enumeration.SortBy
 
@@ -12,7 +13,7 @@ interface IRedditApi {
 
     suspend fun getSubreddditAbout(subreddit: String): SubredditAbout?
 
-    suspend fun getComments(subreddit: String, postId: String, limit: Int): String
+    suspend fun getComments(subreddit: String, postId: String, limit: Int): List<Comment>
 
     suspend fun findSubreddits(query: String, limit: Int): List<SubredditAbout>
 }

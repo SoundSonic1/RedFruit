@@ -1,9 +1,12 @@
 package com.example.redfruit.data.api
 
+import com.beust.klaxon.JsonArray
 import com.beust.klaxon.JsonObject
 import com.beust.klaxon.Klaxon
 import com.beust.klaxon.Parser
+import com.example.redfruit.data.deserializer.CommentDeserializer
 import com.example.redfruit.data.deserializer.SubredditsDeserializer
+import com.example.redfruit.data.model.Comment
 import com.example.redfruit.data.model.SubredditAbout
 import com.example.redfruit.data.model.enumeration.SortBy
 import com.example.redfruit.util.Constants
@@ -23,6 +26,8 @@ class RedditApi(
     private val klaxonFactory: IFactory<Klaxon>,
     private val parser: Parser
 ) : IRedditApi {
+
+    private val commentDeserializer = CommentDeserializer(klaxonFactory)
 
     private fun buildRequest(url: HttpUrl) = Request.Builder().apply {
         addHeader("User-Agent", Constants.USER_AGENT)
@@ -52,14 +57,10 @@ class RedditApi(
         val request = buildRequest(url)
 
         val response = client.newCall(request).execute()
-        if (response.isSuccessful) {
-            response.body?.let {
-                return@withContext it.string()
-            }
-            ""
-        } else {
-            ""
-        }
+
+        if (!response.isSuccessful) return@withContext ""
+
+        response.body?.string() ?: ""
     }
 
     /**
@@ -80,19 +81,17 @@ class RedditApi(
 
         if (!response.isSuccessful) return@withContext null
 
-        response.body?.let {
+        val responseString = response.body?.string() ?: return@withContext null
 
-            val jsonString = StringBuilder(it.string())
+        val jsonString = StringBuilder(responseString)
 
-            val json = parser.parse(jsonString) as? JsonObject
-            json?.let {
-                if (json.string("kind") == "t5") {
-                    json.obj("data")?.let { dataObj ->
-                        return@withContext klaxonFactory.build().parse<SubredditAbout>(dataObj.toJsonString())
-                    }
+        val json = parser.parse(jsonString) as? JsonObject
+        json?.let {
+            if (json.string("kind") == "t5") {
+                json.obj("data")?.let { dataObj ->
+                    return@withContext klaxonFactory.build().parse<SubredditAbout>(dataObj.toJsonString())
                 }
             }
-
         }
 
         null
@@ -102,7 +101,7 @@ class RedditApi(
      * Returns the api response for comments
      */
     override suspend fun getComments(subreddit: String, postId: String, limit: Int) =
-        withContext(Dispatchers.IO) {
+        withContext(Dispatchers.Default) {
             val url = HttpUrl.Builder()
                 .scheme("https")
                 .host(BASE_URL)
@@ -114,13 +113,27 @@ class RedditApi(
             val request = buildRequest(url)
 
             val response = client.newCall(request).execute()
-            if (response.isSuccessful) {
-                response.body?.let {
-                    return@withContext it.string()
-                }
-                ""
-            } else {
-                ""
+            if (!response.isSuccessful) {
+                return@withContext listOf<Comment>()
+            }
+
+            val responseString = response.body?.string() ?: return@withContext listOf<Comment>()
+
+            val jsonStringBuilder = StringBuilder(responseString)
+
+            val array = try {
+                @Suppress("UNCHECKED_CAST")
+                parser.parse(jsonStringBuilder) as JsonArray<JsonObject>
+            } catch (e: Throwable) {
+                return@withContext listOf<Comment>()
+            }
+
+            array.filter {
+                it.string("kind") == "Listing" && it.obj("data")?.array<JsonObject>("children")?.any {
+                    it.string("kind") == "t1"
+                } ?: false
+            }.flatMap {
+                commentDeserializer.deserialize(it)
             }
         }
 
@@ -141,14 +154,14 @@ class RedditApi(
 
         val response = client.newCall(request).execute()
 
-        if (response.isSuccessful) {
-            response.body?.let {
+        if (!response.isSuccessful) return@withContext listOf<SubredditAbout>()
 
-                val stringBuilder = StringBuilder(it.string())
-                val json = parser.parse(stringBuilder) as? JsonObject
-                json?.let { jsonObj ->
-                   return@withContext SubredditsDeserializer(klaxonFactory).deserialize(jsonObj)
-                }
+        response.body?.let {
+
+            val stringBuilder = StringBuilder(it.string())
+            val json = parser.parse(stringBuilder) as? JsonObject
+            json?.let { jsonObj ->
+                return@withContext SubredditsDeserializer(klaxonFactory).deserialize(jsonObj)
             }
         }
 
