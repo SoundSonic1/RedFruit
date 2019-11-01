@@ -20,6 +20,9 @@ import javax.inject.Provider
 class StreamVideoFragment : DaggerFullScreenFragment() {
 
     @Inject
+    lateinit var url: String
+
+    @Inject
     lateinit var exoPlayerProvider: Provider<ExoPlayer>
     private lateinit var exoPlayer: ExoPlayer
 
@@ -27,8 +30,6 @@ class StreamVideoFragment : DaggerFullScreenFragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-
-        val url = arguments?.getString(STREAM_VIDEO_KEY) ?: ""
 
         val view = inflater.inflate(R.layout.stream_video_fragment, container, false)
         val playerView = view.findViewById<PlayerView>(R.id.exoPlayerViewFragment)
@@ -61,12 +62,11 @@ class StreamVideoFragment : DaggerFullScreenFragment() {
 
     companion object {
 
-        private const val STREAM_VIDEO_KEY = "STREAM_VIDEO_KEY"
-
-        fun newInstance(url: String): StreamVideoFragment {
-            val fragment = StreamVideoFragment()
-            fragment.arguments = bundleOf(STREAM_VIDEO_KEY to url)
-            return fragment
+        /**
+         * Pass the streaming url (dash) to the new fragment instance
+         */
+        fun newInstance(url: String) = StreamVideoFragment().apply {
+            arguments = bundleOf(Constants.STREAM_URL_KEY to url)
         }
     }
 
