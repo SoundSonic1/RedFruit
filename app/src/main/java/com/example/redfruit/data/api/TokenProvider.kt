@@ -4,6 +4,7 @@ import android.util.Log
 import com.beust.klaxon.Klaxon
 import com.example.redfruit.data.model.Token
 import com.example.redfruit.util.Constants
+import com.example.redfruit.util.IFactory
 import okhttp3.FormBody
 import okhttp3.OkHttpClient
 import okhttp3.Request
@@ -14,14 +15,13 @@ import java.util.*
  */
 class TokenProvider(
     private val clientId: String,
-    private val deviceId: String
+    private val deviceId: String,
+    private val klaxonFactory: IFactory<Klaxon>,
+    private var _token: Token? = null,
+    private val tokenRefreshListener: (Token?) -> Unit = {}
 ) : ITokenProvider {
 
-    private var _token: Token? = null
-
     override val token get() = _token
-
-    private val klaxon = Klaxon()
 
     /**
      * Refresh the token if the current token is invalid
@@ -50,12 +50,16 @@ class TokenProvider(
 
         val client = OkHttpClient()
         val response = client.newCall(request).execute()
-        if (response.isSuccessful) {
-            _token = klaxon.parse<Token>(response.body!!.string())
-            return token
-        } else {
-            return null
-        }
+
+        if (!response.isSuccessful) return null
+
+        val responseString = response.body?.string() ?: return null
+        _token = klaxonFactory.build().parse<Token>(responseString)
+
+        tokenRefreshListener(token)
+
+        return token
+
     }
 
     companion object {

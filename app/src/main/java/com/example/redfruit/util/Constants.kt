@@ -7,6 +7,7 @@ object Constants {
     const val DEFAULT_SUB = "androiddev"
     // https://github.com/reddit-archive/reddit/wiki/api
     const val USER_AGENT = "android:com.example.redfruit:v1.0 (by /u/SoundSonic1)"
+    const val TOKEN_KEY = "TOKEN_KEY"
     const val LIMIT = 15
     const val HOME_FRAGMENT_TAG = "HOME_FRAGMENT_TAG"
     const val COMMENTS_FRAGMENT_TAG = "COMMENTS_FRAGMENT_TAG"

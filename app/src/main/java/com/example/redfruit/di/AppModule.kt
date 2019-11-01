@@ -10,10 +10,8 @@ import com.beust.klaxon.Klaxon
 import com.beust.klaxon.Parser
 import com.example.redfruit.BuildConfig
 import com.example.redfruit.R
-import com.example.redfruit.data.api.IRedditApi
-import com.example.redfruit.data.api.RedditApi
-import com.example.redfruit.data.api.TokenAuthenticator
-import com.example.redfruit.data.api.TokenProvider
+import com.example.redfruit.data.api.*
+import com.example.redfruit.data.model.Token
 import com.example.redfruit.data.model.enumeration.SortBy
 import com.example.redfruit.data.repositories.SubredditAboutRepository
 import com.example.redfruit.util.Constants
@@ -76,13 +74,35 @@ class AppModule {
     }
 
     @Provides
-    @Singleton
-    fun provideTokenProvider(@Named("DeviceId") deviceId: String)
-            = TokenProvider(BuildConfig.ClientId, deviceId)
+    fun provideSavedToken(sharedPref: SharedPreferences): Token? {
+
+        val accessCode = sharedPref.getString(Constants.TOKEN_KEY, "") ?: ""
+
+        if (accessCode.isNotBlank()) {
+            return Token(accessCode)
+        }
+
+        return null
+    }
 
     @Provides
     @Singleton
-    fun provideTokenAuthenticator(tokenProvider: TokenProvider) = TokenAuthenticator(tokenProvider)
+    fun provideTokenProvider(
+        @Named("DeviceId") deviceId: String,
+        klaxonFactory: IFactory<Klaxon>,
+        token: Token?,
+        sharedPref: SharedPreferences
+    ): ITokenProvider = TokenProvider(BuildConfig.ClientId, deviceId, klaxonFactory, token) {
+        it?.let {
+            sharedPref.edit {
+                putString(Constants.TOKEN_KEY, it.access)
+            }
+        }
+    }
+
+    @Provides
+    @Singleton
+    fun provideTokenAuthenticator(tokenProvider: ITokenProvider) = TokenAuthenticator(tokenProvider)
 
     @Provides
     @Singleton
