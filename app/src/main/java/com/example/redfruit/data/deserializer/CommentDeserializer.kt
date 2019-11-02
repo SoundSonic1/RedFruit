@@ -28,7 +28,7 @@ class CommentDeserializer(
             body = data.string("body") ?: "",
             created = data.long("created") ?: 0,
             created_utc = data.long("created_utc") ?: 0,
-            gildings = klaxonFactory.build().parse<Gildings>(data.obj("gildings")!!.toJsonString())!!,
+            gildings = klaxonFactory.build().parseFromJsonObject<Gildings>(data.obj("gildings")!!)!!,
             id = data.string("id") ?: "",
             score = data.int("score") ?: 0,
             replies = if (replies != null) {

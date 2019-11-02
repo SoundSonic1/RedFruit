@@ -28,8 +28,8 @@ class PostDeserializer(
         val arrayImages = preview?.array<JsonObject>("images")
         val images = arrayImages?.map {
             RedditImage(
-                source = klaxon.parse<ImageSource>(it.obj("source")!!.toJsonString())!!,
-                resolutions = klaxon.parseArray(it.array<JsonObject>("resolutions")!!.toJsonString()) ?: listOf()
+                source = klaxon.parseFromJsonObject<ImageSource>(it.obj("source")!!)!!,
+                resolutions = klaxon.parseFromJsonArray(it.array<JsonObject>("resolutions")!!) ?: listOf()
             )
         }
 
@@ -49,7 +49,7 @@ class PostDeserializer(
                 images = images ?: listOf()
             ),
             secureMedia = secureMedia,
-            gildings = klaxon.parse<Gildings>(data.obj("gildings")!!.toJsonString())!!,
+            gildings = klaxon.parseFromJsonObject<Gildings>(data.obj("gildings")!!)!!,
             over_18 = data.boolean("over18") ?: false,
             stickied = data.boolean("stickied") ?: false,
             selftext = data.string("selftext") ?: "",
@@ -61,12 +61,12 @@ class PostDeserializer(
     private fun getSecureMedia(jsonObj: JsonObject, klaxon: Klaxon): SecureMedia {
 
         val redditVideo = jsonObj.obj("reddit_video")?.let {
-            klaxon.parse<RedditVideo>(it.toJsonString())
+            klaxon.parseFromJsonObject<RedditVideo>(it)
         }
 
         val youtubeOembed = if (jsonObj.string("type") == "youtube.com") {
             jsonObj.obj("oembed")?.let {
-                klaxon.parse<YoutubeoEmbed>(it.toJsonString())
+                klaxon.parseFromJsonObject<YoutubeoEmbed>(it)
             }
         } else {
             null

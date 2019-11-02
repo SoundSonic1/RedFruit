@@ -20,7 +20,7 @@ class SubredditsDeserializer(
         val children = data.array<JsonObject>("children") ?: return listOf()
 
         return children.map {
-            klaxon.parse<SubredditAbout>(it.obj("data")!!.toJsonString())!!
+            klaxon.parseFromJsonObject<SubredditAbout>(it.obj("data")!!)!!
         }
     }
 }

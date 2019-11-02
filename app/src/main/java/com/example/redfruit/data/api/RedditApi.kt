@@ -28,6 +28,7 @@ class RedditApi(
 ) : IRedditApi {
 
     private val commentDeserializer = CommentDeserializer(klaxonFactory)
+    private val subredditsDeserializer = SubredditsDeserializer(klaxonFactory)
 
     private fun buildRequest(url: HttpUrl) = Request.Builder().apply {
         addHeader("User-Agent", Constants.USER_AGENT)
@@ -89,7 +90,7 @@ class RedditApi(
         json?.let {
             if (json.string("kind") == "t5") {
                 json.obj("data")?.let { dataObj ->
-                    return@withContext klaxonFactory.build().parse<SubredditAbout>(dataObj.toJsonString())
+                    return@withContext klaxonFactory.build().parseFromJsonObject<SubredditAbout>(dataObj)
                 }
             }
         }
@@ -161,7 +162,7 @@ class RedditApi(
             val stringBuilder = StringBuilder(it.string())
             val json = parser.parse(stringBuilder) as? JsonObject
             json?.let { jsonObj ->
-                return@withContext SubredditsDeserializer(klaxonFactory).deserialize(jsonObj)
+                return@withContext subredditsDeserializer.deserialize(jsonObj)
             }
         }
 

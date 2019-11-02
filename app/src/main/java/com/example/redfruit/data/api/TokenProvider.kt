@@ -8,6 +8,7 @@ import com.example.redfruit.util.IFactory
 import okhttp3.FormBody
 import okhttp3.OkHttpClient
 import okhttp3.Request
+import java.io.StringReader
 import java.util.*
 
 /**
@@ -53,8 +54,11 @@ class TokenProvider(
 
         if (!response.isSuccessful) return null
 
+        val klaxon = klaxonFactory.build()
+
         val responseString = response.body?.string() ?: return null
-        _token = klaxonFactory.build().parse<Token>(responseString)
+        val responsObj = klaxon.parseJsonObject(StringReader(responseString))
+        _token = klaxonFactory.build().parseFromJsonObject<Token>(responsObj)
 
         tokenRefreshListener(token)
 
