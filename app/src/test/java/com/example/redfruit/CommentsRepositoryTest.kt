@@ -15,7 +15,9 @@ import java.util.*
 
 class CommentsRepositoryTest {
 
-    private val authenticator = TokenAuthenticator(TokenProvider(BuildConfig.ClientId, UUID.randomUUID().toString()))
+    private val klaxonFactory = KlaxonFactory()
+
+    private val authenticator = TokenAuthenticator(TokenProvider(BuildConfig.ClientId, UUID.randomUUID().toString(), klaxonFactory))
 
     private val redditApi: IRedditApi =
         RedditApi(

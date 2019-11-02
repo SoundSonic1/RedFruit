@@ -24,7 +24,9 @@ import java.util.*
 
 class SubredditPostsRepositoryTest {
 
-    private val authenticator = TokenAuthenticator(TokenProvider(BuildConfig.ClientId, UUID.randomUUID().toString()))
+    private val klaxonFactory = KlaxonFactory()
+
+    private val authenticator = TokenAuthenticator(TokenProvider(BuildConfig.ClientId, UUID.randomUUID().toString(), klaxonFactory))
 
     private val redditApi: IRedditApi =
         RedditApi(
@@ -94,7 +96,7 @@ class SubredditPostsRepositoryTest {
             500,
             534
         )
-        assertEquals(imageSource, child.preview.firstImage)
+        assertEquals(imageSource, child.preview.firstImage?.source)
 
         assertEquals("1", child.score)
 

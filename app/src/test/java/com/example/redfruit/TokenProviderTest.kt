@@ -1,6 +1,7 @@
 package com.example.redfruit
 
 import com.example.redfruit.data.api.TokenProvider
+import com.example.redfruit.util.KlaxonFactory
 import org.junit.Assert
 import org.junit.Before
 import org.junit.Test
@@ -8,11 +9,13 @@ import java.util.*
 
 
 class TokenProviderTest {
+
+    private val klaxonFactory = KlaxonFactory()
     private lateinit var tokenProvider: TokenProvider
 
     @Before
     fun init() {
-        tokenProvider = TokenProvider(BuildConfig.ClientId, UUID.randomUUID().toString())
+        tokenProvider = TokenProvider(BuildConfig.ClientId, UUID.randomUUID().toString(), klaxonFactory)
     }
 
     @Test
@@ -26,7 +29,7 @@ class TokenProviderTest {
 
     @Test
     fun testEmptyId() {
-        tokenProvider = TokenProvider("", UUID.randomUUID().toString())
+        tokenProvider = TokenProvider("", UUID.randomUUID().toString(), klaxonFactory)
         val token = tokenProvider.refreshToken()
         Assert.assertNull(token)
     }

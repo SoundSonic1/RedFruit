@@ -19,7 +19,9 @@ class SubredditAboutRepositoryTest {
 
     private lateinit var repo: SubredditAboutRepository
 
-    private val authenticator = TokenAuthenticator(TokenProvider(BuildConfig.ClientId, UUID.randomUUID().toString()))
+    private val klaxonFactory = KlaxonFactory()
+
+    private val authenticator = TokenAuthenticator(TokenProvider(BuildConfig.ClientId, UUID.randomUUID().toString(), klaxonFactory))
 
     private val redditApi: IRedditApi =
         RedditApi(
