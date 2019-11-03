@@ -5,8 +5,10 @@ import com.beust.klaxon.JsonObject
 import com.beust.klaxon.Klaxon
 import com.beust.klaxon.Parser
 import com.example.redfruit.data.deserializer.CommentDeserializer
+import com.example.redfruit.data.deserializer.PostDeserializer
 import com.example.redfruit.data.deserializer.SubredditsDeserializer
 import com.example.redfruit.data.model.Comment
+import com.example.redfruit.data.model.Post
 import com.example.redfruit.data.model.SubredditAbout
 import com.example.redfruit.data.model.enumeration.SortBy
 import com.example.redfruit.util.Constants
@@ -27,8 +29,10 @@ class RedditApi(
     private val parser: Parser
 ) : IRedditApi {
 
+    // TODO: inject deserializer
     private val commentDeserializer = CommentDeserializer(klaxonFactory)
     private val subredditsDeserializer = SubredditsDeserializer(klaxonFactory)
+    private val postDeserializer = PostDeserializer(klaxonFactory)
 
     private fun buildRequest(url: HttpUrl) = Request.Builder().apply {
         addHeader("User-Agent", Constants.USER_AGENT)
@@ -37,14 +41,14 @@ class RedditApi(
     }.build()
 
     /**
-     * Returns api response for the subreddit posts
+     * Returns a Pair which contains a new list of posts and a new "after" for pagination
      */
     override suspend fun getSubredditPosts(
         subreddit: String,
         sortBy: SortBy,
         after: String,
         limit: Int
-    ) = withContext(Dispatchers.IO) {
+    ) = withContext(Dispatchers.Default) {
 
         val url = HttpUrl.Builder()
             .scheme("https")
@@ -59,9 +63,35 @@ class RedditApi(
 
         val response = client.newCall(request).execute()
 
-        if (!response.isSuccessful) return@withContext ""
+        if (!response.isSuccessful) return@withContext Pair(listOf<Post>(), "")
 
-        response.body?.string() ?: ""
+        val responseString = response.body?.string() ?: return@withContext Pair(listOf<Post>(), "")
+
+        val stringBuilder = StringBuilder(responseString)
+
+        val jsonObj =
+            Parser.default().parse(stringBuilder) as? JsonObject ?: return@withContext Pair(listOf<Post>(), "")
+
+        if (jsonObj.string("kind") != "Listing") {
+            // either private or banned sub
+            return@withContext Pair(listOf<Post>(), "")
+        }
+        val data = jsonObj.obj("data") ?: return@withContext Pair(listOf<Post>(), "")
+        // JSONArray of children aka posts
+        val children = data.array<JsonObject>("children") ?: return@withContext Pair(listOf<Post>(), "")
+
+        // check if children are posts
+        if (children.any { it.string("kind") != "t3" }) {
+            return@withContext Pair(listOf<Post>(), "")
+        }
+
+        val newAfter = data.string("after") ?: ""
+
+        val posts = children.map {
+            postDeserializer.deserialize(it)
+        }
+
+        Pair(posts, newAfter)
     }
 
     /**
@@ -101,42 +131,43 @@ class RedditApi(
     /**
      * Returns the api response for comments
      */
-    override suspend fun getComments(subreddit: String, postId: String, limit: Int) =
-        withContext(Dispatchers.Default) {
-            val url = HttpUrl.Builder()
-                .scheme("https")
-                .host(BASE_URL)
-                .addPathSegment("r/$subreddit/comments/$postId")
-                .addQueryParameter("limit", limit.toString())
-                .addQueryParameter("raw_json", "1")
-                .build()
+    override suspend fun getComments(
+        subreddit: String, postId: String, limit: Int
+    ) = withContext(Dispatchers.Default) {
+        val url = HttpUrl.Builder()
+            .scheme("https")
+            .host(BASE_URL)
+            .addPathSegment("r/$subreddit/comments/$postId")
+            .addQueryParameter("limit", limit.toString())
+            .addQueryParameter("raw_json", "1")
+            .build()
 
-            val request = buildRequest(url)
+        val request = buildRequest(url)
 
-            val response = client.newCall(request).execute()
-            if (!response.isSuccessful) {
-                return@withContext listOf<Comment>()
-            }
-
-            val responseString = response.body?.string() ?: return@withContext listOf<Comment>()
-
-            val jsonStringBuilder = StringBuilder(responseString)
-
-            val array = try {
-                @Suppress("UNCHECKED_CAST")
-                parser.parse(jsonStringBuilder) as JsonArray<JsonObject>
-            } catch (e: Throwable) {
-                return@withContext listOf<Comment>()
-            }
-
-            array.filter {
-                it.string("kind") == "Listing" && it.obj("data")?.array<JsonObject>("children")?.any {
-                    it.string("kind") == "t1"
-                } ?: false
-            }.flatMap {
-                commentDeserializer.deserialize(it)
-            }
+        val response = client.newCall(request).execute()
+        if (!response.isSuccessful) {
+            return@withContext listOf<Comment>()
         }
+
+        val responseString = response.body?.string() ?: return@withContext listOf<Comment>()
+
+        val jsonStringBuilder = StringBuilder(responseString)
+
+        val array = try {
+            @Suppress("UNCHECKED_CAST")
+            parser.parse(jsonStringBuilder) as JsonArray<JsonObject>
+        } catch (e: Throwable) {
+            return@withContext listOf<Comment>()
+        }
+
+        array.filter {
+            it.string("kind") == "Listing" && it.obj("data")?.array<JsonObject>("children")?.any {
+                it.string("kind") == "t1"
+            } ?: false
+        }.flatMap {
+            commentDeserializer.deserialize(it)
+        }
+    }
 
     override suspend fun findSubreddits(query: String, limit: Int): List<SubredditAbout> = withContext(Dispatchers.Default) {
 
