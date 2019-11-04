@@ -22,7 +22,7 @@ class SubredditPostsRepository(
      * @param limit the amount of the posts that are to be fetched
      * @return a list of reddit posts
      */
-    override suspend fun getData(sub: String, sortBy: SortBy, limit: Int): List<Post> {
+    override suspend fun getPosts(sub: String, sortBy: SortBy, limit: Int): List<Post> {
 
         val subreddit = subredditMap.getOrPut(Pair(sub, sortBy)) {
             SubredditListing(sub)
@@ -46,6 +46,6 @@ class SubredditPostsRepository(
     /**
      * Clear all data to make a clean refresh
      */
-    override fun clearData() = subredditMap.clear()
+    override fun clearPosts() = subredditMap.clear()
 
 }

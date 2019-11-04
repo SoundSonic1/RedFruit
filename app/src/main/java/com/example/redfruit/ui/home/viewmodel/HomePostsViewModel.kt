@@ -61,11 +61,11 @@ class HomePostsViewModel(
     }
 
     fun refreshSub() {
-        repo.clearData()
+        repo.clearPosts()
         loadMoreData(Constants.LIMIT)
     }
 
     // call to the api
     private suspend fun get(count: Int) =
-        repo.getData(_subReddit.toLowerCase(Locale.ENGLISH), sortBy, count)
+        repo.getPosts(_subReddit.toLowerCase(Locale.ENGLISH), sortBy, count)
 }

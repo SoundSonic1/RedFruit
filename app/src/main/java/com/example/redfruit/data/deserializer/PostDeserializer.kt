@@ -50,7 +50,7 @@ class PostDeserializer(
             ),
             secureMedia = secureMedia,
             gildings = klaxon.parseFromJsonObject<Gildings>(data.obj("gildings")!!)!!,
-            over_18 = data.boolean("over18") ?: false,
+            over_18 = data.boolean("over_18") ?: false,
             stickied = data.boolean("stickied") ?: false,
             selftext = data.string("selftext") ?: "",
             subreddit = data.string("subreddit") ?: "",
