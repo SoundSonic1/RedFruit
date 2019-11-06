@@ -4,15 +4,18 @@ import com.beust.klaxon.JsonArray
 import com.beust.klaxon.JsonObject
 import com.beust.klaxon.Klaxon
 import com.beust.klaxon.Parser
+import com.example.redfruit.data.adapter.SubredditAboutAdapter
+import com.example.redfruit.data.adapter.SubredditListingAdapter
+import com.example.redfruit.data.adapter.SubredditsAdapter
 import com.example.redfruit.data.deserializer.CommentDeserializer
-import com.example.redfruit.data.deserializer.PostDeserializer
-import com.example.redfruit.data.deserializer.SubredditsDeserializer
 import com.example.redfruit.data.model.Comment
-import com.example.redfruit.data.model.Post
 import com.example.redfruit.data.model.SubredditAbout
+import com.example.redfruit.data.model.SubredditListing
 import com.example.redfruit.data.model.enumeration.SortBy
 import com.example.redfruit.util.Constants
 import com.example.redfruit.util.IFactory
+import com.squareup.moshi.Moshi
+import com.squareup.moshi.Types
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import okhttp3.HttpUrl
@@ -31,8 +34,6 @@ class RedditApi(
 
     // TODO: inject deserializer
     private val commentDeserializer = CommentDeserializer(klaxonFactory)
-    private val subredditsDeserializer = SubredditsDeserializer(klaxonFactory)
-    private val postDeserializer = PostDeserializer(klaxonFactory)
 
     private fun buildRequest(url: HttpUrl) = Request.Builder().apply {
         addHeader("User-Agent", Constants.USER_AGENT)
@@ -40,10 +41,22 @@ class RedditApi(
         url(url)
     }.build()
 
+    private val moshi = Moshi.Builder()
+        .add(SubredditListingAdapter())
+        .add(SubredditAboutAdapter())
+        .add(SubredditsAdapter())
+        .build()
+
+    private val type = Types.newParameterizedType(List::class.java, SubredditAbout::class.java)
+
+    private val subredditListingAdapter = moshi.adapter(SubredditListing::class.java)
+    private val subredditAboutAdapter = moshi.adapter(SubredditAbout::class.java)
+    private val subredditsAdapter = moshi.adapter<List<SubredditAbout>>(type)
+
     /**
      * Returns a Pair which contains a new list of posts and a new "after" for pagination
      */
-    override suspend fun getSubredditPosts(
+    override suspend fun getSubredditListing(
         subreddit: String,
         sortBy: SortBy,
         after: String,
@@ -63,35 +76,11 @@ class RedditApi(
 
         val response = client.newCall(request).execute()
 
-        if (!response.isSuccessful) return@withContext Pair(listOf<Post>(), "")
+        if (!response.isSuccessful) return@withContext null
 
-        val responseString = response.body?.string() ?: return@withContext Pair(listOf<Post>(), "")
+        val responseString = response.body?.string() ?: return@withContext null
 
-        val stringBuilder = StringBuilder(responseString)
-
-        val jsonObj =
-            Parser.default().parse(stringBuilder) as? JsonObject ?: return@withContext Pair(listOf<Post>(), "")
-
-        if (jsonObj.string("kind") != "Listing") {
-            // either private or banned sub
-            return@withContext Pair(listOf<Post>(), "")
-        }
-        val data = jsonObj.obj("data") ?: return@withContext Pair(listOf<Post>(), "")
-        // JSONArray of children aka posts
-        val children = data.array<JsonObject>("children") ?: return@withContext Pair(listOf<Post>(), "")
-
-        // check if children are posts
-        if (children.any { it.string("kind") != "t3" }) {
-            return@withContext Pair(listOf<Post>(), "")
-        }
-
-        val newAfter = data.string("after") ?: ""
-
-        val posts = children.map {
-            postDeserializer.deserialize(it)
-        }
-
-        Pair(posts, newAfter)
+        subredditListingAdapter.fromJson(responseString)
     }
 
     /**
@@ -114,18 +103,7 @@ class RedditApi(
 
         val responseString = response.body?.string() ?: return@withContext null
 
-        val jsonString = StringBuilder(responseString)
-
-        val json = parser.parse(jsonString) as? JsonObject
-        json?.let {
-            if (json.string("kind") == "t5") {
-                json.obj("data")?.let { dataObj ->
-                    return@withContext klaxonFactory.build().parseFromJsonObject<SubredditAbout>(dataObj)
-                }
-            }
-        }
-
-        null
+        subredditAboutAdapter.fromJson(responseString)
     }
 
     /**
@@ -193,7 +171,7 @@ class RedditApi(
             val stringBuilder = StringBuilder(it.string())
             val json = parser.parse(stringBuilder) as? JsonObject
             json?.let { jsonObj ->
-                return@withContext subredditsDeserializer.deserialize(jsonObj)
+                return@withContext subredditsAdapter.fromJson(jsonObj.toJsonString())!!
             }
         }
 

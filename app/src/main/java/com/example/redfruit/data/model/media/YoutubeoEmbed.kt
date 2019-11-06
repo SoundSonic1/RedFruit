@@ -1,7 +1,9 @@
 package com.example.redfruit.data.model.media
 
 import com.example.redfruit.data.model.interfaces.IoEmbed
+import com.squareup.moshi.JsonClass
 
+@JsonClass(generateAdapter = true)
 data class YoutubeoEmbed(
     override val provider_url: String = "",
     override val type: String = "video",

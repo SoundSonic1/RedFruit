@@ -46,7 +46,7 @@ class SubredditAboutRepositoryTest {
             val subredditAbout = repo.getData("android")
 
             assertEquals("Android", subredditAbout?.display_name)
-            assertEquals(false, subredditAbout?.over18)
+            assertEquals(false, subredditAbout?.over_18)
         }
 
         runBlocking {

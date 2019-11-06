@@ -2,7 +2,7 @@ package com.example.redfruit.data.model
 
 import com.example.redfruit.data.model.interfaces.ISource
 import com.example.redfruit.data.model.media.SecureMedia
-import com.nguyencse.URLEmbeddedData
+import com.squareup.moshi.JsonClass
 
 /**
  * Class which contains detailed information about subreddit post
@@ -19,6 +19,7 @@ import com.nguyencse.URLEmbeddedData
  * @property selftext post information details
  * @property url of the post
  */
+@JsonClass(generateAdapter = true)
 data class Post(
     val id: String,
     val title: String,
@@ -33,6 +34,6 @@ data class Post(
     val stickied: Boolean,
     val selftext: String,
     val subreddit: String,
-    var urlEmbeddedData: URLEmbeddedData? = null,
+    //var urlEmbeddedData: URLEmbeddedData? = null,
     override val url: String
 ) : ISource

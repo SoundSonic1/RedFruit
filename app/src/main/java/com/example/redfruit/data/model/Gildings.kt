@@ -1,10 +1,12 @@
 package com.example.redfruit.data.model
 
 import com.beust.klaxon.Json
+import com.squareup.moshi.JsonClass
 
 /**
  * Stores given awards to posts/comments
  */
+@JsonClass(generateAdapter = true)
 data class Gildings(
     @Json(name = "gid_1")
     val silverCount: Int = 0,

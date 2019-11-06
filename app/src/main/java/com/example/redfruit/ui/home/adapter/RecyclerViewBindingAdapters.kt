@@ -10,8 +10,6 @@ import com.example.redfruit.R
 import com.example.redfruit.data.model.Post
 import com.example.redfruit.data.model.Preview
 import com.example.redfruit.util.SizableColorDrawable
-import com.nguyencse.URLEmbeddedData
-import com.nguyencse.URLEmbeddedView
 
 /**
  * Collect all RecyclerViewBindingAdapters here
@@ -75,7 +73,7 @@ object RecyclerViewBindingAdapters {
         }
     }
 
-    @JvmStatic
+    /*@JvmStatic
     @BindingAdapter("urlEmbedded")
     fun loadUrlPreview(urlEmbeddedView: URLEmbeddedView, post: Post) {
         if (post.urlEmbeddedData == null) {
@@ -88,5 +86,5 @@ object RecyclerViewBindingAdapters {
         } else {
             urlEmbeddedView.setData(post.urlEmbeddedData!!)
         }
-    }
+    }*/
 }

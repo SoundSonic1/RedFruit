@@ -1,7 +1,7 @@
-package com.example.redfruit.data.deserializer
+package com.example.redfruit.data.adapter
 
 import com.beust.klaxon.JsonObject
-import com.beust.klaxon.Klaxon
+import com.beust.klaxon.Parser
 import com.example.redfruit.data.model.Gildings
 import com.example.redfruit.data.model.Post
 import com.example.redfruit.data.model.Preview
@@ -10,31 +10,47 @@ import com.example.redfruit.data.model.images.RedditImage
 import com.example.redfruit.data.model.media.RedditVideo
 import com.example.redfruit.data.model.media.SecureMedia
 import com.example.redfruit.data.model.media.YoutubeoEmbed
-import com.example.redfruit.util.IFactory
+import com.squareup.moshi.FromJson
+import com.squareup.moshi.Moshi
+import com.squareup.moshi.Types
 
-/**
- * Custom deserializer for json post
- */
-class PostDeserializer(
-    private val klaxonFactory: IFactory<Klaxon>
-) : IDeserializer<Post> {
+class PostAdapter {
+    private val moshi = Moshi.Builder().build()
 
-    override fun deserialize(json: JsonObject): Post {
-        val klaxon = klaxonFactory.build()
-        val data = json.obj("data")!!
+    private val type = Types.newParameterizedType(List::class.java, ImageSource::class.java)
+
+    private val mapAdapter = moshi.adapter(Map::class.java)
+
+    private val imageAdapter = moshi.adapter(ImageSource::class.java)
+
+    private val resolutionsAdapter = moshi.adapter<List<ImageSource>>(type)
+
+    private val gildingsAdapter = moshi.adapter(Gildings::class.java)
+
+    private val redditVideoAdapter = moshi.adapter(RedditVideo::class.java)
+
+    private val youtubeOembedAdapter = moshi.adapter(YoutubeoEmbed::class.java)
+
+    @FromJson
+    fun fromJson(jsonMap: Map<*, *>): Post {
+
+        val jsonString = mapAdapter.toJson(jsonMap)
+        val jsonStringBuilder = StringBuilder(jsonString)
+        val jsonObj = Parser.default().parse(jsonStringBuilder) as JsonObject
+        val data = jsonObj.obj("data")!!
         val preview = data.obj("preview")
         val enabled = preview?.boolean("enabled") ?: false
 
         val arrayImages = preview?.array<JsonObject>("images")
         val images = arrayImages?.map {
             RedditImage(
-                source = klaxon.parseFromJsonObject<ImageSource>(it.obj("source")!!)!!,
-                resolutions = klaxon.parseFromJsonArray(it.array<JsonObject>("resolutions")!!) ?: listOf()
+                source = imageAdapter.fromJson(it.obj("source")!!.toJsonString())!!,
+                resolutions = resolutionsAdapter.fromJson(it.array<JsonObject>("resolutions")!!.toJsonString()) ?: listOf()
             )
         }
 
         val secureMedia: SecureMedia? = data.obj("secure_media")?.let {
-            getSecureMedia(it, klaxon)
+            getSecureMedia(it)
         }
 
         return Post(
@@ -49,7 +65,7 @@ class PostDeserializer(
                 images = images ?: listOf()
             ),
             secureMedia = secureMedia,
-            gildings = klaxon.parseFromJsonObject<Gildings>(data.obj("gildings")!!)!!,
+            gildings = gildingsAdapter.fromJson(data.obj("gildings")!!.toJsonString())!!,
             over_18 = data.boolean("over_18") ?: false,
             stickied = data.boolean("stickied") ?: false,
             selftext = data.string("selftext") ?: "",
@@ -58,15 +74,15 @@ class PostDeserializer(
         )
     }
 
-    private fun getSecureMedia(jsonObj: JsonObject, klaxon: Klaxon): SecureMedia {
+    private fun getSecureMedia(jsonObj: JsonObject): SecureMedia {
 
         val redditVideo = jsonObj.obj("reddit_video")?.let {
-            klaxon.parseFromJsonObject<RedditVideo>(it)
+            redditVideoAdapter.fromJson(it.toJsonString())
         }
 
         val youtubeOembed = if (jsonObj.string("type") == "youtube.com") {
             jsonObj.obj("oembed")?.let {
-                klaxon.parseFromJsonObject<YoutubeoEmbed>(it)
+                youtubeOembedAdapter.fromJson(it.toJsonString())
             }
         } else {
             null

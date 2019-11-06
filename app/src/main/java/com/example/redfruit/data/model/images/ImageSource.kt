@@ -1,6 +1,7 @@
 package com.example.redfruit.data.model.images
 
 import com.example.redfruit.data.model.interfaces.ISource
+import com.squareup.moshi.JsonClass
 
 /**
  * Required information for image fetching library
@@ -9,6 +10,7 @@ import com.example.redfruit.data.model.interfaces.ISource
  * @property width of the image
  * @property height of the image
  */
+@JsonClass(generateAdapter = true)
 data class ImageSource(
     override val url: String,
     val width: Int,

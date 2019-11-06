@@ -28,16 +28,16 @@ class SubredditPostsRepository(
             SubredditListing(sub)
         }
 
-        val responsePair = redditApi.getSubredditPosts(sub, sortBy, subreddit.after, limit)
+        val responseListing = redditApi.getSubredditListing(sub, sortBy, subreddit.after, limit) ?: return listOf()
 
         // we are at the bottom of the sub and already fetched the posts
-        if (responsePair.second.isBlank() && subreddit.children.isNotEmpty()) {
+        if (responseListing.after.isBlank() && subreddit.children.isNotEmpty()) {
             return subreddit.children.toList()
         }
 
         subreddit.apply {
-            children.addAll(responsePair.first)
-            after = responsePair.second
+            children.addAll(responseListing.children)
+            after = responseListing.after
         }
 
         return subreddit.children.toList()

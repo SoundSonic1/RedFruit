@@ -1,14 +1,16 @@
 package com.example.redfruit.data.api
 
 import android.util.Log
+import com.beust.klaxon.JsonObject
 import com.beust.klaxon.Klaxon
+import com.beust.klaxon.Parser
 import com.example.redfruit.data.model.Token
 import com.example.redfruit.util.Constants
 import com.example.redfruit.util.IFactory
+import com.squareup.moshi.Moshi
 import okhttp3.FormBody
 import okhttp3.OkHttpClient
 import okhttp3.Request
-import java.io.StringReader
 import java.util.*
 
 /**
@@ -21,6 +23,9 @@ class TokenProvider(
     private var _token: Token? = null,
     private val tokenRefreshListener: (Token?) -> Unit = {}
 ) : ITokenProvider {
+
+    private val moshi = Moshi.Builder().build()
+    private val tokenAdapter = moshi.adapter(Token::class.java)
 
     override val token get() = _token
 
@@ -54,11 +59,10 @@ class TokenProvider(
 
         if (!response.isSuccessful) return null
 
-        val klaxon = klaxonFactory.build()
-
         val responseString = response.body?.string() ?: return null
-        val responsObj = klaxon.parseJsonObject(StringReader(responseString))
-        _token = klaxonFactory.build().parseFromJsonObject<Token>(responsObj)
+        val responseStringBuilder = StringBuilder(responseString)
+        val responsObj = Parser.default().parse(responseStringBuilder) as JsonObject
+        _token = tokenAdapter.fromJson(responsObj.toJsonString())
 
         tokenRefreshListener(token)
 

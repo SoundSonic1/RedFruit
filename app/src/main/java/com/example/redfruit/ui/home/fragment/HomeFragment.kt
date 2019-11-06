@@ -77,7 +77,7 @@ class HomeFragment : DaggerFragment() {
         subredditAboutViewModel.subreddits.observe(viewLifecycleOwner, Observer {
             val cursor = MatrixCursor(arrayOf("_id", Constants.SUGGESTIONS))
             it.forEach { sub ->
-                if (sub.subredditType != "private") {
+                if (sub.subreddit_type != "private") {
                     cursor.newRow().add(Constants.SUGGESTIONS, sub.display_name)
                 }
             }

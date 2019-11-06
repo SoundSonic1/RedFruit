@@ -2,10 +2,12 @@ package com.example.redfruit.data.model.media
 
 import com.beust.klaxon.Json
 import com.example.redfruit.data.model.interfaces.ISource
+import com.squareup.moshi.JsonClass
 
 /**
  * Streamable video via dash url
  */
+@JsonClass(generateAdapter = true)
 data class RedditVideo(
     @Json(name = "dash_url")
     override val url: String = "",
