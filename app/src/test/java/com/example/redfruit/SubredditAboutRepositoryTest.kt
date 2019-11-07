@@ -60,8 +60,8 @@ class SubredditAboutRepositoryTest {
         runBlocking {
             assertEquals(9, repo.findSubreddits("android", 9).size)
             assertEquals(1, repo.findSubreddits("android", 1).size)
-            assertEquals(0, repo.findSubreddits("android", -1).size)
-            assertEquals(0, repo.findSubreddits("android", 0).size)
+            assertTrue(repo.findSubreddits("android", -1).isEmpty())
+            assertTrue(repo.findSubreddits("android", 0).isEmpty())
         }
     }
 

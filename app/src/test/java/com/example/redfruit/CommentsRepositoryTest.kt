@@ -58,7 +58,7 @@ class CommentsRepositoryTest {
             val secondComment = comments[1]
 
             assertEquals("egphilippov", secondComment.author)
-            assertEquals(0, secondComment.replies.size,"Comment has no replies.")
+            assertTrue(secondComment.replies.isEmpty(),"Comment has no replies.")
         }
     }
 
@@ -67,12 +67,12 @@ class CommentsRepositoryTest {
         var newRepo =
             CommentsRepository(redditApi, "redditdev", "")
         runBlocking {
-            assertEquals(0, newRepo.getComments(50).size)
+            assertTrue(newRepo.getComments(50).isEmpty())
         }
 
         newRepo = CommentsRepository(redditApi, "", "123456")
         runBlocking {
-            assertEquals(0, newRepo.getComments(50).size)
+            assertTrue(newRepo.getComments(50).isEmpty())
         }
     }
 

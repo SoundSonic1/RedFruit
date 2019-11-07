@@ -62,7 +62,7 @@ class PostAdapter {
             ),
             secureMedia = secureMedia,
             gildings = gildingsAdapter.fromJson(mapAdapter.toJson(data["gildings"] as Map<*, *>))!!,
-            over_18 = data["over18"] as? Boolean ?: false,
+            over_18 = data["over_18"] as? Boolean ?: false,
             stickied = data["stickied"] as? Boolean ?: false,
             selftext = data["selftext"] as? String ?: "",
             subreddit = data["subreddit"] as? String ?: "",

@@ -1,73 +1,57 @@
 package com.example.redfruit.data.adapter
 
-import com.beust.klaxon.JsonObject
-import com.beust.klaxon.Parser
-import com.beust.klaxon.jackson.jackson
 import com.example.redfruit.data.model.Comment
 import com.example.redfruit.data.model.Gildings
 import com.squareup.moshi.FromJson
 import com.squareup.moshi.Moshi
 
+@Suppress("UNCHECKED_CAST")
 class CommentsAdapter {
     private val moshi = Moshi.Builder().build()
     private val mapAdapter = moshi.adapter(Map::class.java)
     private val gildingsAdapter = moshi.adapter(Gildings::class.java)
-    private val parser = Parser.jackson()
 
 
     @FromJson
-    fun fromJson(jsonListMap: List<Map<*, *>>): List<Comment> {
-
-        val jsonObjList = jsonListMap.map {
-            parser.parse(StringBuilder(mapAdapter.toJson(it))) as JsonObject
-        }.filter {
-            it.string("kind") == "Listing" && it.obj("data")?.array<JsonObject>("children")?.any {
-                it.string("kind") == "t1"
-            } ?: false
-        }
-
-        return jsonObjList.flatMap {
-            fromJsonDetail(it)
-        }
+    fun fromJson(jsonListMap: List<Map<*, *>>): List<Comment> = jsonListMap.flatMap {
+        fromJsonDetail(it)
     }
 
-    private fun fromJsonDetail(jsonObj: JsonObject): List<Comment> {
 
-        val data = jsonObj.obj("data") ?: return listOf()
+    private fun fromJsonDetail(jsonMap: Map<*, *>): List<Comment> {
 
-        val array = data.array<JsonObject>("children") ?: return listOf()
+        val data = jsonMap["data"] as? Map<*, *> ?: return listOf()
 
-        return array.filter {
-            it.string("kind") == "t1"
+        val children = data["children"] as? List<Map<*, *>> ?: return listOf()
+
+        // remove post from children
+        return children.filter {
+            it["kind"] == "t1"
         }.map {
             deserializeDetail(it)
         }
     }
 
-    private fun deserializeDetail(json: JsonObject): Comment {
-        val data = json.obj("data")!!
+    private fun deserializeDetail(json: Map<*, *>): Comment {
+        val data = json["data"] as Map<*, *>
 
         // replies can be json obj or empty string
-        val replies = if (data["replies"] is JsonObject) {
-            data.obj("replies")
-        } else {
-            null
-        }
+        val replies = data["replies"] as? Map<*, *>
 
         return Comment(
-            author = data.string("author") ?: "Unknown",
-            body = data.string("body") ?: "",
-            created = data.long("created") ?: 0,
-            created_utc = data.long("created_utc") ?: 0,
-            gildings = gildingsAdapter.fromJson(data.obj("gildings")!!.toJsonString())!!,
-            id = data.string("id") ?: "",
-            score = data.int("score") ?: 0,
+            author = data["author"] as? String ?: "Unknown",
+            body = data["body"] as? String ?: "",
+            created = (data["created"] as? Double)?.toLong() ?: 0,
+            created_utc = (data["created_utc"] as? Double)?.toLong() ?: 0,
+            gildings = gildingsAdapter.fromJson(mapAdapter.toJson(data["gildings"] as Map<*, *>)) ?: Gildings(),
+            id = data["id"] as? String ?: "",
+            score = (data["score"] as? Double)?.toInt() ?: 0,
             replies = if (replies != null) {
                 fromJsonDetail(replies)
             } else {
                 listOf()
             },
-            depth = data.int("depth") ?: 0
+            depth = (data["depth"] as? Double)?.toInt() ?: 0
         )
     }
 }

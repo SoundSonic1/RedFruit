@@ -21,7 +21,7 @@
 #-renamesourcefileattribute SourceFile
 
 ##### model classes which rely on reflection
--keep class com.example.redfruit.data.** {*;}
+-keep class com.example.redfruit.data.model.** {*;}
 
 ##### Kotlin coroutines
 # ServiceLoader support
@@ -47,12 +47,6 @@
 
 # OkHttp platform used only on JVM and when Conscrypt dependency is available.
 -dontwarn okhttp3.internal.platform.ConscryptPlatform
-
-##### Klaxon
--keep public class kotlin.reflect.jvm.internal.impl.** { public *; }
--keep class com.beust.klaxon.** { *; }
--keep interface com.beust.klaxon.** { *; }
--keep class kotlin.Metadata { *; }
 
 ##### Moshi
 

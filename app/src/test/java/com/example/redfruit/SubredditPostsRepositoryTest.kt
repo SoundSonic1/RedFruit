@@ -11,6 +11,7 @@ import com.example.redfruit.util.Constants
 import kotlinx.coroutines.runBlocking
 import okhttp3.OkHttpClient
 import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.Test
 import java.util.*
 
@@ -38,7 +39,7 @@ class SubredditPostsRepositoryTest {
                 repo.getPosts(Constants.DEFAULT_SUB, SortBy.new, 10).size,
                 "Should add new posts on top of old ones"
             )
-            assertEquals(0, repo.getPosts("empty", sortByNew, 10).size)
+            assertTrue(repo.getPosts("empty", sortByNew, 10).isEmpty())
             assertEquals(10, repo.getPosts(Constants.DEFAULT_SUB, SortBy.rising, 10).size)
         }
 

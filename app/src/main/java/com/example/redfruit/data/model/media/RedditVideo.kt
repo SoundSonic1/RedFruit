@@ -1,7 +1,7 @@
 package com.example.redfruit.data.model.media
 
-import com.beust.klaxon.Json
 import com.example.redfruit.data.model.interfaces.ISource
+import com.squareup.moshi.Json
 import com.squareup.moshi.JsonClass
 
 /**

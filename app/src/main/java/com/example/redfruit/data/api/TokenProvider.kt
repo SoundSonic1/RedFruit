@@ -1,8 +1,6 @@
 package com.example.redfruit.data.api
 
 import android.util.Log
-import com.beust.klaxon.JsonObject
-import com.beust.klaxon.Parser
 import com.example.redfruit.data.model.Token
 import com.example.redfruit.util.Constants
 import com.squareup.moshi.Moshi
@@ -21,8 +19,7 @@ class TokenProvider(
     private val tokenRefreshListener: (Token?) -> Unit = {}
 ) : ITokenProvider {
 
-    private val moshi = Moshi.Builder().build()
-    private val tokenAdapter = moshi.adapter(Token::class.java)
+    private val tokenAdapter = Moshi.Builder().build().adapter(Token::class.java)
 
     override val token get() = _token
 
@@ -57,9 +54,7 @@ class TokenProvider(
         if (!response.isSuccessful) return null
 
         val responseString = response.body?.string() ?: return null
-        val responseStringBuilder = StringBuilder(responseString)
-        val responsObj = Parser.default().parse(responseStringBuilder) as JsonObject
-        _token = tokenAdapter.fromJson(responsObj.toJsonString())
+        _token = tokenAdapter.fromJson(responseString)
 
         tokenRefreshListener(token)
 
