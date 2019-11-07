@@ -1,8 +1,5 @@
 package com.example.redfruit.data.adapter
 
-import com.beust.klaxon.JsonObject
-import com.beust.klaxon.Parser
-import com.beust.klaxon.jackson.jackson
 import com.example.redfruit.data.model.Gildings
 import com.example.redfruit.data.model.Post
 import com.example.redfruit.data.model.Preview
@@ -13,18 +10,14 @@ import com.example.redfruit.data.model.media.SecureMedia
 import com.example.redfruit.data.model.media.YoutubeoEmbed
 import com.squareup.moshi.FromJson
 import com.squareup.moshi.Moshi
-import com.squareup.moshi.Types
 
+@Suppress("UNCHECKED_CAST")
 class PostAdapter {
     private val moshi = Moshi.Builder().build()
-
-    private val type = Types.newParameterizedType(List::class.java, ImageSource::class.java)
 
     private val mapAdapter = moshi.adapter(Map::class.java)
 
     private val imageAdapter = moshi.adapter(ImageSource::class.java)
-
-    private val resolutionsAdapter = moshi.adapter<List<ImageSource>>(type)
 
     private val gildingsAdapter = moshi.adapter(Gildings::class.java)
 
@@ -35,55 +28,57 @@ class PostAdapter {
     @FromJson
     fun fromJson(jsonMap: Map<*, *>): Post {
 
-        val jsonString = mapAdapter.toJson(jsonMap)
-        val jsonStringBuilder = StringBuilder(jsonString)
-        val jsonObj = Parser.jackson().parse(jsonStringBuilder) as JsonObject
-        val data = jsonObj.obj("data")!!
-        val preview = data.obj("preview")
-        val enabled = preview?.boolean("enabled") ?: false
+        val data = jsonMap["data"] as Map<*, *>
+        val preview = data["preview"] as? Map<*, *>
+        val enabled = preview?.get("enabled") as? Boolean ?: false
 
-        val arrayImages = preview?.array<JsonObject>("images")
-        val images = arrayImages?.map {
+        val imagesList = preview?.get("images") as? List<Map<*, *>>
+        val images = imagesList?.map { imageMap ->
+            val resolutionsList = imageMap["resolutions"] as List<Map<*, *>>
+            val res = resolutionsList.map { value ->
+                mapAdapter.toJson(value)
+            }
             RedditImage(
-                source = imageAdapter.fromJson(it.obj("source")!!.toJsonString())!!,
-                resolutions = resolutionsAdapter.fromJson(it.array<JsonObject>("resolutions")!!.toJsonString()) ?: listOf()
+                source = imageAdapter.fromJson(mapAdapter.toJson(imageMap["source"] as Map<*, *>))!!,
+                resolutions = res.map { imageAdapter.fromJson(it)!! }
             )
         }
 
-        val secureMedia: SecureMedia? = data.obj("secure_media")?.let {
+        val secureMediaMap = data["secure_media"] as? Map<*, *>
+        val secureMedia = secureMediaMap?.let {
             getSecureMedia(it)
         }
 
         return Post(
-            id = data.string("id") ?: "",
-            title = data.string("title") ?: "",
-            author = data.string("author") ?: "Unknown",
-            score = (data.int("score") ?: 0).toString(),
-            num_comments = (data.int("num_comments") ?: 0).toString(),
-            post_hint = data.string("post_hint") ?: "",
+            id = data["id"] as? String ?: "",
+            title = data["title"] as? String ?: "",
+            author = data["author"] as? String ?: "Unknown",
+            score = ((data["score"] as? Double)?.toLong() ?: 0).toString(),
+            num_comments = ((data["num_comments"] as? Double)?.toLong() ?: 0).toString(),
+            post_hint = data["post_hint"] as? String ?: "",
             preview = Preview(
                 enabled = enabled,
                 images = images ?: listOf()
             ),
             secureMedia = secureMedia,
-            gildings = gildingsAdapter.fromJson(data.obj("gildings")!!.toJsonString())!!,
-            over_18 = data.boolean("over18") ?: false,
-            stickied = data.boolean("stickied") ?: false,
-            selftext = data.string("selftext") ?: "",
-            subreddit = data.string("subreddit") ?: "",
-            url = data.string("url") ?: ""
+            gildings = gildingsAdapter.fromJson(mapAdapter.toJson(data["gildings"] as Map<*, *>))!!,
+            over_18 = data["over18"] as? Boolean ?: false,
+            stickied = data["stickied"] as? Boolean ?: false,
+            selftext = data["selftext"] as? String ?: "",
+            subreddit = data["subreddit"] as? String ?: "",
+            url = data["url"] as? String ?: ""
         )
     }
 
-    private fun getSecureMedia(jsonObj: JsonObject): SecureMedia {
+    private fun getSecureMedia(jsonMap: Map<*, *>): SecureMedia {
 
-        val redditVideo = jsonObj.obj("reddit_video")?.let {
-            redditVideoAdapter.fromJson(it.toJsonString())
+        val redditVideo = jsonMap["reddit_video"]?.let {
+            redditVideoAdapter.fromJson(mapAdapter.toJson(it as Map<*, *>))
         }
 
-        val youtubeOembed = if (jsonObj.string("type") == "youtube.com") {
-            jsonObj.obj("oembed")?.let {
-                youtubeOembedAdapter.fromJson(it.toJsonString())
+        val youtubeOembed = if (jsonMap["type"] == "youtube.com") {
+            jsonMap["oembed"]?.let {
+                youtubeOembedAdapter.fromJson(mapAdapter.toJson(it as Map<*, *>))
             }
         } else {
             null

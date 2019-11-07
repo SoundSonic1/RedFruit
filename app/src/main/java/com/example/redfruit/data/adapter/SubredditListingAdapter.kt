@@ -1,8 +1,5 @@
 package com.example.redfruit.data.adapter
 
-import com.beust.klaxon.JsonObject
-import com.beust.klaxon.Parser
-import com.beust.klaxon.jackson.jackson
 import com.example.redfruit.data.model.Post
 import com.example.redfruit.data.model.SubredditListing
 import com.squareup.moshi.FromJson
@@ -19,35 +16,25 @@ class SubredditListingAdapter {
     @FromJson
     fun fromJson(jsonMap: Map<*, *>): SubredditListing? {
 
-        val jsonString = mapAdapter.toJson(jsonMap)
-        val jsonStringBuilder = StringBuilder(jsonString)
-        val jsonObj = Parser.jackson().parse(jsonStringBuilder) as JsonObject
+        // either private or banned sub
+        if (jsonMap["kind"] != "Listing") return null
 
-        if (jsonObj.string("kind") != "Listing") {
-            // either private or banned sub
-            return null
-        }
+        val data = jsonMap["data"] as? Map<*, *> ?: return null
 
-        val data = jsonObj.obj("data") ?: return null
-
-        // JSONArray of children aka posts
-        val children = data.array<JsonObject>("children") ?: return null
+        @Suppress("UNCHECKED_CAST")
+        val children = data["children"] as? List<Map<*, *>>?: return null
 
         // check if children are posts
-        if (children.any { it.string("kind") != "t3" }) {
-            return null
-        }
-
-        val after = data.string("after") ?: ""
+        if (children.any { it["kind"] != "t3" }) return null
 
         val posts = children.map {
-            postAdapter.fromJson(it.toJsonString())!!
+            postAdapter.fromJson(mapAdapter.toJson(it))!!
         }
 
         return SubredditListing(
             name = posts.firstOrNull()?.subreddit ?: "",
-            before = jsonObj.string("before") ?: "",
-            after = after,
+            before = data["before"] as? String ?: "",
+            after = data["after"] as? String ?: "",
             children = posts.toMutableList()
         )
     }

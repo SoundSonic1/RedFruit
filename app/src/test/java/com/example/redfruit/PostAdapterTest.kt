@@ -9,11 +9,12 @@ import org.junit.jupiter.api.Test
 
 class PostAdapterTest {
 
+    val moshi = Moshi.Builder().add(PostAdapter()).build()
+    val adapter = moshi.adapter(Post::class.java)
+
     @Test
     fun testDeserialization() {
 
-        val moshi = Moshi.Builder().add(PostAdapter()).build()
-        val adapter = moshi.adapter(Post::class.java)
         val post = adapter.fromJson(PostString)!!
 
         assertEquals("MsElia", post.author)

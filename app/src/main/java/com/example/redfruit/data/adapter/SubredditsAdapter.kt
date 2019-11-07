@@ -1,35 +1,29 @@
 package com.example.redfruit.data.adapter
 
-import com.beust.klaxon.JsonObject
-import com.beust.klaxon.Parser
-import com.beust.klaxon.jackson.jackson
 import com.example.redfruit.data.model.SubredditAbout
 import com.squareup.moshi.FromJson
 import com.squareup.moshi.Moshi
-import com.squareup.moshi.Types
 
 class SubredditsAdapter {
 
     private val moshi = Moshi.Builder().add(SubredditAboutAdapter()).build()
 
-    private val type = Types.newParameterizedType(List::class.java, SubredditAbout::class.java)
-
     private val mapAdapter = moshi.adapter(Map::class.java)
 
-    private val subredditAdapter = moshi.adapter<List<SubredditAbout>>(type)
+    private val subredditAdapter = moshi.adapter(SubredditAbout::class.java)
 
     @FromJson
     fun fromJson(jsonMap: Map<*, *>): List<SubredditAbout> {
 
-        val jsonString = mapAdapter.toJson(jsonMap)
-        val jsonStringBuilder = StringBuilder(jsonString)
-        val jsonObj = Parser.jackson().parse(jsonStringBuilder) as JsonObject
+        if (jsonMap["kind"] != "Listing") return listOf()
 
-        if (jsonObj.string("kind") != "Listing") return listOf()
+        val data = jsonMap["data"] as? Map<*, *> ?: return listOf()
 
-        val data = jsonObj.obj("data") ?: return listOf()
-        val children = data.array<JsonObject>("children") ?: return listOf()
+        @Suppress("UNCHECKED_CAST")
+        val children = data["children"] as? List<Map<*, *>> ?: listOf()
 
-        return subredditAdapter.fromJson(children.toJsonString())!!
+        return children.map {
+            subredditAdapter.fromJson(mapAdapter.toJson(it))!!
+        }
     }
 }
