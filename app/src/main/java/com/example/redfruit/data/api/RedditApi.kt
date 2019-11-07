@@ -1,19 +1,14 @@
 package com.example.redfruit.data.api
 
-import com.beust.klaxon.JsonArray
-import com.beust.klaxon.JsonObject
-import com.beust.klaxon.Klaxon
-import com.beust.klaxon.Parser
+import com.example.redfruit.data.adapter.CommentsAdapter
 import com.example.redfruit.data.adapter.SubredditAboutAdapter
 import com.example.redfruit.data.adapter.SubredditListingAdapter
 import com.example.redfruit.data.adapter.SubredditsAdapter
-import com.example.redfruit.data.deserializer.CommentDeserializer
 import com.example.redfruit.data.model.Comment
 import com.example.redfruit.data.model.SubredditAbout
 import com.example.redfruit.data.model.SubredditListing
 import com.example.redfruit.data.model.enumeration.SortBy
 import com.example.redfruit.util.Constants
-import com.example.redfruit.util.IFactory
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.Types
 import kotlinx.coroutines.Dispatchers
@@ -27,13 +22,8 @@ import okhttp3.Request
  */
 class RedditApi(
     private val authenticator: TokenAuthenticator,
-    private val client: OkHttpClient,
-    private val klaxonFactory: IFactory<Klaxon>,
-    private val parser: Parser
+    private val client: OkHttpClient
 ) : IRedditApi {
-
-    // TODO: inject deserializer
-    private val commentDeserializer = CommentDeserializer(klaxonFactory)
 
     private fun buildRequest(url: HttpUrl) = Request.Builder().apply {
         addHeader("User-Agent", Constants.USER_AGENT)
@@ -45,13 +35,20 @@ class RedditApi(
         .add(SubredditListingAdapter())
         .add(SubredditAboutAdapter())
         .add(SubredditsAdapter())
+        .add(CommentsAdapter())
         .build()
 
-    private val type = Types.newParameterizedType(List::class.java, SubredditAbout::class.java)
+    private val typeSubreddits =
+        Types.newParameterizedType(List::class.java, SubredditAbout::class.java)
+
+    private val typeComments =
+        Types.newParameterizedType(List::class.java, Comment::class.java)
 
     private val subredditListingAdapter = moshi.adapter(SubredditListing::class.java)
     private val subredditAboutAdapter = moshi.adapter(SubredditAbout::class.java)
-    private val subredditsAdapter = moshi.adapter<List<SubredditAbout>>(type)
+    private val subredditsAdapter = moshi.adapter<List<SubredditAbout>>(typeSubreddits)
+
+    private val commentsAdapter = moshi.adapter<List<Comment>>(typeComments)
 
     /**
      * Returns a Pair which contains a new list of posts and a new "after" for pagination
@@ -129,21 +126,11 @@ class RedditApi(
 
         val responseString = response.body?.string() ?: return@withContext listOf<Comment>()
 
-        val jsonStringBuilder = StringBuilder(responseString)
-
-        val array = try {
-            @Suppress("UNCHECKED_CAST")
-            parser.parse(jsonStringBuilder) as JsonArray<JsonObject>
+        try {
+            commentsAdapter.fromJson(responseString) ?: listOf()
         } catch (e: Throwable) {
-            return@withContext listOf<Comment>()
-        }
-
-        array.filter {
-            it.string("kind") == "Listing" && it.obj("data")?.array<JsonObject>("children")?.any {
-                it.string("kind") == "t1"
-            } ?: false
-        }.flatMap {
-            commentDeserializer.deserialize(it)
+            // response is not in json array format
+            listOf<Comment>()
         }
     }
 
@@ -166,16 +153,7 @@ class RedditApi(
 
         if (!response.isSuccessful) return@withContext listOf<SubredditAbout>()
 
-        response.body?.let {
-
-            val stringBuilder = StringBuilder(it.string())
-            val json = parser.parse(stringBuilder) as? JsonObject
-            json?.let { jsonObj ->
-                return@withContext subredditsAdapter.fromJson(jsonObj.toJsonString())!!
-            }
-        }
-
-        listOf<SubredditAbout>()
+        subredditsAdapter.fromJson(response.body!!.string()) ?: listOf()
     }
 
     companion object {

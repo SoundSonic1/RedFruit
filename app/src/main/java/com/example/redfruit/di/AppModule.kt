@@ -6,8 +6,6 @@ import android.content.SharedPreferences
 import androidx.core.content.edit
 import androidx.preference.PreferenceManager
 import androidx.recyclerview.widget.RecyclerView
-import com.beust.klaxon.Klaxon
-import com.beust.klaxon.Parser
 import com.example.redfruit.BuildConfig
 import com.example.redfruit.R
 import com.example.redfruit.data.api.*
@@ -15,8 +13,6 @@ import com.example.redfruit.data.model.Token
 import com.example.redfruit.data.model.enumeration.SortBy
 import com.example.redfruit.data.repositories.SubredditAboutRepository
 import com.example.redfruit.util.Constants
-import com.example.redfruit.util.IFactory
-import com.example.redfruit.util.KlaxonFactory
 import dagger.Module
 import dagger.Provides
 import jp.wasabeef.recyclerview.animators.SlideInDownAnimator
@@ -109,16 +105,10 @@ class AppModule {
         OkHttpClient.Builder().authenticator(authenticator).build()
 
     @Provides
-    fun provideKlaxonFactory(): IFactory<Klaxon> = KlaxonFactory()
-
-    @Provides
-    fun provideParser() = Parser.default()
-
-    @Provides
     @Singleton
     fun provideRedditApi(
-        authenticator: TokenAuthenticator, client: OkHttpClient , klaxonFactory: IFactory<Klaxon>, parser: Parser
-    ): IRedditApi = RedditApi(authenticator, client, klaxonFactory, parser)
+        authenticator: TokenAuthenticator, client: OkHttpClient
+    ): IRedditApi = RedditApi(authenticator, client)
 
     @Provides
     fun provideSubredditAboutRepo(redditApi: IRedditApi) = SubredditAboutRepository(redditApi)

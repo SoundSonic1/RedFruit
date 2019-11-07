@@ -1,5 +1,8 @@
 package com.example.redfruit.data.model
 
+import com.squareup.moshi.JsonClass
+
+@JsonClass(generateAdapter = true)
 data class Comment(
     val author: String = "Unknown",
     val body: String = "",

@@ -2,6 +2,7 @@ package com.example.redfruit.data.adapter
 
 import com.beust.klaxon.JsonObject
 import com.beust.klaxon.Parser
+import com.beust.klaxon.jackson.jackson
 import com.example.redfruit.data.model.Post
 import com.example.redfruit.data.model.SubredditListing
 import com.squareup.moshi.FromJson
@@ -20,7 +21,7 @@ class SubredditListingAdapter {
 
         val jsonString = mapAdapter.toJson(jsonMap)
         val jsonStringBuilder = StringBuilder(jsonString)
-        val jsonObj = Parser.default().parse(jsonStringBuilder) as JsonObject
+        val jsonObj = Parser.jackson().parse(jsonStringBuilder) as JsonObject
 
         if (jsonObj.string("kind") != "Listing") {
             // either private or banned sub

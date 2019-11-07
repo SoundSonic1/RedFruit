@@ -1,12 +1,10 @@
 package com.example.redfruit
 
-import com.beust.klaxon.Parser
 import com.example.redfruit.data.api.IRedditApi
 import com.example.redfruit.data.api.RedditApi
 import com.example.redfruit.data.api.TokenAuthenticator
 import com.example.redfruit.data.api.TokenProvider
 import com.example.redfruit.data.repositories.CommentsRepository
-import com.example.redfruit.util.KlaxonFactory
 import kotlinx.coroutines.runBlocking
 import okhttp3.OkHttpClient
 import org.junit.jupiter.api.Assertions.assertEquals
@@ -22,9 +20,7 @@ class CommentsRepositoryTest {
     private val redditApi: IRedditApi =
         RedditApi(
             authenticator,
-            OkHttpClient.Builder().authenticator(authenticator).build(),
-            KlaxonFactory(),
-            Parser.default()
+            OkHttpClient.Builder().authenticator(authenticator).build()
         )
 
     @Test

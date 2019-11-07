@@ -2,6 +2,7 @@ package com.example.redfruit.data.adapter
 
 import com.beust.klaxon.JsonObject
 import com.beust.klaxon.Parser
+import com.beust.klaxon.jackson.jackson
 import com.example.redfruit.data.model.Gildings
 import com.example.redfruit.data.model.Post
 import com.example.redfruit.data.model.Preview
@@ -36,7 +37,7 @@ class PostAdapter {
 
         val jsonString = mapAdapter.toJson(jsonMap)
         val jsonStringBuilder = StringBuilder(jsonString)
-        val jsonObj = Parser.default().parse(jsonStringBuilder) as JsonObject
+        val jsonObj = Parser.jackson().parse(jsonStringBuilder) as JsonObject
         val data = jsonObj.obj("data")!!
         val preview = data.obj("preview")
         val enabled = preview?.boolean("enabled") ?: false
