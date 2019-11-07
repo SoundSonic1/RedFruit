@@ -5,7 +5,7 @@ import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.redfruit.R
-import com.example.redfruit.data.api.IRedditApi
+import com.example.redfruit.data.api.RedditApi
 import com.example.redfruit.data.model.enumeration.SortBy
 import com.example.redfruit.data.repositories.SubredditPostsRepository
 import com.example.redfruit.ui.comments.fragment.CommentsFragment
@@ -25,7 +25,7 @@ import javax.inject.Named
 object SubredditPostsFragmentModule {
 
     @Provides
-    fun provideSubredditRepo(redditApi: IRedditApi) =
+    fun provideSubredditRepo(redditApi: RedditApi) =
         SubredditPostsRepository(redditApi)
 
     @Provides

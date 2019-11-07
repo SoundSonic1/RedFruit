@@ -1,6 +1,6 @@
 package com.example.redfruit.data.repositories
 
-import com.example.redfruit.data.api.IRedditApi
+import com.example.redfruit.data.api.RedditApi
 import com.example.redfruit.data.model.Post
 import com.example.redfruit.data.model.SubredditListing
 import com.example.redfruit.data.model.enumeration.SortBy
@@ -9,7 +9,7 @@ import com.example.redfruit.data.model.enumeration.SortBy
  * Repository which manages subreddit posts
  */
 class SubredditPostsRepository(
-    private val redditApi: IRedditApi,
+    private val redditApi: RedditApi,
     private val subredditMap: MutableMap<Pair<String, SortBy>, SubredditListing> = mutableMapOf()
 ) : IPostsRepository {
 
@@ -28,7 +28,11 @@ class SubredditPostsRepository(
             SubredditListing(sub)
         }
 
-        val responseListing = redditApi.getSubredditListing(sub, sortBy, subreddit.after, limit) ?: return listOf()
+        val responseListing = try {
+            redditApi.getSubredditListing(sub, sortBy.name, subreddit.after, limit.toString()) ?: return listOf()
+        } catch (e: Throwable) {
+            return listOf()
+        }
 
         // we are at the bottom of the sub and already fetched the posts
         if (responseListing.after.isBlank() && subreddit.children.isNotEmpty()) {

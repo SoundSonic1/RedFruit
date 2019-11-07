@@ -4,8 +4,9 @@ import com.example.redfruit.data.model.Post
 import com.example.redfruit.data.model.SubredditListing
 import com.squareup.moshi.FromJson
 import com.squareup.moshi.Moshi
+import javax.inject.Inject
 
-class SubredditListingAdapter {
+class SubredditListingAdapter @Inject constructor() {
 
     private val moshi = Moshi.Builder().add(PostAdapter()).build()
 

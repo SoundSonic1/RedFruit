@@ -4,9 +4,10 @@ import com.example.redfruit.data.model.Comment
 import com.example.redfruit.data.model.Gildings
 import com.squareup.moshi.FromJson
 import com.squareup.moshi.Moshi
+import javax.inject.Inject
 
 @Suppress("UNCHECKED_CAST")
-class CommentsAdapter {
+class CommentsAdapter @Inject constructor() {
     private val moshi = Moshi.Builder().build()
     private val mapAdapter = moshi.adapter(Map::class.java)
     private val gildingsAdapter = moshi.adapter(Gildings::class.java)

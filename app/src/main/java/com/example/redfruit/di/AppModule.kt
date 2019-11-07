@@ -8,15 +8,22 @@ import androidx.preference.PreferenceManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.redfruit.BuildConfig
 import com.example.redfruit.R
+import com.example.redfruit.data.adapter.CommentsAdapter
+import com.example.redfruit.data.adapter.SubredditAboutAdapter
+import com.example.redfruit.data.adapter.SubredditListingAdapter
+import com.example.redfruit.data.adapter.SubredditsAdapter
 import com.example.redfruit.data.api.*
 import com.example.redfruit.data.model.Token
 import com.example.redfruit.data.model.enumeration.SortBy
 import com.example.redfruit.data.repositories.SubredditAboutRepository
 import com.example.redfruit.util.Constants
+import com.squareup.moshi.Moshi
 import dagger.Module
 import dagger.Provides
 import jp.wasabeef.recyclerview.animators.SlideInDownAnimator
 import okhttp3.OkHttpClient
+import retrofit2.Retrofit
+import retrofit2.converter.moshi.MoshiConverterFactory
 import java.util.*
 import javax.inject.Named
 import javax.inject.Singleton
@@ -82,12 +89,34 @@ class AppModule {
     }
 
     @Provides
+    fun provideOAuthApi(): OAuthApi = Retrofit
+        .Builder()
+        .baseUrl(Constants.ACCESS_TOKEN_URL)
+        .addConverterFactory(MoshiConverterFactory.create())
+        .build()
+        .create(OAuthApi::class.java)
+
+    @Provides
+    fun provideMoshi(
+        subredditListingAdapter: SubredditListingAdapter,
+        subredditAboutAdapter: SubredditAboutAdapter,
+        subredditsAdapter: SubredditsAdapter,
+        commentsAdapter: CommentsAdapter
+    ) = Moshi.Builder()
+        .add(subredditListingAdapter)
+        .add(subredditAboutAdapter)
+        .add(subredditsAdapter)
+        .add(commentsAdapter)
+        .build()
+
+    @Provides
     @Singleton
     fun provideTokenProvider(
         @Named("DeviceId") deviceId: String,
         token: Token?,
+        oAuthApi: OAuthApi,
         sharedPref: SharedPreferences
-    ): ITokenProvider = TokenProvider(BuildConfig.ClientId, deviceId, token) {
+    ): ITokenProvider = TokenProvider(BuildConfig.ClientId, deviceId, oAuthApi, token) {
         it?.let {
             sharedPref.edit {
                 putString(Constants.TOKEN_KEY, it.access)
@@ -100,18 +129,28 @@ class AppModule {
     fun provideTokenAuthenticator(tokenProvider: ITokenProvider) = TokenAuthenticator(tokenProvider)
 
     @Provides
-    @Singleton
-    fun provideOkhttpClient(authenticator: TokenAuthenticator) =
-        OkHttpClient.Builder().authenticator(authenticator).build()
+    fun provideTokenInterceptor(tokenAuthenticator: TokenAuthenticator) = TokenInterceptor(tokenAuthenticator)
 
     @Provides
     @Singleton
+    fun provideOkhttpClient(
+        authenticator: TokenAuthenticator, interceptor: TokenInterceptor
+    ) = OkHttpClient.Builder().addInterceptor(interceptor).authenticator(authenticator).build()
+
+    @Provides
     fun provideRedditApi(
-        authenticator: TokenAuthenticator, client: OkHttpClient
-    ): IRedditApi = RedditApi(authenticator, client)
+        moshi: Moshi,
+        client: OkHttpClient
+    ): RedditApi = Retrofit
+        .Builder()
+        .addConverterFactory(MoshiConverterFactory.create(moshi))
+        .client(client)
+        .baseUrl(Constants.BASE_URL)
+        .build()
+        .create(RedditApi::class.java)
 
     @Provides
-    fun provideSubredditAboutRepo(redditApi: IRedditApi) = SubredditAboutRepository(redditApi)
+    fun provideSubredditAboutRepo(api: RedditApi) = SubredditAboutRepository(api)
 
     @Provides
     @Named("ItemAnimator")

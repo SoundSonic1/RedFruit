@@ -1,27 +1,16 @@
 package com.example.redfruit
 
-import com.example.redfruit.data.api.IRedditApi
-import com.example.redfruit.data.api.RedditApi
-import com.example.redfruit.data.api.TokenAuthenticator
-import com.example.redfruit.data.api.TokenProvider
 import com.example.redfruit.data.repositories.CommentsRepository
+import com.example.redfruit.util.provideRetroFitRedditApi
 import kotlinx.coroutines.runBlocking
-import okhttp3.OkHttpClient
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.Test
-import java.util.*
+
 
 class CommentsRepositoryTest {
 
-    private val authenticator =
-        TokenAuthenticator(TokenProvider(BuildConfig.ClientId, UUID.randomUUID().toString()))
-
-    private val redditApi: IRedditApi =
-        RedditApi(
-            authenticator,
-            OkHttpClient.Builder().authenticator(authenticator).build()
-        )
+    private val redditApi = provideRetroFitRedditApi()
 
     @Test
     fun `archived post comments`() {

@@ -10,9 +10,10 @@ import com.example.redfruit.data.model.media.SecureMedia
 import com.example.redfruit.data.model.media.YoutubeoEmbed
 import com.squareup.moshi.FromJson
 import com.squareup.moshi.Moshi
+import javax.inject.Inject
 
 @Suppress("UNCHECKED_CAST")
-class PostAdapter {
+class PostAdapter @Inject constructor() {
     private val moshi = Moshi.Builder().build()
 
     private val mapAdapter = moshi.adapter(Map::class.java)

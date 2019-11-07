@@ -1,32 +1,18 @@
 package com.example.redfruit
 
-import com.example.redfruit.data.api.IRedditApi
-import com.example.redfruit.data.api.RedditApi
-import com.example.redfruit.data.api.TokenAuthenticator
-import com.example.redfruit.data.api.TokenProvider
 import com.example.redfruit.data.model.Post
 import com.example.redfruit.data.model.enumeration.SortBy
 import com.example.redfruit.data.repositories.SubredditPostsRepository
 import com.example.redfruit.util.Constants
+import com.example.redfruit.util.provideRetroFitRedditApi
 import kotlinx.coroutines.runBlocking
-import okhttp3.OkHttpClient
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.Test
-import java.util.*
 
 class SubredditPostsRepositoryTest {
 
-    private val authenticator =
-        TokenAuthenticator(TokenProvider(BuildConfig.ClientId, UUID.randomUUID().toString()))
-
-    private val redditApi: IRedditApi =
-        RedditApi(
-            authenticator,
-            OkHttpClient.Builder().authenticator(authenticator).build()
-        )
-
-    private val repo = SubredditPostsRepository(redditApi)
+    private val repo = SubredditPostsRepository(provideRetroFitRedditApi())
 
     @Test
     fun `test post count`() {

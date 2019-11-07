@@ -3,7 +3,7 @@ package com.example.redfruit.di
 import android.content.Context
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.example.redfruit.data.api.IRedditApi
+import com.example.redfruit.data.api.RedditApi
 import com.example.redfruit.data.repositories.CommentsRepository
 import com.example.redfruit.data.repositories.ICommentsRepository
 import com.example.redfruit.ui.comments.fragment.CommentsFragment
@@ -40,7 +40,7 @@ object CommentsFragmentModule {
 
     @Provides
     fun provideCommentsRepo(
-        redditApi: IRedditApi,
+        redditApi: RedditApi,
         @Named("SubredditName") sub: String,
         @Named("PostId") id: String
     ): ICommentsRepository =

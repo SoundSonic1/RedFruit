@@ -4,5 +4,5 @@ import com.example.redfruit.data.model.Token
 
 interface ITokenProvider {
     val token: Token?
-    fun refreshToken(): Token?
+    suspend fun refreshToken(): Token?
 }

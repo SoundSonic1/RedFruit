@@ -6,7 +6,10 @@ package com.example.redfruit.util
 object Constants {
     const val DEFAULT_SUB = "androiddev"
     // https://github.com/reddit-archive/reddit/wiki/api
+    const val BASE_URL = "https://oauth.reddit.com/"
     const val USER_AGENT = "android:com.example.redfruit:v1.0 (by /u/SoundSonic1)"
+    const val ACCESS_TOKEN_URL = "https://www.reddit.com/api/v1/access_token/"
+    const val GRANT_TYPE = "https://oauth.reddit.com/grants/installed_client"
     const val TOKEN_KEY = "TOKEN_KEY"
     const val LIMIT = 15
     const val HOME_FRAGMENT_TAG = "HOME_FRAGMENT_TAG"
