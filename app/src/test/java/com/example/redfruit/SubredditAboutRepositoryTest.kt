@@ -7,8 +7,7 @@ import com.example.redfruit.data.api.TokenProvider
 import com.example.redfruit.data.repositories.SubredditAboutRepository
 import kotlinx.coroutines.runBlocking
 import okhttp3.OkHttpClient
-import org.junit.jupiter.api.Assertions.assertEquals
-import org.junit.jupiter.api.Assertions.assertNotNull
+import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.Test
 import java.util.*
 
@@ -28,15 +27,9 @@ class SubredditAboutRepositoryTest {
 
     @Test
     fun `valid input`() {
-        runBlocking {
-            val subredditAbout = repo.getData("android")
-
-            assertEquals("Android", subredditAbout?.display_name)
-            assertEquals(false, subredditAbout?.over_18)
-        }
 
         runBlocking {
-            val subredditAbout = repo.getData("memes_of_dank")
+            val subredditAbout = repo.getData("memes_of_danK")
             assertNotNull(subredditAbout, "Underscore is valid")
             assertEquals("Memes_of_dank", subredditAbout?.display_name)
         }
@@ -44,24 +37,31 @@ class SubredditAboutRepositoryTest {
     }
 
     @Test
-    fun `invalid input test`() {
+    fun `nsfw subreddit`() {
         runBlocking {
-            assertEquals( null, repo.getData("androidd"), "Subreddit androidd does not exist.")
-        }
-        runBlocking {
-            assertEquals(null, repo.getData(""), "Empty sub name is not allowed.")
-        }
+            val subredditAbout = repo.getData("gonewild")!!
 
-        runBlocking {
-            assertEquals( null, repo.getData("dank memes"), "Spaces are not allowed")
+            assertEquals("gonewild", subredditAbout.display_name)
+            assertTrue(subredditAbout.over18)
         }
     }
 
     @Test
-    fun `test find subreddits count`() {
+    fun `invalid input`() {
+        runBlocking {
+            assertNull(repo.getData("androidd"), "Subreddit androidd does not exist.")
+            assertNull(repo.getData(""), "Empty sub name is not allowed.")
+            assertNull(repo.getData("dank memes"), "Spaces are not allowed")
+        }
+    }
+
+    @Test
+    fun `check subreddits count`() {
         runBlocking {
             assertEquals(9, repo.findSubreddits("android", 9).size)
-            assertEquals(12, repo.findSubreddits("android", 12).size)
+            assertEquals(1, repo.findSubreddits("android", 1).size)
+            assertEquals(0, repo.findSubreddits("android", -1).size)
+            assertEquals(0, repo.findSubreddits("android", 0).size)
         }
     }
 

@@ -67,7 +67,7 @@ class PostAdapter {
             ),
             secureMedia = secureMedia,
             gildings = gildingsAdapter.fromJson(data.obj("gildings")!!.toJsonString())!!,
-            over_18 = data.boolean("over_18") ?: false,
+            over_18 = data.boolean("over18") ?: false,
             stickied = data.boolean("stickied") ?: false,
             selftext = data.string("selftext") ?: "",
             subreddit = data.string("subreddit") ?: "",

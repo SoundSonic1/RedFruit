@@ -8,7 +8,7 @@ import com.squareup.moshi.JsonClass
 @JsonClass(generateAdapter = true)
 data class SubredditAbout(
     val display_name: String,
-    val over_18: Boolean? = false,
+    val over18: Boolean = false,
     val subscribers: Long? = 0,
     val public_description: String? = "",
     val description: String? = "",

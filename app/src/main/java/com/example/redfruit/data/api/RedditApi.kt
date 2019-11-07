@@ -138,6 +138,8 @@ class RedditApi(
 
         if (query.isBlank()) return@withContext listOf<SubredditAbout>()
 
+        if (limit < 1) return@withContext listOf<SubredditAbout>()
+
         val url = HttpUrl.Builder()
             .scheme("https")
             .host(BASE_URL)
