@@ -9,19 +9,15 @@ import com.example.redfruit.data.repositories.SubredditAboutRepository
 import com.example.redfruit.util.KlaxonFactory
 import kotlinx.coroutines.runBlocking
 import okhttp3.OkHttpClient
-import org.junit.Assert.assertEquals
-import org.junit.Assert.assertNotNull
-import org.junit.Before
-import org.junit.Test
+import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.Assertions.assertNotNull
+import org.junit.jupiter.api.Test
 import java.util.*
 
 class SubredditAboutRepositoryTest {
 
-    private lateinit var repo: SubredditAboutRepository
-
-    private val klaxonFactory = KlaxonFactory()
-
-    private val authenticator = TokenAuthenticator(TokenProvider(BuildConfig.ClientId, UUID.randomUUID().toString(), klaxonFactory))
+    private val authenticator =
+        TokenAuthenticator(TokenProvider(BuildConfig.ClientId, UUID.randomUUID().toString()))
 
     private val redditApi: IRedditApi =
         RedditApi(
@@ -31,17 +27,11 @@ class SubredditAboutRepositoryTest {
             Parser.default()
         )
 
+    private val repo: SubredditAboutRepository = SubredditAboutRepository(redditApi, mutableMapOf())
 
-    @Before
-    fun setUp() {
-        repo = SubredditAboutRepository(
-            redditApi,
-            mutableMapOf()
-        )
-    }
 
     @Test
-    fun getValidDataTest() {
+    fun `valid input`() {
         runBlocking {
             val subredditAbout = repo.getData("android")
 
@@ -51,33 +41,39 @@ class SubredditAboutRepositoryTest {
 
         runBlocking {
             val subredditAbout = repo.getData("memes_of_dank")
-            assertNotNull("Underscore is valid", subredditAbout)
+            assertNotNull(subredditAbout, "Underscore is valid")
             assertEquals("Memes_of_dank", subredditAbout?.display_name)
         }
 
     }
 
     @Test
-    fun getInvalidDataTest() {
+    fun `invalid input test`() {
         runBlocking {
-            assertEquals("Subreddit androidd does not exist.", null, repo.getData("androidd"))
+            assertEquals( null, repo.getData("androidd"), "Subreddit androidd does not exist.")
         }
         runBlocking {
-            assertEquals("Empty sub name is not allowed.",null, repo.getData(""))
+            assertEquals(null, repo.getData(""), "Empty sub name is not allowed.")
         }
 
         runBlocking {
-            assertEquals("Spaces are not allowed", null, repo.getData("dank memes"))
+            assertEquals( null, repo.getData("dank memes"), "Spaces are not allowed")
         }
     }
 
     @Test
-    fun testFindSubreddits() {
+    fun `test find subreddits count`() {
         runBlocking {
-
             assertEquals(9, repo.findSubreddits("android", 9).size)
             assertEquals(12, repo.findSubreddits("android", 12).size)
-            assertEquals("Private subreddit is searchable",1, repo.findSubreddits("fgousa", 1).size)
+        }
+    }
+
+    @Test
+    fun `find private sub`() {
+        runBlocking {
+            val sub = repo.findSubreddits("fgousa", 1)
+            assertEquals("FGOUSA", sub[0].display_name, "Private subreddits are searchable")
         }
     }
 }

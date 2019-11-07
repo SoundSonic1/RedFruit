@@ -2,11 +2,9 @@ package com.example.redfruit.data.api
 
 import android.util.Log
 import com.beust.klaxon.JsonObject
-import com.beust.klaxon.Klaxon
 import com.beust.klaxon.Parser
 import com.example.redfruit.data.model.Token
 import com.example.redfruit.util.Constants
-import com.example.redfruit.util.IFactory
 import com.squareup.moshi.Moshi
 import okhttp3.FormBody
 import okhttp3.OkHttpClient
@@ -19,7 +17,6 @@ import java.util.*
 class TokenProvider(
     private val clientId: String,
     private val deviceId: String,
-    private val klaxonFactory: IFactory<Klaxon>,
     private var _token: Token? = null,
     private val tokenRefreshListener: (Token?) -> Unit = {}
 ) : ITokenProvider {

@@ -89,10 +89,9 @@ class AppModule {
     @Singleton
     fun provideTokenProvider(
         @Named("DeviceId") deviceId: String,
-        klaxonFactory: IFactory<Klaxon>,
         token: Token?,
         sharedPref: SharedPreferences
-    ): ITokenProvider = TokenProvider(BuildConfig.ClientId, deviceId, klaxonFactory, token) {
+    ): ITokenProvider = TokenProvider(BuildConfig.ClientId, deviceId, token) {
         it?.let {
             sharedPref.edit {
                 putString(Constants.TOKEN_KEY, it.access)

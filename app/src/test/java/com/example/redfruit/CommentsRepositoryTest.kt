@@ -9,15 +9,15 @@ import com.example.redfruit.data.repositories.CommentsRepository
 import com.example.redfruit.util.KlaxonFactory
 import kotlinx.coroutines.runBlocking
 import okhttp3.OkHttpClient
-import org.junit.Assert
-import org.junit.Test
+import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.Assertions.assertTrue
+import org.junit.jupiter.api.Test
 import java.util.*
 
 class CommentsRepositoryTest {
 
-    private val klaxonFactory = KlaxonFactory()
-
-    private val authenticator = TokenAuthenticator(TokenProvider(BuildConfig.ClientId, UUID.randomUUID().toString(), klaxonFactory))
+    private val authenticator =
+        TokenAuthenticator(TokenProvider(BuildConfig.ClientId, UUID.randomUUID().toString()))
 
     private val redditApi: IRedditApi =
         RedditApi(
@@ -28,7 +28,8 @@ class CommentsRepositoryTest {
         )
 
     @Test
-    fun testArchivedPostComments() {
+    fun `archived post comments`() {
+
         runBlocking {
             val repo = CommentsRepository(
                 redditApi,
@@ -37,58 +38,58 @@ class CommentsRepositoryTest {
             )
             val comments = repo.getComments(50)
 
-            Assert.assertEquals(3, comments.size)
+            assertEquals(3, comments.size)
 
             val firstComment = comments[0]
 
-            Assert.assertEquals("Watchful1", firstComment.author)
+            assertEquals("Watchful1", firstComment.author)
 
-            Assert.assertEquals(
+            assertEquals(
                 "It looks like it's encoding.\n\n`https://preview.redd.it/b561b7thjlr11.jpg?auto=webp&amp;s=41918f5d043abced1aa923ee57eef49566c0c2fc`\n\n`https://preview.redd.it/b561b7thjlr11.jpg?auto=webp&s=41918f5d043abced1aa923ee57eef49566c0c2fc`\n\nThe `&` symbol means \"start an encoded entity\", so it can't be used by itself. To escape it, you need to put `&amp;`. It looks like chrome, at least for me, isn't properly parsing that, and your code might not be either.",
                 firstComment.body
             )
 
-            Assert.assertEquals("e7l7wy2", firstComment.id)
+            assertEquals("e7l7wy2", firstComment.id)
 
-            Assert.assertEquals(0, firstComment.gildings.goldCount)
+            assertEquals(0, firstComment.gildings.goldCount)
 
-            Assert.assertEquals("Comment has two replies.",2, firstComment.replies.size)
+            assertEquals(2, firstComment.replies.size,"Comment has two replies.")
 
             val nestedComment = firstComment.replies[1]
 
-            Assert.assertEquals("Nested comment has one reply",1, nestedComment.replies.size)
+            assertEquals(1, nestedComment.replies.size,"Nested comment has one reply")
 
             val secondComment = comments[1]
 
-            Assert.assertEquals("egphilippov", secondComment.author)
-            Assert.assertEquals("Comment has no replies.",0, secondComment.replies.size)
+            assertEquals("egphilippov", secondComment.author)
+            assertEquals(0, secondComment.replies.size,"Comment has no replies.")
         }
     }
 
     @Test
-    fun testWrongInput() {
-        var repo =
+    fun `wrong input`() {
+        var newRepo =
             CommentsRepository(redditApi, "redditdev", "")
         runBlocking {
-            Assert.assertEquals(0, repo.getComments(50).size)
+            assertEquals(0, newRepo.getComments(50).size)
         }
 
-        repo = CommentsRepository(redditApi, "", "123456")
+        newRepo = CommentsRepository(redditApi, "", "123456")
         runBlocking {
-            Assert.assertEquals(0, repo.getComments(50).size)
+            assertEquals(0, newRepo.getComments(50).size)
         }
     }
 
     @Test
-    fun testLargeCommentCount() {
+    fun `large comment count`() {
         // contains kind: more
-        val repo = CommentsRepository(
+        val newRepo = CommentsRepository(
             redditApi,
             "grandorder",
             "d2n1a8"
         )
         runBlocking {
-            Assert.assertTrue(repo.getComments(100).isNotEmpty())
+            assertTrue(newRepo.getComments(100).isNotEmpty())
         }
     }
 }

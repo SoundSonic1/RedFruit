@@ -3,21 +3,18 @@ package com.example.redfruit
 import com.example.redfruit.data.api.TokenAuthenticator
 import com.example.redfruit.data.api.TokenProvider
 import com.example.redfruit.util.Constants
-import com.example.redfruit.util.KlaxonFactory
 import okhttp3.OkHttpClient
 import okhttp3.Request
-import org.junit.Assert
-import org.junit.Test
+import org.junit.jupiter.api.Assertions.assertTrue
+import org.junit.jupiter.api.Test
 import java.util.*
 
 class TokenAuthenticatorTest {
 
-    private val klaxonFactory = KlaxonFactory()
-
     @Test
-    fun testTokenRefresh() {
+    fun `automatic refresh of expired token`() {
 
-        val tokenProvider = TokenProvider(BuildConfig.ClientId, UUID.randomUUID().toString(), klaxonFactory)
+        val tokenProvider = TokenProvider(BuildConfig.ClientId, UUID.randomUUID().toString())
 
         val request = Request.Builder().apply {
             addHeader("User-Agent", Constants.USER_AGENT)
@@ -31,6 +28,6 @@ class TokenAuthenticatorTest {
             .build()
 
         val response = client.newCall(request).execute()
-        Assert.assertTrue(response.isSuccessful)
+        assertTrue(response.isSuccessful)
     }
 }

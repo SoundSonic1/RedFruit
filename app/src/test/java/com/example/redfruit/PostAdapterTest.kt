@@ -4,8 +4,8 @@ import com.example.redfruit.data.adapter.PostAdapter
 import com.example.redfruit.data.model.Post
 import com.example.redfruit.data.model.images.ImageSource
 import com.squareup.moshi.Moshi
-import org.junit.Assert
-import org.junit.Test
+import org.junit.jupiter.api.Assertions.*
+import org.junit.jupiter.api.Test
 
 class PostAdapterTest {
 
@@ -16,32 +16,32 @@ class PostAdapterTest {
         val adapter = moshi.adapter(Post::class.java)
         val post = adapter.fromJson(PostString)!!
 
-        Assert.assertEquals("MsElia", post.author)
+        assertEquals("MsElia", post.author)
 
-        Assert.assertEquals(
+        assertEquals(
             "Finally got all my dream Lancer, mine wish has become true, wish you guys got your dream Servant too.",
             post.title
         )
 
-        Assert.assertFalse(post.stickied)
-        Assert.assertTrue(post.over_18)
+        assertFalse(post.stickied)
+        assertTrue(post.over_18)
 
         val imageSource = ImageSource(
             "https://preview.redd.it/efxkoi0c15m31.jpg?auto=webp&amp;s=92ce8de5d3d2e35f7eedd8be01c79e063a770666",
             500,
             534
         )
-        Assert.assertEquals(imageSource, post.preview.firstImage?.source)
+        assertEquals(imageSource, post.preview.firstImage?.source)
 
-        Assert.assertEquals("1", post.score)
+        assertEquals("1", post.score)
 
-        Assert.assertEquals("d35r85", post.id)
+        assertEquals("d35r85", post.id)
 
-        Assert.assertEquals("https://i.redd.it/efxkoi0c15m31.jpg", post.url)
+        assertEquals("https://i.redd.it/efxkoi0c15m31.jpg", post.url)
 
-        Assert.assertEquals("There is no media", null, post.secureMedia)
+        assertNull(post.secureMedia, "Media must be null")
 
-        Assert.assertEquals("2", post.num_comments)
+        assertEquals("2", post.num_comments)
     }
 
 
