@@ -1,4 +1,4 @@
-package com.example.redfruit
+package com.example.redfruit.viewmodel
 
 import com.example.redfruit.data.model.enumeration.SortBy
 import com.example.redfruit.data.repositories.SubredditAboutRepository
@@ -6,7 +6,7 @@ import com.example.redfruit.ui.extension.getOrAwaitValue
 import com.example.redfruit.ui.shared.SubredditAboutViewModel
 import com.example.redfruit.util.Constants
 import com.example.redfruit.util.InstantExecutorExtension
-import com.example.redfruit.util.provideRetroFitRedditApi
+import com.example.redfruit.util.provideRedditApi
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.newSingleThreadContext
 import kotlinx.coroutines.runBlocking
@@ -24,7 +24,7 @@ class SubredditAboutViewModelTest {
     }
 
 
-    private val repo = SubredditAboutRepository(provideRetroFitRedditApi())
+    private val repo = SubredditAboutRepository(provideRedditApi())
 
     private val vm = SubredditAboutViewModel(
         Constants.DEFAULT_SUB,

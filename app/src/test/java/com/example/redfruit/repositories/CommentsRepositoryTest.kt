@@ -1,7 +1,7 @@
-package com.example.redfruit
+package com.example.redfruit.repositories
 
 import com.example.redfruit.data.repositories.CommentsRepository
-import com.example.redfruit.util.provideRetroFitRedditApi
+import com.example.redfruit.util.provideRedditApi
 import kotlinx.coroutines.runBlocking
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertTrue
@@ -10,7 +10,7 @@ import org.junit.jupiter.api.Test
 
 class CommentsRepositoryTest {
 
-    private val redditApi = provideRetroFitRedditApi()
+    private val redditApi = provideRedditApi()
 
     @Test
     fun `archived post comments`() {

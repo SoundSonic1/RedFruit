@@ -1,7 +1,7 @@
-package com.example.redfruit
+package com.example.redfruit.repositories
 
 import com.example.redfruit.data.repositories.SubredditAboutRepository
-import com.example.redfruit.util.provideRetroFitRedditApi
+import com.example.redfruit.util.provideRedditApi
 import kotlinx.coroutines.runBlocking
 import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.Test
@@ -9,7 +9,7 @@ import org.junit.jupiter.api.Test
 class SubredditAboutRepositoryTest {
 
     private val repo: SubredditAboutRepository =
-        SubredditAboutRepository(provideRetroFitRedditApi())
+        SubredditAboutRepository(provideRedditApi())
 
     @Test
     fun `valid input`() {

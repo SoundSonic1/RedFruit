@@ -1,4 +1,4 @@
-package com.example.redfruit
+package com.example.redfruit.adapter
 
 import com.example.redfruit.data.adapter.PostAdapter
 import com.example.redfruit.data.model.Post

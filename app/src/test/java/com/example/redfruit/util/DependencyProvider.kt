@@ -39,7 +39,7 @@ fun provideMoshi() = Moshi.Builder()
     .add(CommentsAdapter())
     .build()
 
-fun provideRetroFitRedditApi(): RedditApi {
+fun provideRedditApi(): RedditApi {
     val authenticator = provideAuthenticator()
     val client = provideOkhttpClient(authenticator)
     val moshi = provideMoshi()

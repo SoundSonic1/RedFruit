@@ -1,10 +1,10 @@
-package com.example.redfruit
+package com.example.redfruit.repositories
 
 import com.example.redfruit.data.model.Post
 import com.example.redfruit.data.model.enumeration.SortBy
 import com.example.redfruit.data.repositories.SubredditPostsRepository
 import com.example.redfruit.util.Constants
-import com.example.redfruit.util.provideRetroFitRedditApi
+import com.example.redfruit.util.provideRedditApi
 import kotlinx.coroutines.runBlocking
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertTrue
@@ -12,7 +12,7 @@ import org.junit.jupiter.api.Test
 
 class SubredditPostsRepositoryTest {
 
-    private val repo = SubredditPostsRepository(provideRetroFitRedditApi())
+    private val repo = SubredditPostsRepository(provideRedditApi())
 
     @Test
     fun `test post count`() {

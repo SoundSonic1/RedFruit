@@ -1,5 +1,6 @@
-package com.example.redfruit
+package com.example.redfruit.token
 
+import com.example.redfruit.BuildConfig
 import com.example.redfruit.data.api.TokenProvider
 import com.example.redfruit.util.provideOAuthApi
 import kotlinx.coroutines.runBlocking
