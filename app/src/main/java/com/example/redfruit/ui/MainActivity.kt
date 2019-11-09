@@ -11,7 +11,6 @@ import androidx.core.content.edit
 import androidx.core.view.GravityCompat
 import androidx.databinding.DataBindingUtil
 import androidx.drawerlayout.widget.DrawerLayout
-import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import com.example.redfruit.R
 import com.example.redfruit.databinding.ActivityMainBinding
@@ -22,16 +21,17 @@ import com.example.redfruit.util.findOrCreateFragment
 import com.example.redfruit.util.replaceFragmentIgnoreBackstack
 import com.google.android.material.navigation.NavigationView
 import dagger.android.support.DaggerAppCompatActivity
-import kotlinx.android.synthetic.main.activity_main.*
-import kotlinx.android.synthetic.main.app_bar_main.*
+import kotlinx.android.synthetic.main.activity_main.drawer_layout
+import kotlinx.android.synthetic.main.activity_main.nav_view
+import kotlinx.android.synthetic.main.activity_main.switch_compat
+import kotlinx.android.synthetic.main.app_bar_main.collapsingToolbarLayout
 import javax.inject.Inject
 import javax.inject.Provider
-
 
 /**
  * Entry point of our app. We use the single Activity, many fragments philosophy.
  * The app moves towards clean architecture in the form of MVVM and Repository pattern
- * @property homeFragment activity starts with this fragment
+ *
  * @property subredditAboutViewModel is a shared viewmodel to communicate between activity
  * and fragments
  */
@@ -45,8 +45,6 @@ class MainActivity : DaggerAppCompatActivity(), NavigationView.OnNavigationItemS
 
     @Inject
     lateinit var subredditAboutViewModel: SubredditAboutViewModel
-
-    lateinit var homeFragment: Fragment
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -100,7 +98,7 @@ class MainActivity : DaggerAppCompatActivity(), NavigationView.OnNavigationItemS
             sharedPref.edit { putString(getString(R.string.saved_subreddit), it.display_name) }
         })
 
-        homeFragment = findOrCreateFragment(supportFragmentManager, Constants.HOME_FRAGMENT_TAG) {
+        val homeFragment = findOrCreateFragment(supportFragmentManager, Constants.HOME_FRAGMENT_TAG) {
             homeFragmentProvider.get()
         }
 
@@ -144,27 +142,20 @@ class MainActivity : DaggerAppCompatActivity(), NavigationView.OnNavigationItemS
         // Handle navigation view item clicks here.
         when (item.itemId) {
             R.id.nav_home -> {
-
             }
             R.id.nav_gallery -> {
-
             }
             R.id.nav_slideshow -> {
-
             }
             R.id.nav_tools -> {
-
             }
             R.id.nav_share -> {
-
             }
             R.id.nav_send -> {
-
             }
         }
         val drawerLayout: DrawerLayout = findViewById(R.id.drawer_layout)
         drawerLayout.closeDrawer(GravityCompat.START)
         return true
     }
-
 }

@@ -9,8 +9,8 @@ import org.junit.jupiter.api.Test
 
 class PostAdapterTest {
 
-    val moshi = Moshi.Builder().add(PostAdapter()).build()
-    val adapter = moshi.adapter(Post::class.java)
+    private val moshi = Moshi.Builder().add(PostAdapter()).build()
+    private val adapter = moshi.adapter(Post::class.java)
 
     @Test
     fun testDeserialization() {

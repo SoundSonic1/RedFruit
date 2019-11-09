@@ -35,7 +35,8 @@ class CommentsFragment : DaggerFragment() {
     lateinit var linearLayoutManager: Provider<LinearLayoutManager>
 
     override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
+        inflater: LayoutInflater,
+        container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
         val binding: CommentsFragmentBinding =
@@ -74,5 +75,4 @@ class CommentsFragment : DaggerFragment() {
             }
         }
     }
-
 }

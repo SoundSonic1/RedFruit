@@ -25,7 +25,6 @@ class SuggestionsAdapter(
         cursor?.getString(cursor.getColumnIndex(Constants.SUGGESTIONS))?.let {
             suggestionTextView?.text = it
         }
-
     }
 
     override fun newView(context: Context?, cursor: Cursor?, parent: ViewGroup?): View {

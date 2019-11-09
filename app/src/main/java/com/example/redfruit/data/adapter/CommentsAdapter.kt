@@ -12,12 +12,10 @@ class CommentsAdapter @Inject constructor() {
     private val mapAdapter = moshi.adapter(Map::class.java)
     private val gildingsAdapter = moshi.adapter(Gildings::class.java)
 
-
     @FromJson
     fun fromJson(jsonListMap: List<Map<*, *>>): List<Comment> = jsonListMap.flatMap {
         fromJsonDetail(it)
     }
-
 
     private fun fromJsonDetail(jsonMap: Map<*, *>): List<Comment> {
 

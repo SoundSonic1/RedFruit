@@ -14,7 +14,8 @@ import com.example.redfruit.ui.shared.SubredditAboutViewModel
 class SubredditAboutFragment : Fragment() {
 
     override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
+        inflater: LayoutInflater,
+        container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
         val binding: SubredditAboutFragmentBinding = DataBindingUtil.inflate(
@@ -26,5 +27,4 @@ class SubredditAboutFragment : Fragment() {
 
         return binding.root
     }
-
 }

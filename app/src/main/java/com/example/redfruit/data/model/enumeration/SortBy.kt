@@ -1,7 +1,7 @@
 package com.example.redfruit.data.model.enumeration
 
 /**
- * reddit style of sorting posts
+ * possible ways to sort posts/comments
  */
 enum class SortBy {
     hot,

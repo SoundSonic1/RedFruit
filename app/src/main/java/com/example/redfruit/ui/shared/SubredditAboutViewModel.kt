@@ -9,15 +9,16 @@ import com.example.redfruit.data.model.enumeration.SortBy
 import com.example.redfruit.data.repositories.SubredditAboutRepository
 import com.example.redfruit.ui.base.IViewModel
 import kotlinx.coroutines.launch
-import java.util.*
+import java.util.Locale
 
 /**
  * ViewModel used for communication between Fragments and Activity
  * For now, we specify the type at compile time
  */
-class SubredditAboutViewModel(subreddit: String,
-                              sorting: SortBy,
-                              private val repo: SubredditAboutRepository
+class SubredditAboutViewModel(
+    subreddit: String,
+    sorting: SortBy,
+    private val repo: SubredditAboutRepository
 ) : ViewModel(), IViewModel<SubredditAbout> {
 
     private val _data: MutableLiveData<SubredditAbout> by lazy {
@@ -44,11 +45,11 @@ class SubredditAboutViewModel(subreddit: String,
      */
     suspend fun setSub(sub: String): Boolean {
         val subredditAbout = repo.getData(sub.toLowerCase(Locale.ENGLISH))
-        if (subredditAbout != null) {
+        return if (subredditAbout != null) {
             _data.value = subredditAbout
-            return true
+            true
         } else {
-            return false
+            false
         }
     }
 

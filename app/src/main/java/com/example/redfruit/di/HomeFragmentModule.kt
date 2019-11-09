@@ -2,9 +2,7 @@ package com.example.redfruit.di
 
 import android.content.Context
 import androidx.cursoradapter.widget.CursorAdapter
-import androidx.fragment.app.FragmentManager
 import com.example.redfruit.data.model.enumeration.SortBy
-import com.example.redfruit.ui.home.adapter.SubredditPagerAdapter
 import com.example.redfruit.ui.home.adapter.SuggestionsAdapter
 import com.example.redfruit.ui.home.fragment.HomeFragment
 import dagger.Module
@@ -27,16 +25,10 @@ object HomeFragmentModule {
         homeFragment.childFragmentManager
 
     @Provides
-    fun provideTabAdapter(
-        fragmentManager: FragmentManager,
-        @Named("savedSorting") sortBy: SortBy
-    ) = SubredditPagerAdapter(
-        mutableListOf(sortBy.name, "About"),
-        fragmentManager
-    )
+    fun provideCategories(@Named("savedSorting") sortBy: SortBy) =
+        mutableListOf(sortBy.name, "About")
 
     @Provides
     fun provideCursorAdapter(@Named("HomeFragmentContext") context: Context?): CursorAdapter =
         SuggestionsAdapter(context, null, 0)
-
 }

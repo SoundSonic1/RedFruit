@@ -2,7 +2,12 @@ package com.example.redfruit.ui.home.fragment
 
 import android.database.MatrixCursor
 import android.os.Bundle
-import android.view.*
+import android.view.LayoutInflater
+import android.view.Menu
+import android.view.MenuInflater
+import android.view.MenuItem
+import android.view.View
+import android.view.ViewGroup
 import android.widget.Toast
 import androidx.appcompat.widget.PopupMenu
 import androidx.appcompat.widget.SearchView
@@ -19,9 +24,10 @@ import com.example.redfruit.ui.shared.SubredditAboutViewModel
 import com.example.redfruit.util.Constants
 import com.google.android.material.tabs.TabLayout
 import dagger.android.support.DaggerFragment
-import kotlinx.android.synthetic.main.home_fragment.view.*
+import kotlinx.android.synthetic.main.home_fragment.view.tabsSortBy
+import kotlinx.android.synthetic.main.home_fragment.view.viewPagerHome
 import kotlinx.coroutines.launch
-import java.util.*
+import java.util.Locale
 import javax.inject.Inject
 
 class HomeFragment : DaggerFragment() {
@@ -38,7 +44,8 @@ class HomeFragment : DaggerFragment() {
     val subredditAboutViewModel by activityViewModels<SubredditAboutViewModel>()
 
     override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
+        inflater: LayoutInflater,
+        container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
         // required to create menu
@@ -105,7 +112,7 @@ class HomeFragment : DaggerFragment() {
 
         searchView.queryHint = getString(R.string.search_hint)
 
-        searchView.setOnQueryTextListener(object :  SearchView.OnQueryTextListener {
+        searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
             override fun onQueryTextChange(newText: String?): Boolean {
 
                 if (newText == null || newText.length < 4) return false
@@ -127,7 +134,6 @@ class HomeFragment : DaggerFragment() {
                 searchItem.collapseActionView()
                 return true
             }
-
         })
 
         searchView.setOnSuggestionListener(object : SearchView.OnSuggestionListener {
@@ -146,7 +152,7 @@ class HomeFragment : DaggerFragment() {
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        return when(item.itemId) {
+        return when (item.itemId) {
             R.id.sortMenu -> {
                 showPopUpSortMenu()
                 true
@@ -156,14 +162,14 @@ class HomeFragment : DaggerFragment() {
     }
 
     private fun showPopUpSortMenu() {
-        val item = activity?.findViewById<View>(R.id.sortMenu)
-        item?.let{
-            val menu = PopupMenu(requireContext(), it).apply {
+        val itemView = activity?.findViewById<View>(R.id.sortMenu)
+        itemView?.let { item ->
+            val menu = PopupMenu(requireContext(), item).apply {
                 inflate(R.menu.sortby_menu)
                 show()
             }
             menu.setOnMenuItemClickListener {
-                when(it.itemId) {
+                when (it.itemId) {
                     R.id.sortByHot -> {
                         subredditAboutViewModel.setSort(SortBy.hot)
                         changeSortByTitle(SortBy.hot)

@@ -29,5 +29,4 @@ object MainActivityModule {
         }
         return vm
     }
-
 }

@@ -9,9 +9,10 @@ import android.graphics.drawable.ColorDrawable
  * @param height of the drawable
  * @author https://stackoverflow.com/questions/2548466/how-to-use-colordrawable-with-imageview
  */
-class SizableColorDrawable(color: Int,
-                           private val width: Int,
-                           private val height: Int
+class SizableColorDrawable(
+    color: Int,
+    private val width: Int,
+    private val height: Int
 ) : ColorDrawable(color) {
 
     override fun getIntrinsicWidth(): Int = width

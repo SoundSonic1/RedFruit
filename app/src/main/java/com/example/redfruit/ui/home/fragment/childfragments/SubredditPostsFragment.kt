@@ -19,7 +19,8 @@ import com.example.redfruit.ui.home.viewmodel.HomePostsViewModel
 import com.example.redfruit.ui.shared.SubredditAboutViewModel
 import com.example.redfruit.util.Constants
 import dagger.android.support.DaggerFragment
-import kotlinx.android.synthetic.main.subreddit_posts_fragment.view.*
+import kotlinx.android.synthetic.main.subreddit_posts_fragment.view.homeSwipeRefresh
+import kotlinx.android.synthetic.main.subreddit_posts_fragment.view.recyclerViewPosts
 import javax.inject.Inject
 import javax.inject.Named
 import javax.inject.Provider
@@ -49,7 +50,8 @@ class SubredditPostsFragment : DaggerFragment() {
     lateinit var postListAdapter: PostListAdapter
 
     override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
+        inflater: LayoutInflater,
+        container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
         // get SubredditAboutViewModel instance from the MainActivity
@@ -80,7 +82,6 @@ class SubredditPostsFragment : DaggerFragment() {
             lifecycleOwner = viewLifecycleOwner
             viewModel = homePostsViewModel
         }
-
 
         val recyclerView = binding.root.recyclerViewPosts.apply {
             layoutManager = linearLayoutManagerProvider.get()

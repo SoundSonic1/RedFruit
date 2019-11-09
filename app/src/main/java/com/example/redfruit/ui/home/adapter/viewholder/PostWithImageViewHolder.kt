@@ -15,7 +15,7 @@ import kotlinx.android.synthetic.main.post_item_image.view.*
 
 class PostWithImageViewHolder(
     parent: ViewGroup,
-    private val fm : FragmentManager,
+    private val fm: FragmentManager,
     private val binding: PostItemImageBinding =
         DataBindingUtil.inflate(
             LayoutInflater.from(parent.context), R.layout.post_item_image,
@@ -36,6 +36,5 @@ class PostWithImageViewHolder(
                 Constants.IMAGE_FRAGMENT_TAG
             )
         }
-
     }
 }

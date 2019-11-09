@@ -27,7 +27,8 @@ class StreamVideoFragment : DaggerFullScreenFragment() {
     private lateinit var exoPlayer: ExoPlayer
 
     override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
+        inflater: LayoutInflater,
+        container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
 
@@ -69,5 +70,4 @@ class StreamVideoFragment : DaggerFullScreenFragment() {
             arguments = bundleOf(Constants.STREAM_URL_KEY to url)
         }
     }
-
 }

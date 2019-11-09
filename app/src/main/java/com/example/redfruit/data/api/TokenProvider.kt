@@ -3,14 +3,17 @@ package com.example.redfruit.data.api
 import android.util.Log
 import com.example.redfruit.data.model.Token
 import com.example.redfruit.util.Constants
-import java.util.*
+import java.util.Base64
+import javax.inject.Inject
+import javax.inject.Named
 
 /**
  * Manages the access token which is required for api calls
  */
-class TokenProvider(
-    clientId: String,
-    private val deviceId: String,
+@JvmSuppressWildcards
+class TokenProvider @Inject constructor(
+    @Named("ClientId") clientId: String,
+    @Named("DeviceId") private val deviceId: String,
     private val oAuthApi: OAuthApi,
     private var _token: Token? = null,
     private val tokenRefreshListener: (Token?) -> Unit = {}
@@ -34,7 +37,7 @@ class TokenProvider(
                 basic,
                 deviceId
             )
-        } catch (e : Throwable) {
+        } catch (e: Throwable) {
             null
         }
 
@@ -42,5 +45,4 @@ class TokenProvider(
 
         return token
     }
-
 }

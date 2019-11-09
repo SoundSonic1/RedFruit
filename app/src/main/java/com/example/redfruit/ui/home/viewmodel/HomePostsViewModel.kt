@@ -10,7 +10,7 @@ import com.example.redfruit.data.repositories.IPostsRepository
 import com.example.redfruit.ui.base.IViewModel
 import com.example.redfruit.util.Constants
 import kotlinx.coroutines.launch
-import java.util.*
+import java.util.Locale
 
 /**
  * Control logic of the SubredditPostsFragment

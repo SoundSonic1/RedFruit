@@ -4,14 +4,17 @@ import com.example.redfruit.data.api.RedditApi
 import com.example.redfruit.data.model.Post
 import com.example.redfruit.data.model.SubredditListing
 import com.example.redfruit.data.model.enumeration.SortBy
+import javax.inject.Inject
 
 /**
  * Repository which manages subreddit posts
  */
 class SubredditPostsRepository(
     private val redditApi: RedditApi,
-    private val subredditMap: MutableMap<Pair<String, SortBy>, SubredditListing> = mutableMapOf()
+    private val subredditMap: MutableMap<Pair<String, SortBy>, SubredditListing>
 ) : IPostsRepository {
+
+    @Inject constructor(redditApi: RedditApi) : this(redditApi, mutableMapOf())
 
     /**
      * Main function that returns a list of posts from a given subreddit
@@ -51,5 +54,4 @@ class SubredditPostsRepository(
      * Clear all data to make a clean refresh
      */
     override fun clearPosts() = subredditMap.clear()
-
 }

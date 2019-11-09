@@ -12,14 +12,14 @@ import com.example.redfruit.ui.base.DaggerFullScreenFragment
 import com.example.redfruit.util.Constants
 import javax.inject.Inject
 
-
 class ImageFragment : DaggerFullScreenFragment() {
 
     @Inject
     lateinit var url: String
 
     override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
+        inflater: LayoutInflater,
+        container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
 
@@ -39,5 +39,4 @@ class ImageFragment : DaggerFullScreenFragment() {
             arguments = bundleOf(Constants.IMAGE_URL_KEY to url)
         }
     }
-
 }

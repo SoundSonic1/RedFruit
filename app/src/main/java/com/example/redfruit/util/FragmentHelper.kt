@@ -49,7 +49,8 @@ fun replaceFragment(fm: FragmentManager, containerViewId: Int, fragment: Fragmen
 fun addFragment(
     fm: FragmentManager,
     containerViewId: Int,
-    fragment: Fragment, tag: String
+    fragment: Fragment,
+    tag: String
 ): Boolean {
 
     if (fragment.isAdded) return false

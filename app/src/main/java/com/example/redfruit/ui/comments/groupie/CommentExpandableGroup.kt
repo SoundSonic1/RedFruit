@@ -8,7 +8,7 @@ import com.xwray.groupie.ExpandableGroup
  */
 class CommentExpandableGroup(
     comment: Comment
-) : ExpandableGroup (CommentItem(comment)) {
+) : ExpandableGroup(CommentItem(comment)) {
 
     init {
         comment.replies.forEach {

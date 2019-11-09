@@ -12,10 +12,12 @@ import com.example.redfruit.data.adapter.CommentsAdapter
 import com.example.redfruit.data.adapter.SubredditAboutAdapter
 import com.example.redfruit.data.adapter.SubredditListingAdapter
 import com.example.redfruit.data.adapter.SubredditsAdapter
-import com.example.redfruit.data.api.*
+import com.example.redfruit.data.api.OAuthApi
+import com.example.redfruit.data.api.RedditApi
+import com.example.redfruit.data.api.TokenAuthenticator
+import com.example.redfruit.data.api.TokenInterceptor
 import com.example.redfruit.data.model.Token
 import com.example.redfruit.data.model.enumeration.SortBy
-import com.example.redfruit.data.repositories.SubredditAboutRepository
 import com.example.redfruit.util.Constants
 import com.squareup.moshi.Moshi
 import dagger.Module
@@ -24,7 +26,7 @@ import jp.wasabeef.recyclerview.animators.SlideInDownAnimator
 import okhttp3.OkHttpClient
 import retrofit2.Retrofit
 import retrofit2.converter.moshi.MoshiConverterFactory
-import java.util.*
+import java.util.UUID
 import javax.inject.Named
 import javax.inject.Singleton
 
@@ -40,6 +42,10 @@ class AppModule {
     @Singleton
     fun provideSharedPreference(app: Application): SharedPreferences =
         PreferenceManager.getDefaultSharedPreferences(app)
+
+    @Provides
+    @Named("ClientId")
+    fun provideClientId(): String = BuildConfig.ClientId
 
     @Provides
     @Named("savedSub")
@@ -65,14 +71,14 @@ class AppModule {
     @Named("DeviceId")
     fun provideDeviceId(sharedPref: SharedPreferences): String {
         val id = sharedPref.getString(Constants.DEVICE_ID_KEY, null)
-        if (id.isNullOrBlank()) {
+        return if (id.isNullOrBlank()) {
             val newId = UUID.randomUUID().toString()
             sharedPref.edit {
                 putString(Constants.DEVICE_ID_KEY, newId)
             }
-            return newId
+            newId
         } else {
-            return id
+            id
         }
     }
 
@@ -102,39 +108,30 @@ class AppModule {
         subredditAboutAdapter: SubredditAboutAdapter,
         subredditsAdapter: SubredditsAdapter,
         commentsAdapter: CommentsAdapter
-    ) = Moshi.Builder()
+    ): Moshi = Moshi.Builder()
         .add(subredditListingAdapter)
         .add(subredditAboutAdapter)
         .add(subredditsAdapter)
         .add(commentsAdapter)
         .build()
 
+    /**
+     * Save refreshed token
+     */
     @Provides
-    @Singleton
-    fun provideTokenProvider(
-        @Named("DeviceId") deviceId: String,
-        token: Token?,
-        oAuthApi: OAuthApi,
-        sharedPref: SharedPreferences
-    ): ITokenProvider = TokenProvider(BuildConfig.ClientId, deviceId, oAuthApi, token) {
-        it?.let {
+    fun provideTokenListener(sharedPref: SharedPreferences): (Token?) -> Unit {
+        return { it?.let {
             sharedPref.edit {
                 putString(Constants.TOKEN_KEY, it.access)
             }
-        }
+        } }
     }
 
     @Provides
     @Singleton
-    fun provideTokenAuthenticator(tokenProvider: ITokenProvider) = TokenAuthenticator(tokenProvider)
-
-    @Provides
-    fun provideTokenInterceptor(tokenAuthenticator: TokenAuthenticator) = TokenInterceptor(tokenAuthenticator)
-
-    @Provides
-    @Singleton
     fun provideOkhttpClient(
-        authenticator: TokenAuthenticator, interceptor: TokenInterceptor
+        authenticator: TokenAuthenticator,
+        interceptor: TokenInterceptor
     ) = OkHttpClient.Builder().addInterceptor(interceptor).authenticator(authenticator).build()
 
     @Provides
@@ -148,9 +145,6 @@ class AppModule {
         .baseUrl(Constants.BASE_URL)
         .build()
         .create(RedditApi::class.java)
-
-    @Provides
-    fun provideSubredditAboutRepo(api: RedditApi) = SubredditAboutRepository(api)
 
     @Provides
     @Named("ItemAnimator")

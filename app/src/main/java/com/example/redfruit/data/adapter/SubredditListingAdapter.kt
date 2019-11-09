@@ -23,7 +23,7 @@ class SubredditListingAdapter @Inject constructor() {
         val data = jsonMap["data"] as? Map<*, *> ?: return null
 
         @Suppress("UNCHECKED_CAST")
-        val children = data["children"] as? List<Map<*, *>>?: return null
+        val children = data["children"] as? List<Map<*, *>> ?: return null
 
         // check if children are posts
         if (children.any { it["kind"] != "t3" }) return null

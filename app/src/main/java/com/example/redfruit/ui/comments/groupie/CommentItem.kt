@@ -52,5 +52,4 @@ class CommentItem(
     override fun setExpandableGroup(onToggleListener: ExpandableGroup) {
         listener = onToggleListener
     }
-
 }

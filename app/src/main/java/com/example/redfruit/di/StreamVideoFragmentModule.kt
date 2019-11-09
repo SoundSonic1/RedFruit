@@ -12,8 +12,8 @@ import dagger.Provides
 object StreamVideoFragmentModule {
 
     @Provides
-    fun provideActivityContext(streamVideoFragment: StreamVideoFragment)
-            = streamVideoFragment.requireContext()
+    fun provideActivityContext(streamVideoFragment: StreamVideoFragment) =
+            streamVideoFragment.requireContext()
 
     @Provides
     fun provideExoPlayer(context: Context): ExoPlayer =
@@ -22,5 +22,4 @@ object StreamVideoFragmentModule {
     @Provides
     fun provideStreamUrl(fragment: StreamVideoFragment) =
         fragment.arguments?.getString(Constants.STREAM_URL_KEY) ?: ""
-
 }

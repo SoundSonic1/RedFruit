@@ -5,12 +5,16 @@ import com.example.redfruit.data.adapter.CommentsAdapter
 import com.example.redfruit.data.adapter.SubredditAboutAdapter
 import com.example.redfruit.data.adapter.SubredditListingAdapter
 import com.example.redfruit.data.adapter.SubredditsAdapter
-import com.example.redfruit.data.api.*
+import com.example.redfruit.data.api.OAuthApi
+import com.example.redfruit.data.api.RedditApi
+import com.example.redfruit.data.api.TokenAuthenticator
+import com.example.redfruit.data.api.TokenInterceptor
+import com.example.redfruit.data.api.TokenProvider
 import com.squareup.moshi.Moshi
 import okhttp3.OkHttpClient
 import retrofit2.Retrofit
 import retrofit2.converter.moshi.MoshiConverterFactory
-import java.util.*
+import java.util.UUID
 
 /**
  * Helper functions to provide dependencies for test classes
@@ -32,7 +36,7 @@ fun provideOkhttpClient(authenticator: TokenAuthenticator): OkHttpClient =
     OkHttpClient.Builder().addInterceptor(provideInterceptor(authenticator))
         .authenticator(authenticator).build()
 
-fun provideMoshi() = Moshi.Builder()
+fun provideMoshi(): Moshi = Moshi.Builder()
     .add(SubredditListingAdapter())
     .add(SubredditAboutAdapter())
     .add(SubredditsAdapter())

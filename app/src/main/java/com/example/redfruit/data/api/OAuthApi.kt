@@ -2,7 +2,12 @@ package com.example.redfruit.data.api
 
 import com.example.redfruit.data.model.Token
 import com.example.redfruit.util.Constants
-import retrofit2.http.*
+import retrofit2.http.Field
+import retrofit2.http.FormUrlEncoded
+import retrofit2.http.Header
+import retrofit2.http.Headers
+import retrofit2.http.POST
+import retrofit2.http.Url
 
 interface OAuthApi {
 

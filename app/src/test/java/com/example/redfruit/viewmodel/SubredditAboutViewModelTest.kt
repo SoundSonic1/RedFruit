@@ -8,6 +8,8 @@ import com.example.redfruit.util.Constants
 import com.example.redfruit.util.InstantExecutorExtension
 import com.example.redfruit.util.provideRedditApi
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.ObsoleteCoroutinesApi
 import kotlinx.coroutines.newSingleThreadContext
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.test.setMain
@@ -15,6 +17,8 @@ import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 
+@ObsoleteCoroutinesApi
+@ExperimentalCoroutinesApi
 @ExtendWith(InstantExecutorExtension::class)
 class SubredditAboutViewModelTest {
 

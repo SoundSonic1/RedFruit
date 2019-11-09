@@ -5,12 +5,15 @@ import okhttp3.Authenticator
 import okhttp3.Request
 import okhttp3.Response
 import okhttp3.Route
+import javax.inject.Inject
+import javax.inject.Singleton
 
 /**
  * Custom authenticator which automatically refreshes the token if response is 401
  */
-class TokenAuthenticator(
-    private val tokenProvider: ITokenProvider
+@Singleton
+class TokenAuthenticator @Inject constructor(
+    private val tokenProvider: TokenProvider
 ) : Authenticator {
 
     val currentToken get() = tokenProvider.token
