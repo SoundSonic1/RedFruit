@@ -3,9 +3,14 @@ package com.example.redfruit.adapter
 import com.example.redfruit.data.adapter.PostAdapter
 import com.example.redfruit.data.model.Post
 import com.example.redfruit.data.model.images.ImageSource
+import com.squareup.moshi.JsonDataException
 import com.squareup.moshi.Moshi
-import org.junit.jupiter.api.Assertions.*
+import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.Assertions.assertFalse
+import org.junit.jupiter.api.Assertions.assertNull
+import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.assertThrows
 
 class PostAdapterTest {
 
@@ -13,7 +18,7 @@ class PostAdapterTest {
     private val adapter = moshi.adapter(Post::class.java)
 
     @Test
-    fun testDeserialization() {
+    fun `deserialize valid string`() {
 
         val post = adapter.fromJson(PostString)!!
 
@@ -43,6 +48,21 @@ class PostAdapterTest {
         assertNull(post.secureMedia, "Media must be null")
 
         assertEquals("2", post.num_comments)
+    }
+
+    @Test
+    fun `empty data should throw JsonDataException`() {
+        assertThrows<JsonDataException> {
+            adapter.fromJson("""{"data": null}""")
+        }
+
+        assertThrows<JsonDataException> {
+            adapter.fromJson("""{"data": {}}""")
+        }
+
+        assertThrows<JsonDataException> {
+            adapter.fromJson("""{"data": ""}""")
+        }
     }
 
 

@@ -9,6 +9,7 @@ import com.example.redfruit.data.model.media.RedditVideo
 import com.example.redfruit.data.model.media.SecureMedia
 import com.example.redfruit.data.model.media.YoutubeoEmbed
 import com.squareup.moshi.FromJson
+import com.squareup.moshi.JsonDataException
 import com.squareup.moshi.Moshi
 import javax.inject.Inject
 
@@ -29,7 +30,10 @@ class PostAdapter @Inject constructor() {
     @FromJson
     fun fromJson(jsonMap: Map<*, *>): Post {
 
-        val data = jsonMap["data"] as Map<*, *>
+        val data = jsonMap["data"] as? Map<*, *> ?: throw JsonDataException(
+            "PostAdapter.fromJson(): type \"data\" does not exist."
+        )
+
         val preview = data["preview"] as? Map<*, *>
         val enabled = preview?.get("enabled") as? Boolean ?: false
 
