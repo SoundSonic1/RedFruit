@@ -40,7 +40,8 @@ class SubredditListingAdapterTest {
     }
 
     companion object {
-        val validString = """{
+
+       private const val validString = """{
   "kind": "Listing",
   "data": {
     "modhash": "crrpz9bgqb837a3badb94e44809fd36ec78aa8113bac851b58",

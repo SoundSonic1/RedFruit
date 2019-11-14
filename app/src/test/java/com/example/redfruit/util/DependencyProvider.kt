@@ -29,11 +29,9 @@ fun provideOAuthApi(): OAuthApi = Retrofit
 
 fun provideAuthenticator(): TokenAuthenticator {
 
-    val tokenAuthenticator = TokenAuthenticator(
+    return TokenAuthenticator(
         TokenProvider(BuildConfig.ClientId, UUID.randomUUID().toString(), provideOAuthApi())
     )
-
-    return tokenAuthenticator
 }
 
 fun provideInterceptor(authenticator: TokenAuthenticator) = TokenInterceptor(authenticator)
