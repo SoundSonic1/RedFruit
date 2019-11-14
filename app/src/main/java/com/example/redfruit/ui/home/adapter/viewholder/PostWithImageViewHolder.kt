@@ -11,7 +11,8 @@ import com.example.redfruit.ui.base.AbstractViewHolder
 import com.example.redfruit.ui.media.fragment.ImageFragment
 import com.example.redfruit.util.Constants
 import com.example.redfruit.util.addOrShowFragment
-import kotlinx.android.synthetic.main.post_item_image.view.*
+import kotlinx.android.synthetic.main.post_item_image.view.postImageView
+import kotlinx.android.synthetic.main.post_item_image.view.postTitleAuthorIncludeImage
 
 class PostWithImageViewHolder(
     parent: ViewGroup,

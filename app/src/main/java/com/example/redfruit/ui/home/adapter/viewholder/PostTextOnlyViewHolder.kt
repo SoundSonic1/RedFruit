@@ -7,7 +7,7 @@ import com.example.redfruit.R
 import com.example.redfruit.data.model.Post
 import com.example.redfruit.databinding.PostItemTextBinding
 import com.example.redfruit.ui.base.AbstractViewHolder
-import kotlinx.android.synthetic.main.post_item_text.view.*
+import kotlinx.android.synthetic.main.post_item_text.view.postTitleAuthorText
 
 class PostTextOnlyViewHolder(
     parent: ViewGroup,
