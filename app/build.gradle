@@ -153,3 +153,12 @@ ktlint {
 jacoco {
     toolVersion = "0.8.5"
 }
+
+jacocoAndroidUnitTestReport {
+    // ignore ui components
+    excludes += ['**/*Fragment*.*',
+                 '**/*Activity*.*',
+                 '**/*ViewPager*.*',
+                 '**/*ViewHolder*.*',
+                 '**/*Module*.*']
+}
