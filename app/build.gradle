@@ -132,4 +132,13 @@ dependencies {
 
 ktlint {
     android.set(true)
+
+    reporters {
+        customReporters {
+            register("html") {
+                fileExtension = "html"
+                dependency = "me.cassiano:ktlint-html-reporter:0.2.3"
+            }
+        }
+    }
 }
