@@ -47,14 +47,15 @@ class CommentsFragment : DaggerFragment() {
         binding.lifecycleOwner = viewLifecycleOwner
         binding.viewModel = viewModel
 
-        val recyclerView = binding.root.findViewById<RecyclerView>(R.id.recycler_view_comments).apply {
-            adapter = groupAdapter
-            layoutManager = linearLayoutManager.get()
-            addItemDecoration(
-                DividerItemDecoration(requireContext(), LinearLayoutManager.VERTICAL)
-            )
-            setHasFixedSize(true)
-        }
+        val recyclerView =
+            binding.root.findViewById<RecyclerView>(R.id.recycler_view_comments).apply {
+                adapter = groupAdapter
+                layoutManager = linearLayoutManager.get()
+                addItemDecoration(
+                    DividerItemDecoration(requireContext(), LinearLayoutManager.VERTICAL)
+                )
+                setHasFixedSize(true)
+            }
 
         recyclerView.itemAnimator?.apply {
             addDuration = 400

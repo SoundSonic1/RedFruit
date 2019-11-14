@@ -61,6 +61,7 @@ class HomeFragment : DaggerFragment() {
 
         homeView.tabsSortBy.addOnTabSelectedListener(
             object : TabLayout.ViewPagerOnTabSelectedListener(viewPagerHome) {
+
                 override fun onTabSelected(tab: TabLayout.Tab) = Unit
 
                 override fun onTabUnselected(tab: TabLayout.Tab) = Unit
@@ -70,12 +71,14 @@ class HomeFragment : DaggerFragment() {
                  *  @author: https://stackoverflow.com/questions/18609261/getting-the-current-fragment-instance-in-the-viewpager
                  */
                 override fun onTabReselected(tab: TabLayout.Tab) {
-                    val tag = "android:switcher:" + viewPagerHome.id + ":" + viewPagerHome.currentItem
+                    val tag = "android:switcher:${viewPagerHome.id}:${viewPagerHome.currentItem}"
                     val fragment = childFragmentManager.findFragmentByTag(tag)
                     fragment?.let {
-                       it.view?.findViewById<RecyclerView>(R.id.recyclerViewPosts)?.apply {
-                           this.layoutManager?.smoothScrollToPosition(this, RecyclerView.State(), 0)
-                       }
+                        it.view?.findViewById<RecyclerView>(R.id.recyclerViewPosts)?.apply {
+                            this.layoutManager?.smoothScrollToPosition(
+                                this, RecyclerView.State(), 0
+                            )
+                        }
                     }
                 }
             }

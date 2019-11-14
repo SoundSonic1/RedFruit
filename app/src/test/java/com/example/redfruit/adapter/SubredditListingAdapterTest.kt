@@ -40,7 +40,7 @@ class SubredditListingAdapterTest {
     }
 
     companion object {
-        val validString ="""{
+        val validString = """{
   "kind": "Listing",
   "data": {
     "modhash": "crrpz9bgqb837a3badb94e44809fd36ec78aa8113bac851b58",
@@ -174,6 +174,5 @@ class SubredditListingAdapterTest {
       "before": null
       }
 }"""
-
     }
 }

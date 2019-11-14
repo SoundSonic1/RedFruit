@@ -51,7 +51,7 @@ class TokenProviderTest {
     fun `trigger refresh listener`() {
         var triggered = false
         val provider = TokenProvider(BuildConfig.ClientId, UUID.randomUUID().toString(), oauthApi) {
-           triggered = true
+            triggered = true
         }
         runBlocking {
             provider.refreshToken()

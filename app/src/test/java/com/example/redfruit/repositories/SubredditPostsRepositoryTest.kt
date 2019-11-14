@@ -28,7 +28,6 @@ class SubredditPostsRepositoryTest {
             assertTrue(repo.getPosts("empty", sortByNew, 10).isEmpty())
             assertEquals(10, repo.getPosts(Constants.DEFAULT_SUB, SortPostBy.rising, 10).size)
         }
-
     }
 
     @Test

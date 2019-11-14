@@ -27,8 +27,14 @@ fun provideOAuthApi(): OAuthApi = Retrofit
     .build()
     .create(OAuthApi::class.java)
 
-fun provideAuthenticator() =
-    TokenAuthenticator(TokenProvider(BuildConfig.ClientId, UUID.randomUUID().toString(), provideOAuthApi()))
+fun provideAuthenticator(): TokenAuthenticator {
+
+    val tokenAuthenticator = TokenAuthenticator(
+        TokenProvider(BuildConfig.ClientId, UUID.randomUUID().toString(), provideOAuthApi())
+    )
+
+    return tokenAuthenticator
+}
 
 fun provideInterceptor(authenticator: TokenAuthenticator) = TokenInterceptor(authenticator)
 

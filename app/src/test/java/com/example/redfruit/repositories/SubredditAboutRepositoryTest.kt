@@ -3,7 +3,10 @@ package com.example.redfruit.repositories
 import com.example.redfruit.data.repositories.SubredditAboutRepository
 import com.example.redfruit.util.provideRedditApi
 import kotlinx.coroutines.runBlocking
-import org.junit.jupiter.api.Assertions.*
+import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.Assertions.assertNotNull
+import org.junit.jupiter.api.Assertions.assertNull
+import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.Test
 
 class SubredditAboutRepositoryTest {
@@ -19,7 +22,6 @@ class SubredditAboutRepositoryTest {
             assertNotNull(subredditAbout, "Underscore is valid")
             assertEquals("Memes_of_dank", subredditAbout?.display_name)
         }
-
     }
 
     @Test
@@ -46,8 +48,6 @@ class SubredditAboutRepositoryTest {
         runBlocking {
             assertEquals(9, repo.findSubreddits("android", 9).size)
             assertEquals(1, repo.findSubreddits("android", 1).size)
-            /*assertTrue(repo.findSubreddits("android", -1).isEmpty())
-            assertTrue(repo.findSubreddits("android", 0).isEmpty())*/
         }
     }
 

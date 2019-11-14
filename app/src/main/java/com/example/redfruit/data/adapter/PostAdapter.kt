@@ -43,8 +43,9 @@ class PostAdapter @Inject constructor() {
             val res = resolutionsList.map { value ->
                 mapAdapter.toJson(value)
             }
+            val source = imageAdapter.fromJson(mapAdapter.toJson(imageMap["source"] as Map<*, *>))!!
             RedditImage(
-                source = imageAdapter.fromJson(mapAdapter.toJson(imageMap["source"] as Map<*, *>))!!,
+                source = source,
                 resolutions = res.map { imageAdapter.fromJson(it)!! }
             )
         }

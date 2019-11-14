@@ -7,7 +7,6 @@ import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.Test
 
-
 class CommentsRepositoryTest {
 
     private val redditApi = provideRedditApi()
@@ -38,16 +37,16 @@ class CommentsRepositoryTest {
 
             assertEquals(0, firstComment.gildings.goldCount)
 
-            assertEquals(2, firstComment.replies.size,"Comment has two replies.")
+            assertEquals(2, firstComment.replies.size, "Comment has two replies.")
 
             val nestedComment = firstComment.replies[1]
 
-            assertEquals(1, nestedComment.replies.size,"Nested comment has one reply")
+            assertEquals(1, nestedComment.replies.size, "Nested comment has one reply")
 
             val secondComment = comments[1]
 
             assertEquals("egphilippov", secondComment.author)
-            assertTrue(secondComment.replies.isEmpty(),"Comment has no replies.")
+            assertTrue(secondComment.replies.isEmpty(), "Comment has no replies.")
         }
     }
 

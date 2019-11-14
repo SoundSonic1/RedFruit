@@ -12,7 +12,7 @@ class CommentExpandableGroup(
 
     init {
         comment.replies.forEach {
-           add(CommentExpandableGroup(it))
+            add(CommentExpandableGroup(it))
         }
     }
 }

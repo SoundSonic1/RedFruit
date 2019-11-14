@@ -37,12 +37,15 @@ class CommentsAdapter @Inject constructor() {
         // replies can be json obj or empty string
         val replies = data["replies"] as? Map<*, *>
 
+        val gildings =
+            gildingsAdapter.fromJson(mapAdapter.toJson(data["gildings"] as Map<*, *>)) ?: Gildings()
+
         return Comment(
             author = data["author"] as? String ?: "Unknown",
             body = data["body"] as? String ?: "",
             created = (data["created"] as? Double)?.toLong() ?: 0,
             created_utc = (data["created_utc"] as? Double)?.toLong() ?: 0,
-            gildings = gildingsAdapter.fromJson(mapAdapter.toJson(data["gildings"] as Map<*, *>)) ?: Gildings(),
+            gildings = gildings,
             id = data["id"] as? String ?: "",
             score = (data["score"] as? Double)?.toInt() ?: 0,
             replies = if (replies != null) {

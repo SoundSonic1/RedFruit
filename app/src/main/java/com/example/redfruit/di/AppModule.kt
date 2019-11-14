@@ -62,7 +62,10 @@ class AppModule {
     fun provideSavedSortPref(
         pref: SharedPreferences
     ): SortPostBy {
-        val sort = pref.getString(Constants.SORTBY_SHARED_KEY, SortPostBy.hot.name) ?: SortPostBy.hot.name
+
+        val sort = pref.getString(
+            Constants.SORTBY_SHARED_KEY, SortPostBy.hot.name) ?: SortPostBy.hot.name
+
         return SortPostBy.valueOf(sort)
     }
 

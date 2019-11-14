@@ -98,9 +98,9 @@ class MainActivity : DaggerAppCompatActivity(), NavigationView.OnNavigationItemS
             sharedPref.edit { putString(getString(R.string.saved_subreddit), it.display_name) }
         })
 
-        val homeFragment = findOrCreateFragment(supportFragmentManager, Constants.HOME_FRAGMENT_TAG) {
-            homeFragmentProvider.get()
-        }
+        val homeFragment = findOrCreateFragment(
+            supportFragmentManager, Constants.HOME_FRAGMENT_TAG
+        ) { homeFragmentProvider.get() }
 
         // Start with home fragment
         if (savedInstanceState == null) {

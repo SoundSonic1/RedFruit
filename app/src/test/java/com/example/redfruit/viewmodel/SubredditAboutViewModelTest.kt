@@ -27,7 +27,6 @@ class SubredditAboutViewModelTest {
         Dispatchers.setMain(newSingleThreadContext("UI thread"))
     }
 
-
     private val repo = SubredditAboutRepository(provideRedditApi())
 
     private val vm = SubredditAboutViewModel(
@@ -50,7 +49,11 @@ class SubredditAboutViewModelTest {
             vm.setSub("News")
         }
 
-        assertEquals("news", vm.data.getOrAwaitValue().display_name, "Should change subreddit to news")
+        assertEquals(
+            "news",
+            vm.data.getOrAwaitValue().display_name,
+            "Should change subreddit to news"
+        )
     }
 
     @Test

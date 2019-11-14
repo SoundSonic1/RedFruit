@@ -32,7 +32,9 @@ class SubredditPostsRepository(
         }
 
         val responseListing = try {
-            redditApi.getSubredditListing(sub, sortPostBy.name, subreddit.after, limit.toString()) ?: return listOf()
+            redditApi.getSubredditListing(
+                sub, sortPostBy.name, subreddit.after, limit.toString()
+            ) ?: return listOf()
         } catch (e: Throwable) {
             return listOf()
         }

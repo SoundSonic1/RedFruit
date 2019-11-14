@@ -26,6 +26,9 @@ jobs:
       - run:
           name: Run Android lint tool
           command: ./gradlew lintDebug
+      - run:
+          name: Run klintDebugCheck
+          command: ./gradlew ktlintDebugCheck
       - store_artifacts: # for display in Artifacts: https://circleci.com/docs/2.0/artifacts/
           path: app/build/reports
           destination: reports
