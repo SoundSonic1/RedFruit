@@ -1,6 +1,7 @@
 # RedFruit
 
 [![CircleCI](https://circleci.com/gh/SoundSonic1/RedFruit.svg?style=svg)](https://circleci.com/gh/SoundSonic1/RedFruit)
+[![codecov](https://codecov.io/gh/SoundSonic1/RedFruit/branch/master/graph/badge.svg)](https://codecov.io/gh/SoundSonic1/RedFruit)
 
 This is a Reddit app which is fully written in Kotlin. It is my personal app to learn modern  
 Android design patterns such as MVVM and dependency injection with Dagger.  
