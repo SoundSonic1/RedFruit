@@ -11,10 +11,7 @@ import com.example.redfruit.data.model.Post
 import com.example.redfruit.data.model.Preview
 import com.example.redfruit.util.SizableColorDrawable
 
-/**
- * Collect all RecyclerViewBindingAdapters here
- */
-object RecyclerViewBindingAdapters {
+object HomeRecyclerViewBindingAdapters {
     /**
      * items might be null because the ViewModel which provides them is
      * not yet initialized
@@ -73,18 +70,4 @@ object RecyclerViewBindingAdapters {
         }
     }
 
-    /*@JvmStatic
-    @BindingAdapter("urlEmbedded")
-    fun loadUrlPreview(urlEmbeddedView: URLEmbeddedView, post: Post) {
-        if (post.urlEmbeddedData == null) {
-            urlEmbeddedView.setURL(post.url, object : URLEmbeddedView.OnLoadURLListener {
-                override fun onLoadURLCompleted(data: URLEmbeddedData) {
-                    post.urlEmbeddedData = data
-                    urlEmbeddedView.setData(data)
-                }
-            })
-        } else {
-            urlEmbeddedView.setData(post.urlEmbeddedData!!)
-        }
-    }*/
 }
