@@ -29,6 +29,9 @@ jobs:
       - run:
           name: Run klintDebugCheck
           command: ./gradlew ktlintDebugCheck
+      - run:
+          name: Run jacocoTest
+          command: ./gradlew jacocoTestDebugUnitTestReport
       - store_artifacts: # for display in Artifacts: https://circleci.com/docs/2.0/artifacts/
           path: app/build/reports
           destination: reports
