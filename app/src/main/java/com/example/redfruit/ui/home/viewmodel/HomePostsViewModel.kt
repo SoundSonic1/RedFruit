@@ -9,7 +9,6 @@ import com.example.redfruit.data.model.enumeration.SortPostBy
 import com.example.redfruit.data.repositories.IPostsRepository
 import com.example.redfruit.ui.base.IViewModel
 import com.example.redfruit.util.Constants
-import java.util.Locale
 import kotlinx.coroutines.launch
 
 /**
@@ -31,7 +30,9 @@ class HomePostsViewModel(
         MutableLiveData<List<Post>>().also {
             viewModelScope.launch {
                 isLoading.value = true
-                it.value = get(Constants.LIMIT)
+                it.value = repo.loadMorePosts(
+                    _subReddit, sortPostBy, Constants.LIMIT
+                )
                 isLoading.value = false
             }
         }
@@ -48,7 +49,8 @@ class HomePostsViewModel(
         viewModelScope.launch {
             isLoading.value = true
             try {
-                _data.value = get(count)
+                _data.value =
+                    repo.loadMorePosts(_subReddit, sortPostBy, count)
             } finally {
                 isLoading.value = false
             }
@@ -64,8 +66,4 @@ class HomePostsViewModel(
         repo.clearPosts()
         loadMoreData(Constants.LIMIT)
     }
-
-    // call to the api
-    private suspend fun get(count: Int) =
-        repo.getPosts(_subReddit.toLowerCase(Locale.ENGLISH), sortPostBy, count)
 }

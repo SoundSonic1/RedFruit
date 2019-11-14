@@ -4,6 +4,7 @@ import com.example.redfruit.data.api.RedditApi
 import com.example.redfruit.data.model.Post
 import com.example.redfruit.data.model.SubredditListing
 import com.example.redfruit.data.model.enumeration.SortPostBy
+import java.util.Locale
 import javax.inject.Inject
 
 /**
@@ -25,9 +26,13 @@ class SubredditPostsRepository(
      * @param limit the amount of the posts that are to be fetched
      * @return a list of reddit posts
      */
-    override suspend fun getPosts(sub: String, sortPostBy: SortPostBy, limit: Int): List<Post> {
+    override suspend fun loadMorePosts(
+        sub: String,
+        sortPostBy: SortPostBy,
+        limit: Int
+    ): List<Post> {
 
-        val subreddit = subredditMap.getOrPut(Pair(sub, sortPostBy)) {
+        val subreddit = subredditMap.getOrPut(Pair(sub.toLowerCase(Locale.ENGLISH), sortPostBy)) {
             SubredditListing(sub)
         }
 
