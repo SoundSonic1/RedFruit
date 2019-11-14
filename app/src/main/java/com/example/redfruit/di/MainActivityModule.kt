@@ -1,7 +1,7 @@
 package com.example.redfruit.di
 
 import androidx.activity.viewModels
-import com.example.redfruit.data.model.enumeration.SortBy
+import com.example.redfruit.data.model.enumeration.SortPostBy
 import com.example.redfruit.data.repositories.SubredditAboutRepository
 import com.example.redfruit.ui.MainActivity
 import com.example.redfruit.ui.home.fragment.HomeFragment
@@ -21,11 +21,11 @@ object MainActivityModule {
     fun provideSubredditViewModel(
         mainActivity: MainActivity,
         @Named("savedSub") sub: String,
-        @Named("savedSorting") sortBy: SortBy,
+        @Named("savedSorting") sortPostBy: SortPostBy,
         repo: SubredditAboutRepository
     ): SubredditAboutViewModel {
         val vm by mainActivity.viewModels<SubredditAboutViewModel> {
-            BaseVMFactory { SubredditAboutViewModel(sub, sortBy, repo) }
+            BaseVMFactory { SubredditAboutViewModel(sub, sortPostBy, repo) }
         }
         return vm
     }

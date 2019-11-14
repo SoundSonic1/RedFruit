@@ -17,18 +17,18 @@ import com.example.redfruit.data.api.RedditApi
 import com.example.redfruit.data.api.TokenAuthenticator
 import com.example.redfruit.data.api.TokenInterceptor
 import com.example.redfruit.data.model.Token
-import com.example.redfruit.data.model.enumeration.SortBy
+import com.example.redfruit.data.model.enumeration.SortPostBy
 import com.example.redfruit.util.Constants
 import com.squareup.moshi.Moshi
 import dagger.Module
 import dagger.Provides
+import java.util.UUID
+import javax.inject.Named
+import javax.inject.Singleton
 import jp.wasabeef.recyclerview.animators.SlideInDownAnimator
 import okhttp3.OkHttpClient
 import retrofit2.Retrofit
 import retrofit2.converter.moshi.MoshiConverterFactory
-import java.util.UUID
-import javax.inject.Named
-import javax.inject.Singleton
 
 @Module
 class AppModule {
@@ -61,9 +61,9 @@ class AppModule {
     @Named("savedSorting")
     fun provideSavedSortPref(
         pref: SharedPreferences
-    ): SortBy {
-        val sort = pref.getString(Constants.SORTBY_SHARED_KEY, SortBy.hot.name) ?: SortBy.hot.name
-        return SortBy.valueOf(sort)
+    ): SortPostBy {
+        val sort = pref.getString(Constants.SORTBY_SHARED_KEY, SortPostBy.hot.name) ?: SortPostBy.hot.name
+        return SortPostBy.valueOf(sort)
     }
 
     @Provides

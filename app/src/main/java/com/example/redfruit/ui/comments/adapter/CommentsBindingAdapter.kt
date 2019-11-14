@@ -14,6 +14,7 @@ object CommentsBindingAdapter {
     fun loadComments(recyclerView: RecyclerView, comments: List<CommentExpandableGroup>?) {
         val adapter = recyclerView.adapter
         if (comments != null && adapter is GroupAdapter) {
+            adapter.clear()
             adapter.addAll(comments)
         }
     }

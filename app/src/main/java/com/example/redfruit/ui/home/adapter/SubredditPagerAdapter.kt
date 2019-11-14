@@ -8,7 +8,7 @@ import com.example.redfruit.ui.home.fragment.childfragments.SubredditPostsFragme
 import javax.inject.Inject
 
 /**
- * Show posts based on SortBy preference and About page of the subreddit
+ * Show posts based on SortPostBy preference and About page of the subreddit
  */
 class SubredditPagerAdapter @Inject constructor(
     val categories: MutableList<String>,

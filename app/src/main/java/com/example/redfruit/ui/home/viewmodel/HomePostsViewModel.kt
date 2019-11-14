@@ -5,12 +5,12 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.redfruit.data.model.Post
-import com.example.redfruit.data.model.enumeration.SortBy
+import com.example.redfruit.data.model.enumeration.SortPostBy
 import com.example.redfruit.data.repositories.IPostsRepository
 import com.example.redfruit.ui.base.IViewModel
 import com.example.redfruit.util.Constants
-import kotlinx.coroutines.launch
 import java.util.Locale
+import kotlinx.coroutines.launch
 
 /**
  * Control logic of the SubredditPostsFragment
@@ -19,7 +19,7 @@ import java.util.Locale
  */
 class HomePostsViewModel(
     private var _subReddit: String,
-    var sortBy: SortBy,
+    var sortPostBy: SortPostBy,
     private val repo: IPostsRepository
 ) : ViewModel(), IViewModel<List<Post>> {
 
@@ -67,5 +67,5 @@ class HomePostsViewModel(
 
     // call to the api
     private suspend fun get(count: Int) =
-        repo.getPosts(_subReddit.toLowerCase(Locale.ENGLISH), sortBy, count)
+        repo.getPosts(_subReddit.toLowerCase(Locale.ENGLISH), sortPostBy, count)
 }

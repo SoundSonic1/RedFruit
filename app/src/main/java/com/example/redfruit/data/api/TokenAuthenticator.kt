@@ -1,12 +1,12 @@
 package com.example.redfruit.data.api
 
+import javax.inject.Inject
+import javax.inject.Singleton
 import kotlinx.coroutines.runBlocking
 import okhttp3.Authenticator
 import okhttp3.Request
 import okhttp3.Response
 import okhttp3.Route
-import javax.inject.Inject
-import javax.inject.Singleton
 
 /**
  * Custom authenticator which automatically refreshes the token if response is 401

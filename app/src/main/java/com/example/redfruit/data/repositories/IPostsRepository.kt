@@ -1,9 +1,9 @@
 package com.example.redfruit.data.repositories
 
 import com.example.redfruit.data.model.Post
-import com.example.redfruit.data.model.enumeration.SortBy
+import com.example.redfruit.data.model.enumeration.SortPostBy
 
 interface IPostsRepository {
-    suspend fun getPosts(sub: String, sortBy: SortBy, limit: Int): List<Post>
+    suspend fun getPosts(sub: String, sortPostBy: SortPostBy, limit: Int): List<Post>
     fun clearPosts()
 }

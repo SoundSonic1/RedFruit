@@ -3,7 +3,7 @@ package com.example.redfruit.data.repositories
 import com.example.redfruit.data.api.RedditApi
 import com.example.redfruit.data.model.Post
 import com.example.redfruit.data.model.SubredditListing
-import com.example.redfruit.data.model.enumeration.SortBy
+import com.example.redfruit.data.model.enumeration.SortPostBy
 import javax.inject.Inject
 
 /**
@@ -11,7 +11,7 @@ import javax.inject.Inject
  */
 class SubredditPostsRepository(
     private val redditApi: RedditApi,
-    private val subredditMap: MutableMap<Pair<String, SortBy>, SubredditListing>
+    private val subredditMap: MutableMap<Pair<String, SortPostBy>, SubredditListing>
 ) : IPostsRepository {
 
     @Inject constructor(redditApi: RedditApi) : this(redditApi, mutableMapOf())
@@ -21,18 +21,18 @@ class SubredditPostsRepository(
      * for ViewModels
      *
      * @param sub name of the subreddit
-     * @param sortBy how the posts should be sorted
+     * @param sortPostBy how the posts should be sorted
      * @param limit the amount of the posts that are to be fetched
      * @return a list of reddit posts
      */
-    override suspend fun getPosts(sub: String, sortBy: SortBy, limit: Int): List<Post> {
+    override suspend fun getPosts(sub: String, sortPostBy: SortPostBy, limit: Int): List<Post> {
 
-        val subreddit = subredditMap.getOrPut(Pair(sub, sortBy)) {
+        val subreddit = subredditMap.getOrPut(Pair(sub, sortPostBy)) {
             SubredditListing(sub)
         }
 
         val responseListing = try {
-            redditApi.getSubredditListing(sub, sortBy.name, subreddit.after, limit.toString()) ?: return listOf()
+            redditApi.getSubredditListing(sub, sortPostBy.name, subreddit.after, limit.toString()) ?: return listOf()
         } catch (e: Throwable) {
             return listOf()
         }

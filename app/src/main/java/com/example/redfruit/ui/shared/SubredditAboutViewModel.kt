@@ -5,11 +5,11 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.redfruit.data.model.SubredditAbout
-import com.example.redfruit.data.model.enumeration.SortBy
+import com.example.redfruit.data.model.enumeration.SortPostBy
 import com.example.redfruit.data.repositories.SubredditAboutRepository
 import com.example.redfruit.ui.base.IViewModel
-import kotlinx.coroutines.launch
 import java.util.Locale
+import kotlinx.coroutines.launch
 
 /**
  * ViewModel used for communication between Fragments and Activity
@@ -17,7 +17,7 @@ import java.util.Locale
  */
 class SubredditAboutViewModel(
     subreddit: String,
-    sorting: SortBy,
+    sorting: SortPostBy,
     private val repo: SubredditAboutRepository
 ) : ViewModel(), IViewModel<SubredditAbout> {
 
@@ -29,13 +29,13 @@ class SubredditAboutViewModel(
         }
     }
 
-    private val _sortBy: MutableLiveData<SortBy> = MutableLiveData(sorting)
+    private val _sortPostBy: MutableLiveData<SortPostBy> = MutableLiveData(sorting)
 
     private val _subreddits: MutableLiveData<List<SubredditAbout>> = MutableLiveData()
 
     override val data: LiveData<SubredditAbout> get() = _data
 
-    val sortBy: LiveData<SortBy> get() = _sortBy
+    val sortPostBy: LiveData<SortPostBy> get() = _sortPostBy
 
     val subreddits: LiveData<List<SubredditAbout>> get() = _subreddits
 
@@ -53,8 +53,8 @@ class SubredditAboutViewModel(
         }
     }
 
-    fun setSort(sortBy: SortBy) {
-        _sortBy.value = sortBy
+    fun setSort(sortPostBy: SortPostBy) {
+        _sortPostBy.value = sortPostBy
     }
 
     /**

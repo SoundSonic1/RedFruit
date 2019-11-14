@@ -1,6 +1,6 @@
 package com.example.redfruit.viewmodel
 
-import com.example.redfruit.data.model.enumeration.SortBy
+import com.example.redfruit.data.model.enumeration.SortPostBy
 import com.example.redfruit.data.repositories.SubredditAboutRepository
 import com.example.redfruit.ui.extension.getOrAwaitValue
 import com.example.redfruit.ui.shared.SubredditAboutViewModel
@@ -32,16 +32,16 @@ class SubredditAboutViewModelTest {
 
     private val vm = SubredditAboutViewModel(
         Constants.DEFAULT_SUB,
-        SortBy.hot,
+        SortPostBy.hot,
         repo
     )
 
     @Test
     fun `set sorting`() {
 
-        vm.setSort(SortBy.controversial)
+        vm.setSort(SortPostBy.controversial)
 
-        assertEquals(SortBy.controversial, vm.sortBy.getOrAwaitValue())
+        assertEquals(SortPostBy.controversial, vm.sortPostBy.getOrAwaitValue())
     }
 
     @Test

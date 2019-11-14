@@ -19,11 +19,11 @@ import com.example.redfruit.ui.home.viewmodel.HomePostsViewModel
 import com.example.redfruit.ui.shared.SubredditAboutViewModel
 import com.example.redfruit.util.Constants
 import dagger.android.support.DaggerFragment
-import kotlinx.android.synthetic.main.subreddit_posts_fragment.view.homeSwipeRefresh
-import kotlinx.android.synthetic.main.subreddit_posts_fragment.view.recyclerViewPosts
 import javax.inject.Inject
 import javax.inject.Named
 import javax.inject.Provider
+import kotlinx.android.synthetic.main.subreddit_posts_fragment.view.homeSwipeRefresh
+import kotlinx.android.synthetic.main.subreddit_posts_fragment.view.recyclerViewPosts
 
 /**
  * Fragment that displays the posts of a subreddit
@@ -63,13 +63,13 @@ class SubredditPostsFragment : DaggerFragment() {
             }
         })
 
-        subredditAboutViewModel.sortBy.observe(viewLifecycleOwner, Observer {
-            if (it != homePostsViewModel.sortBy) {
+        subredditAboutViewModel.sortPostBy.observe(viewLifecycleOwner, Observer {
+            if (it != homePostsViewModel.sortPostBy) {
                 sharedPref.edit {
                     putString(Constants.SORTBY_SHARED_KEY, it.name)
                 }
                 postListAdapter.submitList(listOf())
-                homePostsViewModel.sortBy = it
+                homePostsViewModel.sortPostBy = it
                 homePostsViewModel.loadMoreData(Constants.LIMIT)
             }
         })

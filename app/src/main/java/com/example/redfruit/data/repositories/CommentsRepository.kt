@@ -6,7 +6,7 @@ import javax.inject.Inject
 import javax.inject.Named
 
 /**
- * Repository for fetching comments
+ * Repository for fetching comments for CommentsViewModel
  */
 class CommentsRepository @Inject constructor(
     private val redditApi: RedditApi,

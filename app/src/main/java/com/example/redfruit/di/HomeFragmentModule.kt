@@ -2,7 +2,7 @@ package com.example.redfruit.di
 
 import android.content.Context
 import androidx.cursoradapter.widget.CursorAdapter
-import com.example.redfruit.data.model.enumeration.SortBy
+import com.example.redfruit.data.model.enumeration.SortPostBy
 import com.example.redfruit.ui.home.adapter.SuggestionsAdapter
 import com.example.redfruit.ui.home.fragment.HomeFragment
 import dagger.Module
@@ -25,8 +25,8 @@ object HomeFragmentModule {
         homeFragment.childFragmentManager
 
     @Provides
-    fun provideCategories(@Named("savedSorting") sortBy: SortBy) =
-        mutableListOf(sortBy.name, "About")
+    fun provideCategories(@Named("savedSorting") sortPostBy: SortPostBy) =
+        mutableListOf(sortPostBy.name, "About")
 
     @Provides
     fun provideCursorAdapter(@Named("HomeFragmentContext") context: Context?): CursorAdapter =

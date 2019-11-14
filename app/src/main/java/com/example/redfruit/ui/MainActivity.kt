@@ -21,12 +21,12 @@ import com.example.redfruit.util.findOrCreateFragment
 import com.example.redfruit.util.replaceFragmentIgnoreBackstack
 import com.google.android.material.navigation.NavigationView
 import dagger.android.support.DaggerAppCompatActivity
+import javax.inject.Inject
+import javax.inject.Provider
 import kotlinx.android.synthetic.main.activity_main.drawer_layout
 import kotlinx.android.synthetic.main.activity_main.nav_view
 import kotlinx.android.synthetic.main.activity_main.switch_compat
 import kotlinx.android.synthetic.main.app_bar_main.collapsingToolbarLayout
-import javax.inject.Inject
-import javax.inject.Provider
 
 /**
  * Entry point of our app. We use the single Activity, many fragments philosophy.

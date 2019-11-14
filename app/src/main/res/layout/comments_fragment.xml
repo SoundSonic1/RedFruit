@@ -11,13 +11,22 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             tools:context=".ui.comments.fragment.CommentsFragment">
-        <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/recycler_view_comments"
+        <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+                android:id="@+id/commentsSwipeRefresh"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                app:comments="@{viewModel.data}">
+                app:onRefreshListener="@{() -> viewModel.refreshComments()}"
+                app:refreshing="@{viewModel.isLoading}"
+                >
 
-        </androidx.recyclerview.widget.RecyclerView>
+            <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/recycler_view_comments"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    app:comments="@{viewModel.data}">
+
+            </androidx.recyclerview.widget.RecyclerView>
+        </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
     </FrameLayout>
 </layout>

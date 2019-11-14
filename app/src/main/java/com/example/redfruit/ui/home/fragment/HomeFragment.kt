@@ -17,18 +17,18 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.RecyclerView
 import com.example.redfruit.R
-import com.example.redfruit.data.model.enumeration.SortBy
+import com.example.redfruit.data.model.enumeration.SortPostBy
 import com.example.redfruit.data.repositories.SubredditAboutRepository
 import com.example.redfruit.ui.home.adapter.SubredditPagerAdapter
 import com.example.redfruit.ui.shared.SubredditAboutViewModel
 import com.example.redfruit.util.Constants
 import com.google.android.material.tabs.TabLayout
 import dagger.android.support.DaggerFragment
+import java.util.Locale
+import javax.inject.Inject
 import kotlinx.android.synthetic.main.home_fragment.view.tabsSortBy
 import kotlinx.android.synthetic.main.home_fragment.view.viewPagerHome
 import kotlinx.coroutines.launch
-import java.util.Locale
-import javax.inject.Inject
 
 class HomeFragment : DaggerFragment() {
 
@@ -171,28 +171,28 @@ class HomeFragment : DaggerFragment() {
             menu.setOnMenuItemClickListener {
                 when (it.itemId) {
                     R.id.sortByHot -> {
-                        subredditAboutViewModel.setSort(SortBy.hot)
-                        changeSortByTitle(SortBy.hot)
+                        subredditAboutViewModel.setSort(SortPostBy.hot)
+                        changeSortByTitle(SortPostBy.hot)
                         true
                     }
                     R.id.sortByNew -> {
-                        subredditAboutViewModel.setSort(SortBy.new)
-                        changeSortByTitle(SortBy.new)
+                        subredditAboutViewModel.setSort(SortPostBy.new)
+                        changeSortByTitle(SortPostBy.new)
                         true
                     }
                     R.id.sortByTop -> {
-                        subredditAboutViewModel.setSort(SortBy.top)
-                        changeSortByTitle(SortBy.top)
+                        subredditAboutViewModel.setSort(SortPostBy.top)
+                        changeSortByTitle(SortPostBy.top)
                         true
                     }
                     R.id.sortByRising -> {
-                        subredditAboutViewModel.setSort(SortBy.rising)
-                        changeSortByTitle(SortBy.rising)
+                        subredditAboutViewModel.setSort(SortPostBy.rising)
+                        changeSortByTitle(SortPostBy.rising)
                         true
                     }
                     R.id.sortByControversial -> {
-                        subredditAboutViewModel.setSort(SortBy.controversial)
-                        changeSortByTitle(SortBy.controversial)
+                        subredditAboutViewModel.setSort(SortPostBy.controversial)
+                        changeSortByTitle(SortPostBy.controversial)
                         true
                     }
                     else -> false
@@ -201,8 +201,8 @@ class HomeFragment : DaggerFragment() {
         }
     }
 
-    private fun changeSortByTitle(sortBy: SortBy) {
-        subredditPagerAdapter.categories[0] = sortBy.name
+    private fun changeSortByTitle(sortPostBy: SortPostBy) {
+        subredditPagerAdapter.categories[0] = sortPostBy.name
         subredditPagerAdapter.notifyDataSetChanged()
     }
 

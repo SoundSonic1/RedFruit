@@ -1,9 +1,6 @@
 package com.example.redfruit.data.model.enumeration
 
-/**
- * possible ways to sort posts/comments
- */
-enum class SortBy {
+enum class SortPostBy {
     hot,
     new,
     controversial,

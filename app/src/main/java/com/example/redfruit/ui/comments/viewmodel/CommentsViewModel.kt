@@ -13,15 +13,35 @@ class CommentsViewModel(
     private val repo: ICommentsRepository
 ) : ViewModel(), IViewModel<List<CommentExpandableGroup>> {
 
+    private val _isLoading = MutableLiveData<Boolean>(false)
+
     private val _data: MutableLiveData<List<CommentExpandableGroup>> by lazy {
         MutableLiveData<List<CommentExpandableGroup>>().also {
-           viewModelScope.launch {
-               it.value = repo.getComments(200).map {
-                   CommentExpandableGroup(it)
-               }
-           }
+            _isLoading.value = true
+            viewModelScope.launch {
+                it.value = repo.getComments(limit).map {
+                    CommentExpandableGroup(it)
+                }
+                _isLoading.value = false
+            }
         }
     }
 
     override val data: LiveData<List<CommentExpandableGroup>> get() = _data
+
+    val isLoading: LiveData<Boolean> get() = _isLoading
+
+    fun refreshComments() {
+        _isLoading.value = true
+        viewModelScope.launch {
+            _data.value = repo.getComments(limit).map {
+                CommentExpandableGroup(it)
+            }
+            _isLoading.value = false
+        }
+    }
+
+    companion object {
+        private const val limit = 200
+    }
 }

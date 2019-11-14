@@ -5,7 +5,7 @@ import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.redfruit.R
-import com.example.redfruit.data.model.enumeration.SortBy
+import com.example.redfruit.data.model.enumeration.SortPostBy
 import com.example.redfruit.data.repositories.SubredditPostsRepository
 import com.example.redfruit.ui.comments.fragment.CommentsFragment
 import com.example.redfruit.ui.home.adapter.PostListAdapter
@@ -17,8 +17,8 @@ import com.example.redfruit.util.addOrShowFragment
 import com.example.redfruit.util.findOrCreateFragment
 import dagger.Module
 import dagger.Provides
-import jp.wasabeef.recyclerview.animators.SlideInDownAnimator
 import javax.inject.Named
+import jp.wasabeef.recyclerview.animators.SlideInDownAnimator
 
 @Module
 object SubredditPostsFragmentModule {
@@ -57,11 +57,11 @@ object SubredditPostsFragmentModule {
     fun provideHomeViewModel(
         fragment: SubredditPostsFragment,
         @Named("savedSub") savedSub: String,
-        @Named("savedSorting") sortBy: SortBy,
+        @Named("savedSorting") sortPostBy: SortPostBy,
         repo: SubredditPostsRepository
     ): HomePostsViewModel {
         val vm by fragment.viewModels<HomePostsViewModel> {
-            BaseVMFactory { HomePostsViewModel(savedSub, sortBy, repo) }
+            BaseVMFactory { HomePostsViewModel(savedSub, sortPostBy, repo) }
         }
         return vm
     }

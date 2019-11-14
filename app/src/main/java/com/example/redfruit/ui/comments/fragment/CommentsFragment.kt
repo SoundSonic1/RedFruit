@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.content.ContextCompat
 import androidx.core.os.bundleOf
 import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.DividerItemDecoration
@@ -19,9 +20,10 @@ import com.xwray.groupie.GroupieViewHolder
 import dagger.android.support.DaggerFragment
 import javax.inject.Inject
 import javax.inject.Provider
+import kotlinx.android.synthetic.main.comments_fragment.view.commentsSwipeRefresh
 
 /**
- * Fragments that displays the post details including the comments of user
+ * Displays the detailed post and the comment section
  */
 class CommentsFragment : DaggerFragment() {
 
@@ -59,6 +61,14 @@ class CommentsFragment : DaggerFragment() {
             removeDuration = 400
             moveDuration = 400
             changeDuration = 400
+        }
+
+        binding.root.commentsSwipeRefresh.apply {
+            setColorSchemeColors(
+                ContextCompat.getColor(requireContext(), R.color.colorPrimary),
+                ContextCompat.getColor(requireContext(), R.color.colorPrimaryDark),
+                ContextCompat.getColor(requireContext(), R.color.colorAccent)
+            )
         }
 
         return binding.root
