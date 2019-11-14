@@ -32,6 +32,9 @@ jobs:
       - run:
           name: Run jacocoTest
           command: ./gradlew jacocoTestDebugUnitTestReport
+      - run:
+          name: Upload to codecov
+          command: bash <(curl -s https://codecov.io/bash)
       - store_artifacts: # for display in Artifacts: https://circleci.com/docs/2.0/artifacts/
           path: app/build/reports
           destination: reports
