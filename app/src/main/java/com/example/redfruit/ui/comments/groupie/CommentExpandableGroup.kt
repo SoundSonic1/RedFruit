@@ -4,7 +4,7 @@ import com.example.redfruit.data.model.Comment
 import com.xwray.groupie.ExpandableGroup
 
 /**
- * Use ExpandableGroupe to represent nested comments
+ * Use ExpandableGroup to represent nested comments
  */
 class CommentExpandableGroup(
     comment: Comment
