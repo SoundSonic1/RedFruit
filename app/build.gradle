@@ -155,10 +155,17 @@ jacoco {
 }
 
 jacocoAndroidUnitTestReport {
-    // ignore ui components
+    // ignore ui components for now
     excludes += ['**/*Fragment*.*',
                  '**/*Activity*.*',
+                 '**/*App.*',
                  '**/*ViewPager*.*',
                  '**/*ViewHolder*.*',
+                 '**/*VMFactory*.*',
+                 '**/*ListAdapter*.*',
+                 '**/*PagerAdapter*.*',
+                 '**/*BindingAdapters*.*',
+                 '**/*Constants*.*',
+                 '**/*ColorDrawable*.*',
                  '**/*Module*.*']
 }

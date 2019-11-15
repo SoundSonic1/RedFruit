@@ -30,7 +30,12 @@ class PostAdapterTest {
         )
 
         assertFalse(post.stickied)
+
         assertTrue(post.over_18)
+
+        assertTrue(post.preview.enabled)
+
+        assertTrue(post.preview.images.isNotEmpty())
 
         val imageSource = ImageSource(
             "https://preview.redd.it/efxkoi0c15m31.jpg?auto=webp&amp;s=92ce8de5d3d2e35f7eedd8be01c79e063a770666",

@@ -7,7 +7,7 @@ import com.example.redfruit.ui.comments.groupie.CommentExpandableGroup
 import com.xwray.groupie.GroupAdapter
 import io.noties.markwon.Markwon
 
-object CommentsBindingAdapter {
+object CommentsBindingAdapters {
 
     @JvmStatic
     @BindingAdapter("comments")
