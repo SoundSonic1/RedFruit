@@ -7,7 +7,7 @@ import androidx.lifecycle.viewModelScope
 import com.example.redfruit.data.model.SubredditAbout
 import com.example.redfruit.data.model.enumeration.SortPostBy
 import com.example.redfruit.data.repositories.SubredditAboutRepository
-import com.example.redfruit.ui.base.IViewModel
+import com.example.redfruit.ui.base.ILiveData
 import java.util.Locale
 import kotlinx.coroutines.launch
 
@@ -19,7 +19,7 @@ class SubredditAboutViewModel(
     subreddit: String,
     sorting: SortPostBy,
     private val repo: SubredditAboutRepository
-) : ViewModel(), IViewModel<SubredditAbout> {
+) : ViewModel(), ILiveData<SubredditAbout> {
 
     private val _data: MutableLiveData<SubredditAbout> by lazy {
         MutableLiveData<SubredditAbout>().also {

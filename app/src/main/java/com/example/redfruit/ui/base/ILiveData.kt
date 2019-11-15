@@ -7,6 +7,6 @@ import androidx.lifecycle.LiveData
  * @property data observable data holder, immutable
  * @param T data type which is exposed
  */
-interface IViewModel<T> {
+interface ILiveData<T> {
     val data: LiveData<T>
 }
