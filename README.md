@@ -3,8 +3,8 @@
 [![CircleCI](https://circleci.com/gh/SoundSonic1/RedFruit.svg?style=svg)](https://circleci.com/gh/SoundSonic1/RedFruit)
 [![codecov](https://codecov.io/gh/SoundSonic1/RedFruit/branch/master/graph/badge.svg)](https://codecov.io/gh/SoundSonic1/RedFruit)
 
-This is a Reddit app which is fully written in Kotlin. It is my personal app to learn modern  
-Android design patterns such as MVVM and dependency injection with Dagger.  
+RedFruit is a Reddit app, fully written in Kotlin. The app displays modern Android architecture like
+MVVM and dependency injection via Dagger2.
 
 In order to build this app, you need to have a Reddit account.  
 Once you have that, head over to [this](https://www.reddit.com/prefs/apps) page to get a client id for the app.  
