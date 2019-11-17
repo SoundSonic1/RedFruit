@@ -13,6 +13,8 @@ import com.example.redfruit.ui.shared.SubredditAboutViewModel
 
 class SubredditAboutFragment : Fragment() {
 
+    private val viewModel by activityViewModels<SubredditAboutViewModel>()
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -22,7 +24,6 @@ class SubredditAboutFragment : Fragment() {
             inflater, R.layout.subreddit_about_fragment, container, false)
 
         binding.lifecycleOwner = viewLifecycleOwner
-        val viewModel by activityViewModels<SubredditAboutViewModel>()
         binding.viewModel = viewModel
 
         return binding.root

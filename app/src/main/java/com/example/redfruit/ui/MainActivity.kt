@@ -32,8 +32,6 @@ import kotlinx.android.synthetic.main.app_bar_main.collapsingToolbarLayout
  * Entry point of our app. We use the single Activity, many fragments philosophy.
  * The app moves towards clean architecture in the form of MVVM and Repository pattern
  *
- * @property subredditAboutViewModel is a shared viewmodel to communicate between activity
- * and fragments
  */
 class MainActivity : DaggerAppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
 

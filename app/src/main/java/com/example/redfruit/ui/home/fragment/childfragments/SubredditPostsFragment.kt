@@ -27,10 +27,7 @@ import kotlinx.android.synthetic.main.subreddit_posts_fragment.view.recyclerView
 
 /**
  * Fragment that displays the posts of a subreddit
- * @property homePostsViewModel control logic of the fragment
- * @property linearLayoutManagerProvider gets new instance of LayoutManager
- * @property postListAdapter used for RecyclerView
- */
+*/
 class SubredditPostsFragment : DaggerFragment() {
 
     @Inject

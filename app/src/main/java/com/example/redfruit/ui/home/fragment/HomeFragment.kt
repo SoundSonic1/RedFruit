@@ -18,7 +18,6 @@ import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.RecyclerView
 import com.example.redfruit.R
 import com.example.redfruit.data.model.enumeration.SortPostBy
-import com.example.redfruit.data.repositories.SubredditAboutRepository
 import com.example.redfruit.ui.home.adapter.SubredditPagerAdapter
 import com.example.redfruit.ui.shared.SubredditAboutViewModel
 import com.example.redfruit.util.Constants
@@ -38,10 +37,7 @@ class HomeFragment : DaggerFragment() {
     @Inject
     lateinit var cursorAdapter: CursorAdapter
 
-    @Inject
-    lateinit var repo: SubredditAboutRepository
-
-    val subredditAboutViewModel by activityViewModels<SubredditAboutViewModel>()
+    private val subredditAboutViewModel by activityViewModels<SubredditAboutViewModel>()
 
     override fun onCreateView(
         inflater: LayoutInflater,
