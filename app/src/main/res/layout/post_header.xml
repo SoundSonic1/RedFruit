@@ -39,7 +39,7 @@
                     android:layout_height="wrap_content"
                     android:textSize="9sp"
                     android:text="@string/over_18"
-                    android:textColor="@color/colorCardViewBackground"
+                    android:textColor="@android:color/white"
                     android:paddingStart="1dp"
                     android:paddingEnd="1dp"
                     android:drawableStart="@drawable/ic_warning_14dp">
@@ -62,7 +62,7 @@
                     android:layout_height="wrap_content"
                     android:drawableStart="@drawable/ic_create_14dp"
                     android:textSize="9sp"
-                    android:textColor="@color/colorCardViewBackground"
+                    android:textColor="@android:color/white"
                     android:paddingStart="1dp"
                     android:paddingEnd="1dp"
                     android:text="@string/stickied">
