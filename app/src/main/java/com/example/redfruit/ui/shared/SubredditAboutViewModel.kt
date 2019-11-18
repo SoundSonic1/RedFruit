@@ -70,9 +70,11 @@ class SubredditAboutViewModel(
      * Change subreddit on click
      */
     fun changeSubOnClick(pos: Int): Boolean {
-        if (subreddits.value?.size ?: -1 < pos) return false
 
-        _data.value = subreddits.value!![pos]
+        val subs = subreddits.value?.getOrNull(pos) ?: return false
+
+        _data.value = subs
+
         return true
     }
 

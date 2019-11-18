@@ -37,6 +37,12 @@ class CommentsRepositoryTest {
 
             assertEquals(0, firstComment.gildings.goldCount)
 
+            assertEquals(1539311220, firstComment.created)
+
+            assertEquals(1539282420, firstComment.created_utc)
+
+            assertEquals(0, firstComment.depth)
+
             assertEquals(2, firstComment.replies.size, "Comment has two replies.")
 
             val nestedComment = firstComment.replies[1]

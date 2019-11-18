@@ -31,4 +31,11 @@ class CommentsViewModelTest {
     fun `load comments on creation`() {
         assertTrue(vm.data.getOrAwaitValue(5L).isNotEmpty())
     }
+
+    @Test
+    fun `refresh comments`() {
+        assertTrue(vm.data.getOrAwaitValue(5L).isNotEmpty())
+        vm.refreshComments()
+        assertTrue(vm.data.getOrAwaitValue(5L).isNotEmpty())
+    }
 }

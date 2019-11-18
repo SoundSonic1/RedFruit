@@ -3,12 +3,14 @@ package com.example.redfruit.adapter
 import com.example.redfruit.data.adapter.PostAdapter
 import com.example.redfruit.data.model.Post
 import com.example.redfruit.data.model.images.ImageSource
+import com.example.redfruit.data.model.media.YoutubeoEmbed
 import com.squareup.moshi.JsonDataException
 import com.squareup.moshi.Moshi
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertFalse
-import org.junit.jupiter.api.Assertions.assertNull
+import org.junit.jupiter.api.Assertions.assertNotNull
 import org.junit.jupiter.api.Assertions.assertTrue
+import org.junit.jupiter.api.Assertions.fail
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
 
@@ -20,7 +22,7 @@ class PostAdapterTest {
     @Test
     fun `deserialize valid string`() {
 
-        val post = adapter.fromJson(PostString)!!
+        val post = adapter.fromJson(PostString) ?: fail()
 
         assertEquals("MsElia", post.author)
 
@@ -50,7 +52,21 @@ class PostAdapterTest {
 
         assertEquals("https://i.redd.it/efxkoi0c15m31.jpg", post.url)
 
-        assertNull(post.secureMedia, "Media must be null")
+        assertNotNull(post.secureMedia, "Media must not be null")
+
+        val youtubeoEmbed = YoutubeoEmbed(
+            provider_url = "https://www.youtube.com/",
+            thumbnail_url = "https://i.ytimg.com/vi/xNGhsr4wmyQ/hqdefault.jpg",
+            thumbnail_width = 480,
+            thumbnail_height = 360,
+            html = "&lt;iframe width=\"600\" height=\"338\" src=\"https://www.youtube.com/embed/xNGhsr4wmyQ?feature=oembed&amp;enablejsapi=1\" frameborder=\"0\" allow=\"accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture\" allowfullscreen&gt;&lt;/iframe&gt;",
+            width = 600,
+            height = 338
+        )
+
+        assertEquals(youtubeoEmbed, post.secureMedia?.youtubeoEmbed)
+
+        assertEquals("xNGhsr4wmyQ", post.secureMedia?.youtubeoEmbed?.youtubeId)
 
         assertEquals("2", post.num_comments)
     }
@@ -113,7 +129,24 @@ class PostAdapterTest {
     "user_reports": [
       
     ],
-    "secure_media": null,
+    "secure_media": {
+    "type": "youtube.com",
+            "oembed": {
+              "provider_url": "https:\/\/www.youtube.com\/",
+              "version": "1.0",
+              "title": "Pixel 4 Presents: A Motion Sense Experiment. With Karol G &amp; DJ Felo.",
+              "type": "video",
+              "thumbnail_width": 480,
+              "height": 338,
+              "width": 600,
+              "html": "&lt;iframe width=\"600\" height=\"338\" src=\"https:\/\/www.youtube.com\/embed\/xNGhsr4wmyQ?feature=oembed&amp;enablejsapi=1\" frameborder=\"0\" allow=\"accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture\" allowfullscreen&gt;&lt;\/iframe&gt;",
+              "author_name": "Made by Google",
+              "provider_name": "YouTube",
+              "thumbnail_url": "https:\/\/i.ytimg.com\/vi\/xNGhsr4wmyQ\/hqdefault.jpg",
+              "thumbnail_height": 360,
+              "author_url": "https:\/\/www.youtube.com\/channel\/UCIG1k8umaCIIrujZPzZPIMA"
+            }
+    },
     "is_reddit_media_domain": true,
     "is_meta": false,
     "category": null,

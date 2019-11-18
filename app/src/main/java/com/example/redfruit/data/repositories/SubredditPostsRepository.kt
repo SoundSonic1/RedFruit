@@ -36,6 +36,8 @@ class SubredditPostsRepository(
             SubredditListing(sub)
         }
 
+        if (limit < 1) return subreddit.children.toList()
+
         val responseListing = try {
             redditApi.getSubredditListing(
                 sub, sortPostBy.name, subreddit.after, limit.toString()

@@ -31,10 +31,24 @@ class SubredditPostsRepositoryTest {
     }
 
     @Test
-    fun `invalid input`() {
+    fun `invalid sub name input`() {
         runBlocking {
-            assertEquals(listOf<Post>(), repo.loadMorePosts("androidd", SortPostBy.new, 10))
-            assertEquals(listOf<Post>(), repo.loadMorePosts("lounge", SortPostBy.new, 10))
+            assertTrue(repo.loadMorePosts("androidd", SortPostBy.new, 10).isEmpty())
+        }
+    }
+
+    @Test
+    fun `no access to subreddit`() {
+       runBlocking {
+           assertTrue(repo.loadMorePosts("lounge", SortPostBy.new, 10).isEmpty())
+       }
+    }
+
+    @Test
+    fun `invalid limit input`() {
+        runBlocking {
+            assertTrue(repo.loadMorePosts("linux", SortPostBy.new, 0).isEmpty())
+            assertTrue(repo.loadMorePosts("linux", SortPostBy.new, -1).isEmpty())
         }
     }
 }
