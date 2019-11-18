@@ -1,11 +1,14 @@
 package com.example.redfruit.ui.comments.adapter
 
-import android.widget.TextView
+import android.view.View
+import android.widget.ImageView
 import androidx.databinding.BindingAdapter
 import androidx.recyclerview.widget.RecyclerView
+import coil.api.load
+import com.example.redfruit.data.model.Preview
 import com.example.redfruit.ui.comments.groupie.CommentExpandableGroup
+import com.example.redfruit.util.SizableColorDrawable
 import com.xwray.groupie.GroupAdapter
-import io.noties.markwon.Markwon
 
 object CommentsBindingAdapters {
 
@@ -20,10 +23,25 @@ object CommentsBindingAdapters {
     }
 
     @JvmStatic
-    @BindingAdapter("markDownText")
-    fun loadMarkDownText(textView: TextView, text: String) {
-        Markwon.create(textView.context).apply {
-            setMarkdown(textView, text)
+    @BindingAdapter("loadPreviewDetail")
+    fun loadPostPreview(imageView: ImageView, preview: Preview?) {
+
+        val image = preview?.firstImage?.source
+
+        if (image == null || !preview.enabled) {
+            imageView.visibility = View.GONE
+        } else {
+            imageView.visibility = View.VISIBLE
+            imageView.load(image.url) {
+                crossfade(true)
+                placeholder(
+                    SizableColorDrawable(
+                    0x222222,
+                        image.width,
+                        image.height
+                    )
+                )
+            }
         }
     }
 }

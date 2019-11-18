@@ -28,6 +28,9 @@ import kotlinx.android.synthetic.main.comments_fragment.view.commentsSwipeRefres
 class CommentsFragment : DaggerFragment() {
 
     @Inject
+    lateinit var post: Post
+
+    @Inject
     lateinit var viewModel: CommentsViewModel
 
     @Inject
@@ -45,6 +48,7 @@ class CommentsFragment : DaggerFragment() {
             DataBindingUtil.inflate(inflater, R.layout.comments_fragment, container, false)
 
         binding.lifecycleOwner = viewLifecycleOwner
+        binding.post = post
         binding.viewModel = viewModel
 
         val recyclerView =
@@ -80,8 +84,7 @@ class CommentsFragment : DaggerFragment() {
 
             return CommentsFragment().apply {
                 arguments = bundleOf(
-                    Constants.SUBREDDIT_NAME_KEY to post.subreddit,
-                    Constants.POST_ID_KEY to post.id
+                    Constants.POSTDETAIL_KEY to post
                 )
             }
         }

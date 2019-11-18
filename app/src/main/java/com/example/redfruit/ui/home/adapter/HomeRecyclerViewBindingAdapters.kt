@@ -38,8 +38,12 @@ object HomeRecyclerViewBindingAdapters {
         } else {
             imageView.load(image.url) {
                 crossfade(true)
-                placeholder(SizableColorDrawable(
-                    0x222222, image.width, image.height)
+                placeholder(
+                    SizableColorDrawable(
+                    0x222222,
+                        image.width,
+                        image.height
+                    )
                 )
             }
         }

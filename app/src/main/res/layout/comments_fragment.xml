@@ -4,6 +4,9 @@
         <variable
                 name="viewModel"
                 type="com.example.redfruit.ui.comments.viewmodel.CommentsViewModel" />
+        <variable
+                name="post"
+                type="com.example.redfruit.data.model.Post" />
     </data>
 
     <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
@@ -18,14 +21,88 @@
                 app:onRefreshListener="@{() -> viewModel.refreshComments()}"
                 app:refreshing="@{viewModel.isLoading}"
                 >
-
-            <androidx.recyclerview.widget.RecyclerView
-                    android:id="@+id/recycler_view_comments"
+            <androidx.core.widget.NestedScrollView
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    app:comments="@{viewModel.data}">
+                    android:layout_height="match_parent">
+                <androidx.constraintlayout.widget.ConstraintLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent">
+                    <androidx.cardview.widget.CardView
+                            android:id="@+id/PostDetailCardView"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_margin="4dp"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent"
+                            style="@style/CardViewStyle"
+                            >
+                        <androidx.constraintlayout.widget.ConstraintLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:padding="12dp"
+                                >
+                            <androidx.appcompat.widget.AppCompatTextView
+                                    android:id="@+id/PostDetailTitleTextView"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:text="@{post.title}"
+                                    android:textSize="18sp"
+                                    android:textColor="@color/colorTextTitle"
+                                    app:layout_constraintTop_toTopOf="parent"
+                                    app:layout_constraintStart_toStartOf="parent"
+                                    tools:text="@string/app_name"
+                                    >
 
-            </androidx.recyclerview.widget.RecyclerView>
+                            </androidx.appcompat.widget.AppCompatTextView>
+
+                            <androidx.appcompat.widget.AppCompatTextView
+                                    android:id="@+id/PostDetailTextBody"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    app:layout_constraintTop_toBottomOf="@+id/PostDetailTitleTextView"
+                                    app:markDownText="@{post.selftext}"
+                                    tools:text="@string/lorem"
+                                    >
+                            </androidx.appcompat.widget.AppCompatTextView>
+                            <androidx.appcompat.widget.AppCompatImageView
+                                    android:id="@+id/PostDetailImage"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:scaleType="fitCenter"
+                                    android:adjustViewBounds="true"
+                                    app:layout_constraintTop_toBottomOf="@id/PostDetailTextBody"
+                                    app:loadPreviewDetail="@{post.preview}"
+                                    >
+
+                            </androidx.appcompat.widget.AppCompatImageView>
+                            <include
+                                    layout="@layout/post_misc"
+                                    android:id="@+id/PostDetailMisc"
+                                    android:layout_height="wrap_content"
+                                    android:layout_width="match_parent"
+                                    android:layout_marginTop="8dp"
+                                    app:layout_constraintLeft_toLeftOf="parent"
+                                    app:layout_constraintRight_toRightOf="parent"
+                                    app:layout_constraintTop_toBottomOf="@+id/PostDetailImage"
+                                    tools:item="@{post}" />
+
+                        </androidx.constraintlayout.widget.ConstraintLayout>
+
+                    </androidx.cardview.widget.CardView>
+
+                    <androidx.recyclerview.widget.RecyclerView
+                            android:id="@+id/recycler_view_comments"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="4dp"
+                            app:layout_constraintTop_toBottomOf="@id/PostDetailCardView"
+                            app:comments="@{viewModel.data}">
+
+                    </androidx.recyclerview.widget.RecyclerView>
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+            </androidx.core.widget.NestedScrollView>
         </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
     </FrameLayout>

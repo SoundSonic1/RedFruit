@@ -1,8 +1,10 @@
 package com.example.redfruit.data.model
 
+import android.os.Parcelable
 import com.example.redfruit.data.model.interfaces.ISource
 import com.example.redfruit.data.model.media.SecureMedia
 import com.squareup.moshi.JsonClass
+import kotlinx.android.parcel.Parcelize
 
 /**
  * Class which contains detailed information about subreddit post
@@ -20,6 +22,7 @@ import com.squareup.moshi.JsonClass
  * @property url of the post
  */
 @JsonClass(generateAdapter = true)
+@Parcelize
 data class Post(
     val id: String,
     val title: String,
@@ -36,4 +39,4 @@ data class Post(
     val subreddit: String,
     // var urlEmbeddedData: URLEmbeddedData? = null,
     override val url: String
-) : ISource
+) : ISource, Parcelable

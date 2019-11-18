@@ -3,6 +3,7 @@ package com.example.redfruit.di
 import android.content.Context
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.example.redfruit.data.model.Post
 import com.example.redfruit.data.repositories.CommentsRepository
 import com.example.redfruit.ui.comments.fragment.CommentsFragment
 import com.example.redfruit.ui.comments.viewmodel.CommentsViewModel
@@ -21,14 +22,16 @@ object CommentsFragmentModule {
     fun provideContext(fragment: CommentsFragment) = fragment.requireContext()
 
     @Provides
+    fun providePost(fragment: CommentsFragment): Post =
+        fragment.arguments!!.getParcelable(Constants.POSTDETAIL_KEY)!!
+
+    @Provides
     @Named("SubredditName")
-    fun provideSubredditName(fragment: CommentsFragment) =
-        fragment.arguments?.getString(Constants.SUBREDDIT_NAME_KEY) ?: ""
+    fun provideSubredditName(post: Post) = post.subreddit
 
     @Provides
     @Named("PostId")
-    fun providePostId(fragment: CommentsFragment) =
-        fragment.arguments?.getString(Constants.POST_ID_KEY) ?: ""
+    fun providePostId(post: Post) = post.id
 
     @Provides
     fun provideGroupAdapter() = GroupAdapter<GroupieViewHolder>()
