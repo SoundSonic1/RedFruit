@@ -1,5 +1,6 @@
 package com.example.redfruit.ui.toolbar
 
+import android.view.View
 import android.widget.ImageView
 import androidx.databinding.BindingAdapter
 import coil.api.load
@@ -13,10 +14,9 @@ object ToolbarBindingAdapters {
     @BindingAdapter("toolbarImage")
     fun loadToolbarImage(imageView: ImageView, url: String?) {
         if (url.isNullOrBlank()) {
-            imageView.load("https://wallpaperplay.com/walls/full/2/9/e/31137.jpg") {
-                crossfade(true)
-            }
+            imageView.visibility = View.GONE
         } else {
+            imageView.visibility = View.VISIBLE
             imageView.load(url) {
                 crossfade(true)
             }
@@ -26,24 +26,25 @@ object ToolbarBindingAdapters {
     @JvmStatic
     @BindingAdapter("iconImage")
     fun loadIconImage(imageView: ImageView, subredditAbout: SubredditAbout?) {
-        subredditAbout?.let {
-            // Not sure why there are two icons available
-            val url = if (!it.icon_img.isNullOrBlank()) {
-                it.icon_img
-            } else {
-                it.community_icon
+
+        if (subredditAbout == null) return
+
+        // Not sure why there are two icons available
+        val url = if (!subredditAbout.icon_img.isNullOrBlank()) {
+            subredditAbout.icon_img
+        } else {
+            subredditAbout.community_icon
+        }
+        if (url.isNullOrBlank()) {
+            imageView.load(R.drawable.ic_reddit_24dp) {
+                crossfade(true)
+                transformations(CircleCropTransformation())
             }
-            if (url.isNullOrBlank()) {
-                imageView.load(R.drawable.ic_reddit_24dp) {
-                    crossfade(true)
-                    transformations(CircleCropTransformation())
-                }
-            } else {
-                imageView.load(url) {
-                    crossfade(true)
-                    placeholder(R.drawable.ic_reddit_24dp)
-                    transformations(CircleCropTransformation())
-                }
+        } else {
+            imageView.load(url) {
+                crossfade(true)
+                placeholder(R.drawable.ic_reddit_24dp)
+                transformations(CircleCropTransformation())
             }
         }
     }
