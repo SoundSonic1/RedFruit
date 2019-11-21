@@ -108,6 +108,20 @@ class MainActivity : DaggerAppCompatActivity(), NavigationView.OnNavigationItemS
                 Constants.HOME_FRAGMENT_TAG
             )
         }
+
+        supportFragmentManager.addOnBackStackChangedListener {
+            if (supportFragmentManager.backStackEntryCount > 0) {
+                supportActionBar?.setDisplayHomeAsUpEnabled(true) // show back button
+                toolbar.setNavigationOnClickListener { onBackPressed() }
+            } else {
+                // show hamburger
+                supportActionBar?.setDisplayHomeAsUpEnabled(false)
+                toggle.syncState()
+                toolbar.setNavigationOnClickListener {
+                    drawer_layout.openDrawer(GravityCompat.START)
+                }
+            }
+        }
     }
 
     override fun onBackPressed() {
