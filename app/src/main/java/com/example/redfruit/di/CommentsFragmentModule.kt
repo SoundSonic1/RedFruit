@@ -13,7 +13,6 @@ import com.xwray.groupie.GroupAdapter
 import com.xwray.groupie.GroupieViewHolder
 import dagger.Module
 import dagger.Provides
-import javax.inject.Named
 
 @Module
 object CommentsFragmentModule {
@@ -24,14 +23,6 @@ object CommentsFragmentModule {
     @Provides
     fun providePost(fragment: CommentsFragment): Post =
         fragment.arguments!!.getParcelable(Constants.POSTDETAIL_KEY)!!
-
-    @Provides
-    @Named("SubredditName")
-    fun provideSubredditName(post: Post) = post.subreddit
-
-    @Provides
-    @Named("PostId")
-    fun providePostId(post: Post) = post.id
 
     @Provides
     fun provideGroupAdapter() = GroupAdapter<GroupieViewHolder>()

@@ -25,18 +25,17 @@ import kotlinx.android.parcel.Parcelize
 @Parcelize
 data class Post(
     val id: String,
-    val title: String,
-    val author: String,
-    val score: String,
-    val num_comments: String,
-    val post_hint: String,
+    val title: String = "Unknown",
+    val author: String = "Unknown",
+    val score: String = "0",
+    val num_comments: String = "0",
+    val post_hint: String = "",
     val preview: Preview,
-    val secureMedia: SecureMedia?,
+    val secureMedia: SecureMedia? = null,
     val gildings: Gildings,
-    val over_18: Boolean,
-    val stickied: Boolean,
-    val selftext: String,
+    val over_18: Boolean = false,
+    val stickied: Boolean = false,
+    val selftext: String = "",
     val subreddit: String,
-    // var urlEmbeddedData: URLEmbeddedData? = null,
     override val url: String
 ) : ISource, Parcelable

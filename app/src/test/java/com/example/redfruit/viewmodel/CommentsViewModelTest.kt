@@ -1,5 +1,8 @@
 package com.example.redfruit.viewmodel
 
+import com.example.redfruit.data.model.Gildings
+import com.example.redfruit.data.model.Post
+import com.example.redfruit.data.model.Preview
 import com.example.redfruit.data.repositories.CommentsRepository
 import com.example.redfruit.ui.comments.viewmodel.CommentsViewModel
 import com.example.redfruit.ui.extension.getOrAwaitValue
@@ -24,7 +27,14 @@ class CommentsViewModelTest {
         Dispatchers.setMain(newSingleThreadContext("UI thread"))
     }
 
-    private val repo = CommentsRepository(provideRedditApi(), "Android", "dp8qzg")
+    private val post = Post(
+        subreddit = "Android",
+        id = "dp8qzg",
+        preview = Preview(enabled = true, images = listOf()),
+        gildings = Gildings(),
+        url = ""
+    )
+    private val repo = CommentsRepository(provideRedditApi(), post)
     private val vm = CommentsViewModel(repo)
 
     @Test

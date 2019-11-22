@@ -1,5 +1,8 @@
 package com.example.redfruit.repositories
 
+import com.example.redfruit.data.model.Gildings
+import com.example.redfruit.data.model.Post
+import com.example.redfruit.data.model.Preview
 import com.example.redfruit.data.repositories.CommentsRepository
 import com.example.redfruit.util.provideRedditApi
 import kotlinx.coroutines.runBlocking
@@ -10,16 +13,21 @@ import org.junit.jupiter.api.Test
 class CommentsRepositoryTest {
 
     private val redditApi = provideRedditApi()
+    private val preview = Preview(false, listOf())
 
     @Test
     fun `archived post comments`() {
 
+        val post = Post(
+            subreddit = "redditdev",
+            id = "9ncg2r",
+            preview = preview,
+            gildings = Gildings(),
+            url = ""
+        )
+
         runBlocking {
-            val repo = CommentsRepository(
-                redditApi,
-                "redditdev",
-                "9ncg2r"
-            )
+            val repo = CommentsRepository(redditApi, post)
             val comments = repo.getComments(50)
 
             assertEquals(3, comments.size)
@@ -58,13 +66,30 @@ class CommentsRepositoryTest {
 
     @Test
     fun `wrong input`() {
+
+        var post = Post(
+            subreddit = "redditdev",
+            id = "",
+            preview = preview,
+            gildings = Gildings(),
+            url = ""
+        )
+
         var newRepo =
-            CommentsRepository(redditApi, "redditdev", "")
+            CommentsRepository(redditApi, post)
         runBlocking {
             assertTrue(newRepo.getComments(50).isEmpty())
         }
 
-        newRepo = CommentsRepository(redditApi, "", "123456")
+        post = Post(
+            subreddit = "",
+            id = "123456",
+            preview = preview,
+            gildings = Gildings(),
+            url = ""
+        )
+
+        newRepo = CommentsRepository(redditApi, post)
         runBlocking {
             assertTrue(newRepo.getComments(50).isEmpty())
         }
@@ -72,11 +97,18 @@ class CommentsRepositoryTest {
 
     @Test
     fun `large comment count`() {
+
+        val post = Post(
+            subreddit = "grandorder",
+            id = "d2n1a8",
+            preview = preview,
+            gildings = Gildings(),
+            url = ""
+        )
         // contains kind: more
         val newRepo = CommentsRepository(
             redditApi,
-            "grandorder",
-            "d2n1a8"
+            post
         )
         runBlocking {
             assertTrue(newRepo.getComments(100).isNotEmpty())
