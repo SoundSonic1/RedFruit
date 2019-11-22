@@ -5,6 +5,9 @@
     <data>
         <import type="android.view.View"/>
         <variable name="item" type="com.example.redfruit.data.model.Post"/>
+        <variable
+                name="clickHandler"
+                type="com.example.redfruit.ui.shared.OnPostClickHandler" />
     </data>
     <androidx.cardview.widget.CardView
             android:id="@+id/postItemTextCardView"
@@ -29,7 +32,9 @@
                     app:layout_constraintLeft_toLeftOf="parent"
                     app:layout_constraintRight_toRightOf="parent"
                     app:layout_constraintBottom_toTopOf="@id/selfText"
-                    bind:item="@{item}" />
+                    bind:item="@{item}"
+                    bind:clickHandler="@{clickHandler}"
+                    />
 
             <androidx.appcompat.widget.AppCompatTextView
                     android:id="@+id/selfText"

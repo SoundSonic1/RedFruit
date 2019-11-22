@@ -3,16 +3,24 @@ package com.example.redfruit.ui.shared
 import androidx.fragment.app.FragmentManager
 import com.example.redfruit.R
 import com.example.redfruit.data.model.Post
+import com.example.redfruit.ui.comments.fragment.CommentsFragment
 import com.example.redfruit.ui.media.fragment.ImageFragment
 import com.example.redfruit.ui.media.fragment.StreamVideoFragment
 import com.example.redfruit.ui.media.fragment.YoutubeFragment
 import com.example.redfruit.util.addOrShowFragment
 
-class OnPostImageClickHandlerImpl(
+class OnPostClickHandlerImpl(
     private val fm: FragmentManager
-) : OnPostImageClickHandler {
+) : OnPostClickHandler {
 
-    override fun onClick(post: Post) {
+    override fun onTitleClick(post: Post) {
+        addOrShowFragment(
+            fm, R.id.mainContent,
+            CommentsFragment.newInstance(post)
+        )
+    }
+
+    override fun onPreviewClick(post: Post) {
         when {
             post.secureMedia?.redditVideo != null -> addOrShowFragment(
                 fm,

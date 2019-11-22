@@ -4,7 +4,6 @@ import androidx.activity.viewModels
 import com.example.redfruit.data.model.enumeration.SortPostBy
 import com.example.redfruit.data.repositories.SubredditAboutRepository
 import com.example.redfruit.ui.MainActivity
-import com.example.redfruit.ui.home.fragment.HomeFragment
 import com.example.redfruit.ui.shared.SubredditAboutViewModel
 import com.example.redfruit.util.BaseVMFactory
 import dagger.Module
@@ -13,9 +12,6 @@ import javax.inject.Named
 
 @Module
 object MainActivityModule {
-
-    @Provides
-    fun provideHomeFragment() = HomeFragment()
 
     @Provides
     fun provideSubredditViewModel(

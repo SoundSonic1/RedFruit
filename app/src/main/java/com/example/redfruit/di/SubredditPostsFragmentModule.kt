@@ -4,17 +4,14 @@ import android.content.Context
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.example.redfruit.R
 import com.example.redfruit.data.model.enumeration.SortPostBy
 import com.example.redfruit.data.repositories.SubredditPostsRepository
-import com.example.redfruit.ui.comments.fragment.CommentsFragment
 import com.example.redfruit.ui.home.adapter.PostListAdapter
 import com.example.redfruit.ui.home.fragment.childfragments.SubredditPostsFragment
 import com.example.redfruit.ui.home.viewmodel.HomePostsViewModel
+import com.example.redfruit.ui.shared.OnPostClickHandler
+import com.example.redfruit.ui.shared.OnPostClickHandlerImpl
 import com.example.redfruit.util.BaseVMFactory
-import com.example.redfruit.util.Constants
-import com.example.redfruit.util.addOrShowFragment
-import com.example.redfruit.util.findOrCreateFragment
 import dagger.Module
 import dagger.Provides
 import javax.inject.Named
@@ -33,22 +30,20 @@ object SubredditPostsFragmentModule {
     /**
      * Require activity fragment manager to swap to CommentFragment
      */
-    @JvmStatic
     @Provides
-    fun provideFragmentManager(subredditPostsFragment: SubredditPostsFragment) =
-        subredditPostsFragment.activity?.supportFragmentManager
+    fun provideFragmentManager(subredditPostsFragment: SubredditPostsFragment): FragmentManager =
+        subredditPostsFragment.activity!!.supportFragmentManager
+
+    @Provides
+    fun provideOnPostImageClickHandler(fm: FragmentManager): OnPostClickHandler =
+        OnPostClickHandlerImpl(fm)
 
     @Provides
     fun provideHomeListAdapter(
-        fm: FragmentManager?,
+        onPostClickHandler: OnPostClickHandler,
         homePostsViewModel: HomePostsViewModel
     ): PostListAdapter {
-        return PostListAdapter(fm!!) { post ->
-            val fragment = findOrCreateFragment(fm, Constants.COMMENTS_FRAGMENT_TAG) {
-                CommentsFragment.newInstance(post)
-            }
-            addOrShowFragment(fm, R.id.mainContent, fragment, Constants.COMMENTS_FRAGMENT_TAG)
-        }.apply {
+        return PostListAdapter(onPostClickHandler).apply {
             submitList(homePostsViewModel.data.value ?: listOf())
         }
     }

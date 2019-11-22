@@ -5,6 +5,9 @@
     <data>
         <import type="android.view.View"/>
         <variable name="item" type="com.example.redfruit.data.model.Post"/>
+        <variable
+                name="clickHandler"
+                type="com.example.redfruit.ui.shared.OnPostClickHandler" />
     </data>
     <androidx.cardview.widget.CardView
             android:id="@+id/postItemImageCardView"
@@ -28,7 +31,8 @@
                     app:layout_constraintBottom_toTopOf="@+id/postImageView"
                     app:layout_constraintLeft_toLeftOf="parent"
                     app:layout_constraintRight_toRightOf="parent"
-                    bind:item="@{item}" />
+                    bind:item="@{item}"
+                    bind:clickHandler="@{clickHandler}"/>
 
             <androidx.appcompat.widget.AppCompatImageView
                     android:layout_width="match_parent"
@@ -38,6 +42,7 @@
                     android:scaleType="fitCenter"
                     android:contentDescription="@string/image_view_content_descr"
                     android:visibility="@{item.preview.enabled ? View.VISIBLE : View.GONE}"
+                    android:onClick="@{() -> clickHandler.onPreviewClick(item)}"
                     app:layout_constraintTop_toBottomOf="@id/postTitleAuthorIncludeImage"
                     app:layout_constraintBottom_toTopOf="@id/postMiscImage"
                     app:layout_constraintLeft_toLeftOf="parent"

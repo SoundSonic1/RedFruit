@@ -5,17 +5,6 @@ import androidx.fragment.app.FragmentManager
 import com.example.redfruit.R
 
 /**
- * @author https://thuytrinh.github.io/android/kotlin/2017/02/07/find-fragments.html
- * @param fm FragmentManager of the current activity or fragment
- * @param tag is a string used to identify the fragment
- * @return Fragment: returns either a fragment found in the FragmentManager
- * or from a higher order function
- */
-fun findOrCreateFragment(fm: FragmentManager, tag: String, ifNone: (String) -> Fragment): Fragment {
-    return fm.findFragmentByTag(tag) ?: ifNone(tag)
-}
-
-/**
  * Replaces container with the given fragment but does not add it to backstack
  */
 fun replaceFragmentIgnoreBackstack(

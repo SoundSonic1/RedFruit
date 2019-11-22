@@ -16,12 +16,10 @@ import com.example.redfruit.databinding.ActivityMainBinding
 import com.example.redfruit.ui.home.fragment.HomeFragment
 import com.example.redfruit.ui.shared.SubredditAboutViewModel
 import com.example.redfruit.util.Constants
-import com.example.redfruit.util.findOrCreateFragment
 import com.example.redfruit.util.replaceFragmentIgnoreBackstack
 import com.google.android.material.navigation.NavigationView
 import dagger.android.support.DaggerAppCompatActivity
 import javax.inject.Inject
-import javax.inject.Provider
 import kotlinx.android.synthetic.main.activity_main.drawer_layout
 import kotlinx.android.synthetic.main.activity_main.nav_view
 import kotlinx.android.synthetic.main.activity_main.switch_compat
@@ -34,8 +32,9 @@ import kotlinx.android.synthetic.main.app_bar_main.collapsingToolbarLayout
  */
 class MainActivity : DaggerAppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
 
-    @Inject
-    lateinit var homeFragmentProvider: Provider<HomeFragment>
+    private val homeFragment: HomeFragment by lazy {
+        HomeFragment()
+    }
 
     @Inject
     lateinit var sharedPref: SharedPreferences
@@ -94,10 +93,6 @@ class MainActivity : DaggerAppCompatActivity(), NavigationView.OnNavigationItemS
             // save latest subreddit
             sharedPref.edit { putString(getString(R.string.saved_subreddit), it.display_name) }
         })
-
-        val homeFragment = findOrCreateFragment(
-            supportFragmentManager, Constants.HOME_FRAGMENT_TAG
-        ) { homeFragmentProvider.get() }
 
         // Start with home fragment
         if (savedInstanceState == null) {

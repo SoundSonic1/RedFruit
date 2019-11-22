@@ -1,7 +1,6 @@
 package com.example.redfruit.ui.home.adapter
 
 import android.view.ViewGroup
-import androidx.fragment.app.FragmentManager
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import com.example.redfruit.R
@@ -11,13 +10,13 @@ import com.example.redfruit.ui.home.adapter.viewholder.PostTextOnlyViewHolder
 import com.example.redfruit.ui.home.adapter.viewholder.PostWithImageViewHolder
 import com.example.redfruit.ui.home.adapter.viewholder.PostWithLinkViewHolder
 import com.example.redfruit.ui.home.adapter.viewholder.PostWithSecureMediaViewHolder
+import com.example.redfruit.ui.shared.OnPostClickHandler
 
 /**
  * Adapter for SubredditPostsFragment
  */
 class PostListAdapter(
-    private val fm: FragmentManager,
-    private val listener: (Post) -> Unit
+    private val onPostClickHandler: OnPostClickHandler
 ) : ListAdapter<Post, AbstractViewHolder<Post>>(POST_DIFF) {
 
     override fun getItemViewType(position: Int): Int {
@@ -35,15 +34,16 @@ class PostListAdapter(
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): AbstractViewHolder<Post> {
         return when (viewType) {
-            R.layout.post_item_secure_media -> PostWithSecureMediaViewHolder(parent, fm)
-            R.layout.post_item_image -> PostWithImageViewHolder(parent, fm)
-            R.layout.post_item_link -> PostWithLinkViewHolder(parent)
-            else -> PostTextOnlyViewHolder(parent)
+            R.layout.post_item_secure_media ->
+                PostWithSecureMediaViewHolder(parent, onPostClickHandler)
+            R.layout.post_item_image -> PostWithImageViewHolder(parent, onPostClickHandler)
+            R.layout.post_item_link -> PostWithLinkViewHolder(parent, onPostClickHandler)
+            else -> PostTextOnlyViewHolder(parent, onPostClickHandler)
         }
     }
 
     override fun onBindViewHolder(holder: AbstractViewHolder<Post>, position: Int) {
-        holder.bind(getItem(position), listener)
+        holder.bind(getItem(position))
     }
 
     companion object {

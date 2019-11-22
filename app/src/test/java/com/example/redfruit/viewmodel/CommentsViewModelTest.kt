@@ -5,8 +5,8 @@ import com.example.redfruit.data.model.Post
 import com.example.redfruit.data.model.Preview
 import com.example.redfruit.data.repositories.CommentsRepository
 import com.example.redfruit.ui.comments.viewmodel.CommentsViewModel
-import com.example.redfruit.extension.getOrAwaitValue
 import com.example.redfruit.util.InstantExecutorExtension
+import com.example.redfruit.util.getOrAwaitValue
 import com.example.redfruit.util.provideRedditApi
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi

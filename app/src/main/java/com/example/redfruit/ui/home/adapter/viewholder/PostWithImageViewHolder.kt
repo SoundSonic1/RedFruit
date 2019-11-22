@@ -3,37 +3,23 @@ package com.example.redfruit.ui.home.adapter.viewholder
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
-import androidx.fragment.app.FragmentManager
 import com.example.redfruit.R
 import com.example.redfruit.data.model.Post
 import com.example.redfruit.databinding.PostItemImageBinding
 import com.example.redfruit.ui.base.AbstractViewHolder
-import com.example.redfruit.ui.media.fragment.ImageFragment
-import com.example.redfruit.util.addOrShowFragment
-import kotlinx.android.synthetic.main.post_item_image.view.postImageView
-import kotlinx.android.synthetic.main.post_item_image.view.postTitleAuthorIncludeImage
+import com.example.redfruit.ui.shared.OnPostClickHandler
 
 class PostWithImageViewHolder(
     parent: ViewGroup,
-    private val fm: FragmentManager,
+    private val onPostClickHandler: OnPostClickHandler,
     private val binding: PostItemImageBinding =
         DataBindingUtil.inflate(
             LayoutInflater.from(parent.context), R.layout.post_item_image,
             parent, false)
 ) : AbstractViewHolder<Post>(binding.root) {
 
-    override fun bind(item: Post, listener: (Post) -> Unit) {
+    override fun bind(item: Post) {
         binding.item = item
-        itemView.postTitleAuthorIncludeImage.setOnClickListener {
-            listener(item)
-        }
-
-        itemView.postImageView.setOnClickListener {
-            addOrShowFragment(
-                fm,
-                R.id.mainContent,
-                ImageFragment.newInstance(item.preview.firstImage?.source?.url ?: "")
-            )
-        }
+        binding.clickHandler = onPostClickHandler
     }
 }

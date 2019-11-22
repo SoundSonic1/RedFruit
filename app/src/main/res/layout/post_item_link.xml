@@ -4,6 +4,9 @@
         xmlns:bind="http://schemas.android.com/tools">
     <data>
         <variable name="item" type="com.example.redfruit.data.model.Post"/>
+        <variable
+                name="clickHandler"
+                type="com.example.redfruit.ui.shared.OnPostClickHandler" />
     </data>
     <androidx.cardview.widget.CardView
             android:id="@+id/postItemImageCardView"
@@ -43,7 +46,8 @@
                         android:id="@+id/postTitleAuthorIncludeLink"
                         android:layout_height="match_parent"
                         android:layout_width="match_parent"
-                        bind:item="@{item}" />
+                        bind:item="@{item}"
+                        bind:clickHandler="@{clickHandler}"/>
 
             </LinearLayout>
 

@@ -1,6 +1,5 @@
 package com.example.redfruit.repositories
 
-import com.example.redfruit.data.model.Post
 import com.example.redfruit.data.model.enumeration.SortPostBy
 import com.example.redfruit.data.repositories.SubredditPostsRepository
 import com.example.redfruit.util.Constants

@@ -9,7 +9,7 @@
                 type="com.example.redfruit.data.model.Post" />
         <variable
                 name="onImageClickHandler"
-                type="com.example.redfruit.ui.shared.OnPostImageClickHandler" />
+                type="com.example.redfruit.ui.shared.OnPostClickHandler" />
     </data>
 
     <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
@@ -73,7 +73,7 @@
                                     android:layout_height="wrap_content"
                                     android:scaleType="fitCenter"
                                     android:adjustViewBounds="true"
-                                    android:onClick="@{() -> onImageClickHandler.onClick(post)}"
+                                    android:onClick="@{() -> onImageClickHandler.onPreviewClick(post)}"
                                     app:layout_constraintTop_toBottomOf="@id/postDetailTextBody"
                                     app:loadPreviewDetail="@{post}"
                                     >

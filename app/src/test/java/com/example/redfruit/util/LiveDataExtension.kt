@@ -1,9 +1,4 @@
-/**
- * Copyright 2019 Google LLC.
- * SPDX-License-Identifier: Apache-2.0
- */
-
-package com.example.redfruit.extension
+package com.example.redfruit.util
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.Observer
