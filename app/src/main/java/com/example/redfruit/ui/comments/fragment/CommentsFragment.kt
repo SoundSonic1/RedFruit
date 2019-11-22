@@ -14,6 +14,7 @@ import com.example.redfruit.R
 import com.example.redfruit.data.model.Post
 import com.example.redfruit.databinding.CommentsFragmentBinding
 import com.example.redfruit.ui.comments.viewmodel.CommentsViewModel
+import com.example.redfruit.ui.shared.OnPostImageClickHandlerImpl
 import com.example.redfruit.util.Constants
 import com.xwray.groupie.GroupAdapter
 import com.xwray.groupie.GroupieViewHolder
@@ -50,6 +51,7 @@ class CommentsFragment : DaggerFragment() {
         binding.lifecycleOwner = viewLifecycleOwner
         binding.post = post
         binding.viewModel = viewModel
+        binding.onImageClickHandler = OnPostImageClickHandlerImpl(activity!!.supportFragmentManager)
 
         val recyclerView =
             binding.root.findViewById<RecyclerView>(R.id.recycler_view_comments).apply {

@@ -9,7 +9,6 @@ import com.example.redfruit.data.model.Post
 import com.example.redfruit.databinding.PostItemImageBinding
 import com.example.redfruit.ui.base.AbstractViewHolder
 import com.example.redfruit.ui.media.fragment.ImageFragment
-import com.example.redfruit.util.Constants
 import com.example.redfruit.util.addOrShowFragment
 import kotlinx.android.synthetic.main.post_item_image.view.postImageView
 import kotlinx.android.synthetic.main.post_item_image.view.postTitleAuthorIncludeImage
@@ -33,8 +32,7 @@ class PostWithImageViewHolder(
             addOrShowFragment(
                 fm,
                 R.id.mainContent,
-                ImageFragment.newInstance(item.preview.firstImage?.source?.url ?: ""),
-                Constants.IMAGE_FRAGMENT_TAG
+                ImageFragment.newInstance(item.preview.firstImage?.source?.url ?: "")
             )
         }
     }

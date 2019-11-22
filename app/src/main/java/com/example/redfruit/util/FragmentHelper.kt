@@ -22,7 +22,7 @@ fun replaceFragmentIgnoreBackstack(
     fm: FragmentManager,
     containerViewId: Int,
     fragment: Fragment,
-    tag: String
+    tag: String? = null
 ) {
     val transaction = fm.beginTransaction()
     transaction
@@ -32,41 +32,7 @@ fun replaceFragmentIgnoreBackstack(
 }
 
 /**
- * Replaces container with the given fragment.
- */
-fun replaceFragment(fm: FragmentManager, containerViewId: Int, fragment: Fragment, tag: String) {
-    val transaction = fm.beginTransaction()
-    transaction
-        .setCustomAnimations(R.anim.fade_in, R.anim.fade_out, R.anim.fade_in, R.anim.fade_out)
-        .replace(containerViewId, fragment, tag)
-        .addToBackStack(null)
-        .commit()
-}
-
-/**
- * Adds the given fragment to the container and puts it to the backstack.
- */
-fun addFragment(
-    fm: FragmentManager,
-    containerViewId: Int,
-    fragment: Fragment,
-    tag: String
-): Boolean {
-
-    if (fragment.isAdded) return false
-
-    val transaction = fm.beginTransaction()
-    transaction
-        .setCustomAnimations(R.anim.fade_in, R.anim.fade_out, R.anim.fade_in, R.anim.fade_out)
-        .add(containerViewId, fragment, tag)
-        .addToBackStack(null)
-        .commit()
-
-    return true
-}
-
-/**
- * Adds/Shows fragment in container and hides all other fragments
+ * Adds/Shows the given fragment and hides all other fragments in the container
  *
  * @author https://stackoverflow.com/questions/42795611/fragmenttransaction-hide-show-doesnt-work-sometimes
  */
@@ -74,7 +40,7 @@ fun addOrShowFragment(
     fm: FragmentManager,
     containerViewId: Int,
     fragment: Fragment,
-    tag: String
+    tag: String? = null
 ) {
     fm.beginTransaction().apply {
 
@@ -87,7 +53,7 @@ fun addOrShowFragment(
         }
 
         fm.fragments.forEach {
-            if (it != fragment && it.isAdded) {
+            if (it != fragment && it.isVisible) {
                 hide(it)
             }
         }

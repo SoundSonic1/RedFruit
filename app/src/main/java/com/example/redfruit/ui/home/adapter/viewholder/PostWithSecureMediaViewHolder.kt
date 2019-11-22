@@ -10,7 +10,6 @@ import com.example.redfruit.databinding.PostItemSecureMediaBinding
 import com.example.redfruit.ui.base.AbstractViewHolder
 import com.example.redfruit.ui.media.fragment.StreamVideoFragment
 import com.example.redfruit.ui.media.fragment.YoutubeFragment
-import com.example.redfruit.util.Constants
 import com.example.redfruit.util.addOrShowFragment
 import kotlinx.android.synthetic.main.post_item_secure_media.view.postExoPlayerImageView
 import kotlinx.android.synthetic.main.post_item_secure_media.view.postTitleAuthorIncludeRedditVideo
@@ -38,15 +37,13 @@ class PostWithSecureMediaViewHolder(
                 addOrShowFragment(
                     fm,
                     R.id.mainContent,
-                    YoutubeFragment.newInstance(item.secureMedia.youtubeoEmbed.youtubeId),
-                    Constants.YOUTUBE_FRAGMENT_TAG
+                    YoutubeFragment.newInstance(item.secureMedia.youtubeoEmbed.youtubeId)
                 )
             } else {
                 addOrShowFragment(
                     fm,
                     R.id.mainContent,
-                    StreamVideoFragment.newInstance(item.secureMedia?.redditVideo?.url ?: ""),
-                    Constants.STREAM_VIDEO_FRAGMENT_TAG
+                    StreamVideoFragment.newInstance(item.secureMedia?.redditVideo?.url ?: "")
                 )
             }
         }
