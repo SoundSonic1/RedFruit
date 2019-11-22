@@ -3,7 +3,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-package com.example.redfruit.ui.extension
+package com.example.redfruit.extension
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.Observer

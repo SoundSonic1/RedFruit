@@ -2,7 +2,7 @@ package com.example.redfruit.viewmodel
 
 import com.example.redfruit.data.model.enumeration.SortPostBy
 import com.example.redfruit.data.repositories.SubredditPostsRepository
-import com.example.redfruit.ui.extension.getOrAwaitValue
+import com.example.redfruit.extension.getOrAwaitValue
 import com.example.redfruit.ui.home.viewmodel.HomePostsViewModel
 import com.example.redfruit.util.Constants
 import com.example.redfruit.util.InstantExecutorExtension
