@@ -1,6 +1,7 @@
 package com.example.redfruit.data.model
 
 import android.os.Parcelable
+import com.example.redfruit.data.model.interfaces.ICreated
 import com.example.redfruit.data.model.interfaces.ISource
 import com.example.redfruit.data.model.media.SecureMedia
 import com.squareup.moshi.JsonClass
@@ -37,5 +38,7 @@ data class Post(
     val stickied: Boolean = false,
     val selftext: String = "",
     val subreddit: String,
-    override val url: String
-) : ISource, Parcelable
+    override val created: Long = 0,
+    override val created_utc: Long = 0,
+    override val url: String = ""
+) : ISource, ICreated, Parcelable

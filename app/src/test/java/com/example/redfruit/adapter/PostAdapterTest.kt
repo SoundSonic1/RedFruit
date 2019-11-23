@@ -69,6 +69,10 @@ class PostAdapterTest {
         assertEquals("xNGhsr4wmyQ", post.secureMedia?.youtubeoEmbed?.youtubeId)
 
         assertEquals("2", post.num_comments)
+
+        assertEquals(1568311904, post.created)
+
+        assertEquals(1568283104, post.created_utc)
     }
 
     @Test

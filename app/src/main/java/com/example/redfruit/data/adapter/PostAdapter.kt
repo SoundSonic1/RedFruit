@@ -72,6 +72,8 @@ class PostAdapter @Inject constructor() {
             stickied = data["stickied"] as? Boolean ?: false,
             selftext = data["selftext"] as? String ?: "",
             subreddit = data["subreddit"] as? String ?: "",
+            created = (data["created"] as? Double)?.toLong() ?: 0,
+            created_utc = (data["created_utc"] as? Double)?.toLong() ?: 0,
             url = data["url"] as? String ?: ""
         )
     }

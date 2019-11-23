@@ -38,6 +38,18 @@
             </androidx.appcompat.widget.AppCompatTextView>
 
             <androidx.appcompat.widget.AppCompatTextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/commentCreated"
+                    android:layout_marginStart="5dp"
+                    app:layout_constraintStart_toEndOf="@id/author_comment_view"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:timecreated="@{item.created_utc}"
+                    tools:text="3h ago">
+
+            </androidx.appcompat.widget.AppCompatTextView>
+
+            <androidx.appcompat.widget.AppCompatTextView
                     android:id="@+id/comment_body_view"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
