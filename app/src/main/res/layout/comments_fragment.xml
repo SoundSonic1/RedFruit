@@ -78,6 +78,16 @@
                                     app:loadPreviewDetail="@{post}"
                                     >
                             </androidx.appcompat.widget.AppCompatImageView>
+
+                            <com.nguyencse.URLEmbeddedView
+                                    android:id="@+id/postUrlEmbeddeView"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="90dp"
+                                    android:visibility="gone"
+                                    app:layout_constraintTop_toBottomOf="@id/postDetailImage">
+
+                            </com.nguyencse.URLEmbeddedView>
+
                             <include
                                     layout="@layout/post_misc"
                                     android:id="@+id/postDetailMisc"
@@ -86,7 +96,7 @@
                                     android:layout_marginTop="8dp"
                                     app:layout_constraintLeft_toLeftOf="parent"
                                     app:layout_constraintRight_toRightOf="parent"
-                                    app:layout_constraintTop_toBottomOf="@+id/postDetailImage"
+                                    app:layout_constraintTop_toBottomOf="@+id/postUrlEmbeddeView"
                                     tools:item="@{post}" />
 
                         </androidx.constraintlayout.widget.ConstraintLayout>

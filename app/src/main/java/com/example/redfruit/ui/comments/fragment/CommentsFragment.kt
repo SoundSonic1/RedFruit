@@ -16,12 +16,15 @@ import com.example.redfruit.databinding.CommentsFragmentBinding
 import com.example.redfruit.ui.comments.viewmodel.CommentsViewModel
 import com.example.redfruit.ui.shared.OnPostClickHandlerImpl
 import com.example.redfruit.util.Constants
+import com.nguyencse.URLEmbeddedData
+import com.nguyencse.URLEmbeddedView
 import com.xwray.groupie.GroupAdapter
 import com.xwray.groupie.GroupieViewHolder
 import dagger.android.support.DaggerFragment
 import javax.inject.Inject
 import javax.inject.Provider
 import kotlinx.android.synthetic.main.comments_fragment.view.commentsSwipeRefresh
+import kotlinx.android.synthetic.main.comments_fragment.view.postUrlEmbeddeView
 
 /**
  * Displays the detailed post and the comment section
@@ -76,6 +79,19 @@ class CommentsFragment : DaggerFragment() {
                 ContextCompat.getColor(requireContext(), R.color.colorPrimaryDark),
                 ContextCompat.getColor(requireContext(), R.color.colorAccent)
             )
+        }
+
+        if (post.post_hint == "link") {
+            binding.root.postUrlEmbeddeView.apply {
+                visibility = View.VISIBLE
+                setURL(
+                    post.url, object : URLEmbeddedView.OnLoadURLListener {
+                        override fun onLoadURLCompleted(data: URLEmbeddedData) {
+                            binding.root.postUrlEmbeddeView.setData(data)
+                        }
+                    }
+                )
+            }
         }
 
         return binding.root
