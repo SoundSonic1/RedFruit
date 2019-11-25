@@ -110,7 +110,7 @@ dependencies {
     // pinch to zoom etc. for images
     implementation 'com.github.MikeOrtiz:TouchImageView:2.3.0'
     // url preview
-    implementation 'com.github.SoundSonic1:urlembeddedview:fa6c86375f'
+    implementation 'com.github.SoundSonic1:urlembeddedview:249fc957d'
     // custom item animators for RecyclerView
     implementation 'jp.wasabeef:recyclerview-animators:3.0.0'
     // for advanced video playback

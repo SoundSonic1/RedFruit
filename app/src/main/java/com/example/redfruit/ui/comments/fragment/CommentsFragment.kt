@@ -91,6 +91,7 @@ class CommentsFragment : DaggerFragment() {
                         }
                     }
                 )
+                lifecycle.addObserver(this)
             }
         }
 
