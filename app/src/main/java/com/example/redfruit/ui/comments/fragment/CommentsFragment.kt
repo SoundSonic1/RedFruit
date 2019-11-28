@@ -63,7 +63,6 @@ class CommentsFragment : DaggerFragment() {
                 addItemDecoration(
                     DividerItemDecoration(requireContext(), LinearLayoutManager.VERTICAL)
                 )
-                setHasFixedSize(true)
             }
 
         recyclerView.itemAnimator?.apply {
