@@ -13,7 +13,6 @@ object Constants {
     const val TOKEN_KEY = "TOKEN_KEY"
     const val LIMIT = 15
     const val HOME_FRAGMENT_TAG = "HOME_FRAGMENT_TAG"
-    const val COMMENTS_FRAGMENT_TAG = "COMMENTS_FRAGMENT_TAG"
     const val POSTDETAIL_KEY = "POSTDETAIL_KEY"
     const val SORTBY_SHARED_KEY = "SORTBY_SHARED_KEY"
     const val SWITCH_TOGGLE_KEY = "SWITCH_TOGGLE_KEY"

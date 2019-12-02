@@ -16,7 +16,8 @@ class TokenProviderTest {
 
     private val oauthApi = provideOAuthApi()
 
-    private val tokenProvider = TokenProvider(BuildConfig.ClientId, UUID.randomUUID().toString(), oauthApi)
+    private val tokenProvider =
+        TokenProvider(BuildConfig.ClientId, UUID.randomUUID().toString(), oauthApi)
 
     @Test
     fun `get token for application only oauth`() {
