@@ -84,7 +84,6 @@ class SubredditPostsFragment : DaggerFragment() {
             layoutManager = linearLayoutManagerProvider.get()
             adapter = postListAdapter
             itemAnimator = customItemAnimator
-            setHasFixedSize(true)
         }
         recyclerView.itemAnimator?.apply {
             addDuration = 600
