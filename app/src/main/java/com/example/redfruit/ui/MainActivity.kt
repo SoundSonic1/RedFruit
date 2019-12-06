@@ -32,10 +32,6 @@ import kotlinx.android.synthetic.main.app_bar_main.collapsingToolbarLayout
  */
 class MainActivity : DaggerAppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
 
-    private val homeFragment: HomeFragment by lazy {
-        HomeFragment()
-    }
-
     @Inject
     lateinit var sharedPref: SharedPreferences
 
@@ -99,7 +95,7 @@ class MainActivity : DaggerAppCompatActivity(), NavigationView.OnNavigationItemS
             replaceFragmentIgnoreBackstack(
                 supportFragmentManager,
                 R.id.mainContent,
-                homeFragment,
+                HomeFragment(),
                 Constants.HOME_FRAGMENT_TAG
             )
         }
