@@ -3,16 +3,11 @@ package com.example.redfruit.ui
 import android.content.SharedPreferences
 import android.os.Bundle
 import android.view.MenuItem
-import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AppCompatDelegate
-import androidx.appcompat.widget.Toolbar
 import androidx.core.content.edit
 import androidx.core.view.GravityCompat
-import androidx.databinding.DataBindingUtil
 import androidx.drawerlayout.widget.DrawerLayout
-import androidx.lifecycle.Observer
 import com.example.redfruit.R
-import com.example.redfruit.databinding.ActivityMainBinding
 import com.example.redfruit.ui.home.fragment.HomeFragment
 import com.example.redfruit.ui.shared.SubredditAboutViewModel
 import com.example.redfruit.util.Constants
@@ -23,7 +18,6 @@ import javax.inject.Inject
 import kotlinx.android.synthetic.main.activity_main.drawer_layout
 import kotlinx.android.synthetic.main.activity_main.nav_view
 import kotlinx.android.synthetic.main.activity_main.switch_compat
-import kotlinx.android.synthetic.main.app_bar_main.collapsingToolbarLayout
 
 /**
  * Entry point of our app. We use the single Activity, many fragments philosophy.
@@ -41,23 +35,7 @@ class MainActivity : DaggerAppCompatActivity(), NavigationView.OnNavigationItemS
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        val binding: ActivityMainBinding =
-            DataBindingUtil.setContentView(this, R.layout.activity_main)
-
-        binding.lifecycleOwner = this
-        binding.viewModelMainactivity = subredditAboutViewModel
-
-        collapsingToolbarLayout.isTitleEnabled = false
-        val toolbar: Toolbar = findViewById(R.id.toolbar)
-        setSupportActionBar(toolbar)
-
-        val toggle = ActionBarDrawerToggle(
-            this, drawer_layout, toolbar,
-            R.string.navigation_drawer_open,
-            R.string.navigation_drawer_close
-        )
-        drawer_layout.addDrawerListener(toggle)
-        toggle.syncState()
+        setContentView(R.layout.activity_main)
 
         nav_view.setNavigationItemSelectedListener(this)
 
@@ -83,13 +61,6 @@ class MainActivity : DaggerAppCompatActivity(), NavigationView.OnNavigationItemS
             }
         }
 
-        subredditAboutViewModel.data.observe(this, Observer {
-            // TODO: change title via data binding
-            supportActionBar?.title = it.display_name
-            // save latest subreddit
-            sharedPref.edit { putString(getString(R.string.saved_subreddit), it.display_name) }
-        })
-
         // Start with home fragment
         if (savedInstanceState == null) {
             replaceFragmentIgnoreBackstack(
@@ -98,20 +69,6 @@ class MainActivity : DaggerAppCompatActivity(), NavigationView.OnNavigationItemS
                 HomeFragment(),
                 Constants.HOME_FRAGMENT_TAG
             )
-        }
-
-        supportFragmentManager.addOnBackStackChangedListener {
-            if (supportFragmentManager.backStackEntryCount > 0) {
-                supportActionBar?.setDisplayHomeAsUpEnabled(true) // show back button
-                toolbar.setNavigationOnClickListener { onBackPressed() }
-            } else {
-                // show hamburger
-                supportActionBar?.setDisplayHomeAsUpEnabled(false)
-                toggle.syncState()
-                toolbar.setNavigationOnClickListener {
-                    drawer_layout.openDrawer(GravityCompat.START)
-                }
-            }
         }
     }
 
