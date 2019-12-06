@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout xmlns:app="http://schemas.android.com/apk/res-auto">
+<layout xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
     <data>
         <variable
                 name="viewModel"
@@ -11,113 +13,127 @@
                 name="onImageClickHandler"
                 type="com.example.redfruit.ui.shared.OnPostClickHandler" />
     </data>
+    <androidx.coordinatorlayout.widget.CoordinatorLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:context=".ui.comments.fragment.CommentsFragment"
+        >
+        <com.google.android.material.appbar.AppBarLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
 
-    <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-            xmlns:tools="http://schemas.android.com/tools"
+            <include layout="@layout/toolbar_base"
+                android:id="@+id/toolbarComments"
+                />
+
+        </com.google.android.material.appbar.AppBarLayout>
+
+        <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+            android:id="@+id/commentsSwipeRefresh"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            tools:context=".ui.comments.fragment.CommentsFragment">
-        <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
-                android:id="@+id/commentsSwipeRefresh"
+            app:onRefreshListener="@{() -> viewModel.refreshComments()}"
+            app:refreshing="@{viewModel.isLoading}"
+            app:layout_behavior="@string/appbar_scrolling_view_behavior"
+            >
+            <androidx.core.widget.NestedScrollView
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                app:onRefreshListener="@{() -> viewModel.refreshComments()}"
-                app:refreshing="@{viewModel.isLoading}"
                 >
-            <androidx.core.widget.NestedScrollView
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent">
                 <androidx.constraintlayout.widget.ConstraintLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent">
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    >
+
                     <androidx.cardview.widget.CardView
-                            android:id="@+id/postDetailCardView"
+                        android:id="@+id/postDetailCardView"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="4dp"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent"
+                        style="@style/CardViewStyle"
+                        >
+                        <androidx.constraintlayout.widget.ConstraintLayout
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:layout_margin="4dp"
-                            app:layout_constraintStart_toStartOf="parent"
-                            app:layout_constraintTop_toTopOf="parent"
-                            style="@style/CardViewStyle"
+                            android:padding="12dp"
                             >
-                        <androidx.constraintlayout.widget.ConstraintLayout
+                            <androidx.appcompat.widget.AppCompatTextView
+                                android:id="@+id/postDetailTitleTextView"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
-                                android:padding="12dp"
+                                android:text="@{post.title}"
+                                android:textSize="18sp"
+                                android:textColor="@color/colorTextTitle"
+                                app:layout_constraintTop_toTopOf="parent"
+                                app:layout_constraintStart_toStartOf="parent"
+                                tools:text="@string/app_name"
                                 >
-                            <androidx.appcompat.widget.AppCompatTextView
-                                    android:id="@+id/postDetailTitleTextView"
-                                    android:layout_width="match_parent"
-                                    android:layout_height="wrap_content"
-                                    android:text="@{post.title}"
-                                    android:textSize="18sp"
-                                    android:textColor="@color/colorTextTitle"
-                                    app:layout_constraintTop_toTopOf="parent"
-                                    app:layout_constraintStart_toStartOf="parent"
-                                    tools:text="@string/app_name"
-                                    >
 
                             </androidx.appcompat.widget.AppCompatTextView>
 
                             <androidx.appcompat.widget.AppCompatTextView
-                                    android:id="@+id/postDetailTextBody"
-                                    android:layout_width="match_parent"
-                                    android:layout_height="wrap_content"
-                                    app:layout_constraintTop_toBottomOf="@+id/postDetailTitleTextView"
-                                    app:markDownText="@{post.selftext}"
-                                    tools:text="@string/lorem"
-                                    >
+                                android:id="@+id/postDetailTextBody"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                app:layout_constraintTop_toBottomOf="@+id/postDetailTitleTextView"
+                                app:markDownText="@{post.selftext}"
+                                tools:text="@string/lorem"
+                                >
                             </androidx.appcompat.widget.AppCompatTextView>
                             <androidx.appcompat.widget.AppCompatImageView
-                                    android:id="@+id/postDetailImage"
-                                    android:layout_width="match_parent"
-                                    android:layout_height="wrap_content"
-                                    android:scaleType="fitCenter"
-                                    android:adjustViewBounds="true"
-                                    android:onClick="@{() -> onImageClickHandler.onPreviewClick(post)}"
-                                    app:layout_constraintTop_toBottomOf="@id/postDetailTextBody"
-                                    app:loadPreviewDetail="@{post}"
-                                    >
+                                android:id="@+id/postDetailImage"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:scaleType="fitCenter"
+                                android:adjustViewBounds="true"
+                                android:onClick="@{() -> onImageClickHandler.onPreviewClick(post)}"
+                                app:layout_constraintTop_toBottomOf="@id/postDetailTextBody"
+                                app:loadPreviewDetail="@{post}"
+                                >
                             </androidx.appcompat.widget.AppCompatImageView>
 
                             <com.nguyencse.URLEmbeddedView
-                                    android:id="@+id/postUrlEmbeddeView"
-                                    android:layout_width="match_parent"
-                                    android:layout_height="90dp"
-                                    android:visibility="gone"
-                                    app:layout_constraintTop_toBottomOf="@id/postDetailImage">
+                                android:id="@+id/postUrlEmbeddeView"
+                                android:layout_width="match_parent"
+                                android:layout_height="90dp"
+                                android:visibility="gone"
+                                app:layout_constraintTop_toBottomOf="@id/postDetailImage">
 
                             </com.nguyencse.URLEmbeddedView>
 
                             <include
-                                    layout="@layout/post_misc"
-                                    android:id="@+id/postDetailMisc"
-                                    android:layout_height="wrap_content"
-                                    android:layout_width="match_parent"
-                                    android:layout_marginTop="8dp"
-                                    app:layout_constraintLeft_toLeftOf="parent"
-                                    app:layout_constraintRight_toRightOf="parent"
-                                    app:layout_constraintTop_toBottomOf="@+id/postUrlEmbeddeView"
-                                    tools:item="@{post}" />
+                                layout="@layout/post_misc"
+                                android:id="@+id/postDetailMisc"
+                                android:layout_height="wrap_content"
+                                android:layout_width="match_parent"
+                                android:layout_marginTop="8dp"
+                                app:layout_constraintLeft_toLeftOf="parent"
+                                app:layout_constraintRight_toRightOf="parent"
+                                app:layout_constraintTop_toBottomOf="@+id/postUrlEmbeddeView"
+                                tools:item="@{post}" />
 
                         </androidx.constraintlayout.widget.ConstraintLayout>
 
                     </androidx.cardview.widget.CardView>
 
                     <androidx.recyclerview.widget.RecyclerView
-                            android:id="@+id/recycler_view_comments"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="4dp"
-                            android:nestedScrollingEnabled="false"
-                            app:layout_constraintTop_toBottomOf="@id/postDetailCardView"
-                            app:comments="@{viewModel.data}">
+                        android:id="@+id/recycler_view_comments"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="4dp"
+                        android:nestedScrollingEnabled="false"
+                        app:layout_constraintTop_toBottomOf="@id/postDetailCardView"
+                        app:comments="@{viewModel.data}">
 
                     </androidx.recyclerview.widget.RecyclerView>
 
                 </androidx.constraintlayout.widget.ConstraintLayout>
 
             </androidx.core.widget.NestedScrollView>
-        </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
-    </FrameLayout>
+        </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+    </androidx.coordinatorlayout.widget.CoordinatorLayout>
+
 </layout>

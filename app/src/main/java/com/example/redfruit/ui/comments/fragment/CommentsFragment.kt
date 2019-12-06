@@ -4,6 +4,8 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.Toolbar
 import androidx.core.content.ContextCompat
 import androidx.core.os.bundleOf
 import androidx.databinding.DataBindingUtil
@@ -23,8 +25,7 @@ import com.xwray.groupie.GroupieViewHolder
 import dagger.android.support.DaggerFragment
 import javax.inject.Inject
 import javax.inject.Provider
-import kotlinx.android.synthetic.main.comments_fragment.view.commentsSwipeRefresh
-import kotlinx.android.synthetic.main.comments_fragment.view.postUrlEmbeddeView
+import kotlinx.android.synthetic.main.comments_fragment.view.*
 
 /**
  * Displays the detailed post and the comment section
@@ -55,6 +56,8 @@ class CommentsFragment : DaggerFragment() {
         binding.post = post
         binding.viewModel = viewModel
         binding.onImageClickHandler = OnPostClickHandlerImpl(activity!!.supportFragmentManager)
+
+        setUpToolbar(binding.root.toolbarComments as Toolbar, activity as AppCompatActivity)
 
         val recyclerView =
             binding.root.findViewById<RecyclerView>(R.id.recycler_view_comments).apply {
@@ -95,6 +98,16 @@ class CommentsFragment : DaggerFragment() {
         }
 
         return binding.root
+    }
+
+    private fun setUpToolbar(toolbar: Toolbar, appCompatActivity: AppCompatActivity) {
+
+        toolbar.title = getString(R.string.comments_title)
+        appCompatActivity.apply {
+            setSupportActionBar(toolbar)
+            supportActionBar?.setDisplayHomeAsUpEnabled(true)
+        }
+        toolbar.setNavigationOnClickListener { appCompatActivity.onBackPressed() }
     }
 
     companion object {
