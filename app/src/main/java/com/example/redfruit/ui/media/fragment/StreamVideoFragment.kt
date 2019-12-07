@@ -11,11 +11,11 @@ import com.example.redfruit.ui.base.DaggerFullScreenFragment
 import com.example.redfruit.util.Constants
 import com.google.android.exoplayer2.ExoPlayer
 import com.google.android.exoplayer2.source.dash.DashMediaSource
-import com.google.android.exoplayer2.ui.PlayerView
 import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory
 import com.google.android.exoplayer2.util.Util
 import javax.inject.Inject
 import javax.inject.Provider
+import kotlinx.android.synthetic.main.stream_video_fragment.*
 
 class StreamVideoFragment : DaggerFullScreenFragment() {
 
@@ -32,12 +32,15 @@ class StreamVideoFragment : DaggerFullScreenFragment() {
         savedInstanceState: Bundle?
     ): View? {
 
-        val view = inflater.inflate(R.layout.stream_video_fragment, container, false)
-        val playerView = view.findViewById<PlayerView>(R.id.exoPlayerViewFragment)
+        return inflater.inflate(R.layout.stream_video_fragment, container, false)
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
 
         exoPlayer = exoPlayerProvider.get()
         exoPlayer.playWhenReady = true
-        playerView.player = exoPlayer
+        exoPlayerView.player = exoPlayer
 
         val userAgent = Util.getUserAgent(requireContext(), Constants.USER_AGENT)
 
@@ -47,8 +50,6 @@ class StreamVideoFragment : DaggerFullScreenFragment() {
                 .createMediaSource(Uri.parse(url))
             exoPlayer.prepare(mediaSource)
         }
-
-        return view
     }
 
     override fun onPause() {

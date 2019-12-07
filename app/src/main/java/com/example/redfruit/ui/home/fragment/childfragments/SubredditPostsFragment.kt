@@ -22,6 +22,7 @@ import dagger.android.support.DaggerFragment
 import javax.inject.Inject
 import javax.inject.Named
 import javax.inject.Provider
+import kotlinx.android.synthetic.main.subreddit_posts_fragment.*
 import kotlinx.android.synthetic.main.subreddit_posts_fragment.view.homeSwipeRefresh
 import kotlinx.android.synthetic.main.subreddit_posts_fragment.view.recyclerViewPosts
 
@@ -51,7 +52,7 @@ class SubredditPostsFragment : DaggerFragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        // get SubredditAboutViewModel instance from the MainActivity
+
         val subredditAboutViewModel by activityViewModels<SubredditAboutViewModel>()
 
         subredditAboutViewModel.data.observe(viewLifecycleOwner, Observer { sub ->
@@ -80,18 +81,24 @@ class SubredditPostsFragment : DaggerFragment() {
             viewModel = homePostsViewModel
         }
 
-        val recyclerView = binding.root.recyclerViewPosts.apply {
+        return binding.root
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        recyclerViewPosts.apply {
             layoutManager = linearLayoutManagerProvider.get()
             adapter = postListAdapter
             itemAnimator = customItemAnimator
         }
-        recyclerView.itemAnimator?.apply {
+        recyclerViewPosts.itemAnimator?.apply {
             addDuration = 600
             removeDuration = 600
             moveDuration = 600
             changeDuration = 600
         }
-        recyclerView.addOnScrollListener(object : RecyclerView.OnScrollListener() {
+        recyclerViewPosts.addOnScrollListener(object : RecyclerView.OnScrollListener() {
             override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
                 super.onScrolled(recyclerView, dx, dy)
                 val totalItemCount = recyclerView.layoutManager?.itemCount
@@ -104,14 +111,12 @@ class SubredditPostsFragment : DaggerFragment() {
             }
         })
 
-        binding.root.homeSwipeRefresh.apply {
+        homeSwipeRefresh.apply {
             setColorSchemeColors(
                 ContextCompat.getColor(requireContext(), R.color.colorPrimary),
                 ContextCompat.getColor(requireContext(), R.color.colorPrimaryDark),
                 ContextCompat.getColor(requireContext(), R.color.colorAccent)
             )
         }
-
-        return binding.root
     }
 }

@@ -32,6 +32,7 @@ import com.google.android.material.tabs.TabLayout
 import dagger.android.support.DaggerFragment
 import java.util.Locale
 import javax.inject.Inject
+import kotlinx.android.synthetic.main.home_fragment.*
 import kotlinx.android.synthetic.main.home_fragment.view.*
 import kotlinx.coroutines.launch
 
@@ -59,7 +60,13 @@ class HomeFragment : DaggerFragment() {
         binding.lifecycleOwner = viewLifecycleOwner
         binding.viewModel = subredditAboutViewModel
 
-        val toolbar = binding.root.toolbar
+        return binding.root
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        collapsingToolbarLayout.isTitleEnabled = false
         (activity as AppCompatActivity).setSupportActionBar(toolbar)
         setHasOptionsMenu(true)
 
@@ -71,13 +78,26 @@ class HomeFragment : DaggerFragment() {
         )
         drawerLayout.addDrawerListener(toggle)
         toggle.syncState()
+        subredditAboutViewModel.data.observe(this, Observer {
+            toolbar.title = it.display_name
+            sharedPref.edit { putString(getString(R.string.saved_subreddit), it.display_name) }
+        })
 
-        val viewPagerHome = binding.root.viewPagerHome.apply {
-            adapter = subredditPagerAdapter
-        }
-        binding.root.tabsSortBy.setupWithViewPager(viewPagerHome)
+        subredditAboutViewModel.subreddits.observe(viewLifecycleOwner, Observer {
+            val cursor = MatrixCursor(arrayOf("_id", Constants.SUGGESTIONS))
+            it.forEach { sub ->
+                if (sub.subreddit_type != "private") {
+                    cursor.newRow().add(Constants.SUGGESTIONS, sub.display_name)
+                }
+            }
+            cursorAdapter.changeCursor(cursor)
+            cursorAdapter.notifyDataSetChanged()
+        })
 
-        binding.root.tabsSortBy.addOnTabSelectedListener(
+        viewPagerHome.adapter = subredditPagerAdapter
+        tabsSortBy.setupWithViewPager(viewPagerHome)
+
+        tabsSortBy.addOnTabSelectedListener(
             object : TabLayout.ViewPagerOnTabSelectedListener(viewPagerHome) {
 
                 override fun onTabSelected(tab: TabLayout.Tab) = Unit
@@ -101,30 +121,8 @@ class HomeFragment : DaggerFragment() {
                 }
             }
         )
-
-        subredditAboutViewModel.subreddits.observe(viewLifecycleOwner, Observer {
-            val cursor = MatrixCursor(arrayOf("_id", Constants.SUGGESTIONS))
-            it.forEach { sub ->
-                if (sub.subreddit_type != "private") {
-                    cursor.newRow().add(Constants.SUGGESTIONS, sub.display_name)
-                }
-            }
-            cursorAdapter.changeCursor(cursor)
-            cursorAdapter.notifyDataSetChanged()
-        })
-
-        binding.root.collapsingToolbarLayout.isTitleEnabled = false
-        subredditAboutViewModel.data.observe(this, Observer {
-            toolbar.title = it.display_name
-            sharedPref.edit { putString(getString(R.string.saved_subreddit), it.display_name) }
-        })
-
-        return binding.root
     }
 
-    /**
-     * Create menu for home section
-     */
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
         super.onCreateOptionsMenu(menu, inflater)
 

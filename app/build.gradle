@@ -56,6 +56,11 @@ android {
     dataBinding {
         enabled = true
     }
+    testOptions {
+        unitTests.all {
+            useJUnitPlatform()
+        }
+    }
 }
 
 tasks.withType(org.jetbrains.kotlin.gradle.tasks.KotlinCompile).all {
@@ -66,14 +71,6 @@ tasks.withType(org.jetbrains.kotlin.gradle.tasks.KotlinCompile).all {
 
 tasks.withType(Test) {
     jacoco.includeNoLocationClasses = true
-}
-
-android {
-    testOptions {
-        unitTests.all {
-            useJUnitPlatform()
-        }
-    }
 }
 
 dependencies {
@@ -101,7 +98,6 @@ dependencies {
     implementation("com.squareup.moshi:moshi-kotlin:$moshi_version")
     kapt("com.squareup.moshi:moshi-kotlin-codegen:$moshi_version")
     // for api calls
-    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:$coroutine_version"
     implementation("com.squareup.okhttp3:okhttp:4.2.2")
     implementation "com.squareup.retrofit2:retrofit:$retrofit_version"
     implementation "com.squareup.retrofit2:converter-moshi:$retrofit_version"

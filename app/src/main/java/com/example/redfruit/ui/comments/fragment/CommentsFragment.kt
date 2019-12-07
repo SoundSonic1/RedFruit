@@ -11,7 +11,6 @@ import androidx.core.os.bundleOf
 import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import com.example.redfruit.R
 import com.example.redfruit.data.model.Post
 import com.example.redfruit.databinding.CommentsFragmentBinding
@@ -25,6 +24,7 @@ import com.xwray.groupie.GroupieViewHolder
 import dagger.android.support.DaggerFragment
 import javax.inject.Inject
 import javax.inject.Provider
+import kotlinx.android.synthetic.main.comments_fragment.*
 import kotlinx.android.synthetic.main.comments_fragment.view.*
 
 /**
@@ -57,39 +57,35 @@ class CommentsFragment : DaggerFragment() {
         binding.viewModel = viewModel
         binding.onImageClickHandler = OnPostClickHandlerImpl(activity!!.supportFragmentManager)
 
-        setUpToolbar(binding.root.toolbarComments as Toolbar, activity as AppCompatActivity)
+        return binding.root
+    }
 
-        val recyclerView =
-            binding.root.findViewById<RecyclerView>(R.id.recycler_view_comments).apply {
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        setUpToolbar(toolbarComments as Toolbar, activity as AppCompatActivity)
+
+        recycler_view_comments.apply {
                 adapter = groupAdapter
                 layoutManager = linearLayoutManager.get()
                 addItemDecoration(
                     DividerItemDecoration(requireContext(), LinearLayoutManager.VERTICAL)
                 )
             }
-
-        recyclerView.itemAnimator?.apply {
+        recycler_view_comments.itemAnimator?.apply {
             addDuration = 400
             removeDuration = 400
             moveDuration = 400
             changeDuration = 400
         }
 
-        binding.root.commentsSwipeRefresh.apply {
-            setColorSchemeColors(
-                ContextCompat.getColor(requireContext(), R.color.colorPrimary),
-                ContextCompat.getColor(requireContext(), R.color.colorPrimaryDark),
-                ContextCompat.getColor(requireContext(), R.color.colorAccent)
-            )
-        }
-
         if (post.post_hint == "link") {
-            binding.root.postUrlEmbeddeView.apply {
+            postUrlEmbeddeView.apply {
                 visibility = View.VISIBLE
                 setURL(
                     post.url, object : URLEmbeddedView.OnLoadURLListener {
                         override fun onLoadURLCompleted(data: URLEmbeddedData) {
-                            binding.root.postUrlEmbeddeView.setData(data)
+                            postUrlEmbeddeView.setData(data)
                         }
                     }
                 )
@@ -97,7 +93,13 @@ class CommentsFragment : DaggerFragment() {
             }
         }
 
-        return binding.root
+        commentsSwipeRefresh.apply {
+            setColorSchemeColors(
+                ContextCompat.getColor(requireContext(), R.color.colorPrimary),
+                ContextCompat.getColor(requireContext(), R.color.colorPrimaryDark),
+                ContextCompat.getColor(requireContext(), R.color.colorAccent)
+            )
+        }
     }
 
     private fun setUpToolbar(toolbar: Toolbar, appCompatActivity: AppCompatActivity) {

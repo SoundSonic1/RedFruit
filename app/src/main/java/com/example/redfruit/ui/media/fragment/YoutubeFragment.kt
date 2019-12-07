@@ -10,8 +10,8 @@ import com.example.redfruit.ui.base.DaggerFullScreenFragment
 import com.example.redfruit.util.Constants
 import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.YouTubePlayer
 import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.listeners.AbstractYouTubePlayerListener
-import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.views.YouTubePlayerView
 import javax.inject.Inject
+import kotlinx.android.synthetic.main.youtube_fragment.*
 
 class YoutubeFragment : DaggerFullScreenFragment() {
 
@@ -24,12 +24,11 @@ class YoutubeFragment : DaggerFullScreenFragment() {
         savedInstanceState: Bundle?
     ): View? {
 
-        val youtubeView = inflater.inflate(R.layout.youtube_fragment, container, false)
+        return inflater.inflate(R.layout.youtube_fragment, container, false)
+    }
 
-        val youtubePlayerView =
-            youtubeView.findViewById<YouTubePlayerView>(R.id.youtubePlayerViewFragment)
-
-        lifecycle.addObserver(youtubePlayerView)
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
 
         if (youtubeId.isNotBlank()) {
             youtubePlayerView.addYouTubePlayerListener(
@@ -41,7 +40,7 @@ class YoutubeFragment : DaggerFullScreenFragment() {
             )
         }
 
-        return youtubeView
+        lifecycle.addObserver(youtubePlayerView)
     }
 
     companion object {
