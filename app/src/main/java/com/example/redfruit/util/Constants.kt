@@ -15,7 +15,6 @@ object Constants {
     const val HOME_FRAGMENT_TAG = "HOME_FRAGMENT_TAG"
     const val POSTDETAIL_KEY = "POSTDETAIL_KEY"
     const val SORTBY_SHARED_KEY = "SORTBY_SHARED_KEY"
-    const val SWITCH_TOGGLE_KEY = "SWITCH_TOGGLE_KEY"
     const val DARK_THEME_ON_KEY = "DARK_THEME_ON_KEY"
     const val DEVICE_ID_KEY = "DEVICE_ID_KEY"
     const val IMAGE_URL_KEY = "IMAGE_URL_KEY"

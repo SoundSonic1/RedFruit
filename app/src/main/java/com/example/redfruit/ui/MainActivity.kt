@@ -4,13 +4,15 @@ import android.content.SharedPreferences
 import android.os.Bundle
 import android.view.MenuItem
 import androidx.appcompat.app.AppCompatDelegate
+import androidx.appcompat.app.AppCompatDelegate.getDefaultNightMode
 import androidx.core.content.edit
 import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
 import com.example.redfruit.R
 import com.example.redfruit.ui.home.fragment.HomeFragment
 import com.example.redfruit.ui.shared.SubredditAboutViewModel
-import com.example.redfruit.util.Constants
+import com.example.redfruit.util.Constants.DARK_THEME_ON_KEY
+import com.example.redfruit.util.Constants.HOME_FRAGMENT_TAG
 import com.example.redfruit.util.replaceFragmentIgnoreBackstack
 import com.google.android.material.navigation.NavigationView
 import dagger.android.support.DaggerAppCompatActivity
@@ -39,24 +41,20 @@ class MainActivity : DaggerAppCompatActivity(), NavigationView.OnNavigationItemS
 
         nav_view.setNavigationItemSelectedListener(this)
 
-        switch_compat.isChecked = sharedPref.getBoolean(Constants.SWITCH_TOGGLE_KEY, false)
-
-        AppCompatDelegate.setDefaultNightMode(
-            sharedPref.getInt(Constants.DARK_THEME_ON_KEY, AppCompatDelegate.MODE_NIGHT_NO)
-        )
+        if (getDefaultNightMode() == AppCompatDelegate.MODE_NIGHT_YES) {
+            switch_compat.isChecked = true
+        }
 
         switch_compat.setOnCheckedChangeListener { _, b ->
             if (b) {
                 AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
                 sharedPref.edit {
-                    putBoolean(Constants.SWITCH_TOGGLE_KEY, b)
-                    putInt(Constants.DARK_THEME_ON_KEY, AppCompatDelegate.MODE_NIGHT_YES)
+                    putInt(DARK_THEME_ON_KEY, AppCompatDelegate.MODE_NIGHT_YES)
                 }
             } else {
                 AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
                 sharedPref.edit {
-                    putBoolean(Constants.SWITCH_TOGGLE_KEY, b)
-                    putInt(Constants.DARK_THEME_ON_KEY, AppCompatDelegate.MODE_NIGHT_NO)
+                    putInt(DARK_THEME_ON_KEY, AppCompatDelegate.MODE_NIGHT_NO)
                 }
             }
         }
@@ -67,7 +65,7 @@ class MainActivity : DaggerAppCompatActivity(), NavigationView.OnNavigationItemS
                 supportFragmentManager,
                 R.id.mainContent,
                 HomeFragment(),
-                Constants.HOME_FRAGMENT_TAG
+                HOME_FRAGMENT_TAG
             )
         }
     }
