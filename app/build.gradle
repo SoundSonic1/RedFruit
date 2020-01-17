@@ -74,13 +74,13 @@ tasks.withType(Test) {
 }
 
 dependencies {
-    def dagger_version = "2.25.2"
+    def dagger_version = "2.25.4"
     def ktx_version = "1.1.0"
     def exo_version = "2.10.8"
     def markwon_version = "4.2.0"
     def groupie_version = "2.7.2"
     def moshi_version = '1.9.2'
-    def retrofit_version = "2.6.2"
+    def retrofit_version = "2.6.4"
     def coroutine_version = "1.3.2"
     def test_version = "1.2.0"
     def espresso_version = "3.2.0"
@@ -102,7 +102,7 @@ dependencies {
     implementation "com.squareup.retrofit2:retrofit:$retrofit_version"
     implementation "com.squareup.retrofit2:converter-moshi:$retrofit_version"
     // for fetching images
-    implementation("io.coil-kt:coil:0.8.0")
+    implementation("io.coil-kt:coil:0.9.1")
     // pinch to zoom etc. for images
     implementation 'com.github.MikeOrtiz:TouchImageView:2.3.0'
     // url preview

@@ -33,7 +33,6 @@ import dagger.android.support.DaggerFragment
 import java.util.Locale
 import javax.inject.Inject
 import kotlinx.android.synthetic.main.home_fragment.*
-import kotlinx.android.synthetic.main.home_fragment.view.*
 import kotlinx.coroutines.launch
 
 class HomeFragment : DaggerFragment() {

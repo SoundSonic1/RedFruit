@@ -23,8 +23,6 @@ import javax.inject.Inject
 import javax.inject.Named
 import javax.inject.Provider
 import kotlinx.android.synthetic.main.subreddit_posts_fragment.*
-import kotlinx.android.synthetic.main.subreddit_posts_fragment.view.homeSwipeRefresh
-import kotlinx.android.synthetic.main.subreddit_posts_fragment.view.recyclerViewPosts
 
 /**
  * Fragment that displays the posts of a subreddit
